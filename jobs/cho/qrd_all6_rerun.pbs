@@ -1,0 +1,45 @@
+#!/bin/bash
+#PBS -N cho_qrd_all6_rerun
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=96:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/cho/qrd_all6_rerun.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (6 method gop lam 1 job, RERUN mach da va) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints_cho2017
+export QRD_OUT_DIR=$PROJ/results
+export QRD_DATASET=Cho2017
+export QRD_SEEDS=1,2,3,4,5
+export QRD_SEEDS_OUT=cho_qrd_all6_rerun_per_subject.csv
+
+export QRD_RUNS="qrd_dense:qrd_dense,qrd_anchor:qrd_anchor,qrd_global_local:qrd_global_local,qrd_teacher_guided:qrd_teacher_guided:0.02,qrd_tg_b0.01:qrd_teacher_guided:0.01,qrd_tg_b0.05:qrd_teacher_guided:0.05"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+echo "teacher=$(ls $QRD_TEACHER_DIR/teacher_fold0*.pth | wc -l) pkl=$(ls preprocessed_data/Cho2017/*.pkl | wc -l)"
+echo "RUNS=$QRD_RUNS"
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM"
+    sleep 300
+  done ) &
+HB=$!
+
+timeout 342000 $PY $PROJ/scripts/run_seeds.py ; echo "rc=$?"
+kill $HB 2>/dev/null
+
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/cho_qrd_all6_rerun_per_subject.csv 2>/dev/null | wc -l) (dich 1470 = 6 method x 5 seed x 49 subject, LOSO nen khong nhan them 5 fold)"
+echo "===== END $(date +%T) ====="

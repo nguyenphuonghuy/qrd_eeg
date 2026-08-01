@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -N qrd_full_s2
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/full_seeds2.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results
+export QRD_SEEDS=1,2,3,4,5
+# KHONG set QRD_N_FOLDS/QRD_MAX_EPOCHS -> default 5/30, khop dot 1
+export QRD_SEEDS_OUT=seeds2_per_subject.csv
+# quantum (dat) truoc, classical (re) sau: bi cat gio thi mat phan re
+export QRD_RUNS="qrd_dense:qrd_dense,qrd_anchor:qrd_anchor,qrd_global_local:qrd_global_local,qrd_tg_b0.01:qrd_teacher_guided:0.01,no_kd:no_kd,feature_kd:feature_kd,rkd_classical:rkd_classical,ck_cosine_tg:ck_cosine_tg,ck_rbf_tg:ck_rbf_tg"
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "PWD=$(pwd)  teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 60
+  done ) &
+HB=$!
+echo "===== FULL SEEDS2: 9 method x 5 seed x 5 fold x 30ep (uoc ~13.5h) ====="
+timeout 79200 $PY $PROJ/scripts/run_seeds.py ; echo "rc_seeds2=$?"
+kill $HB 2>/dev/null
+echo "===== KIEM OUTPUT ====="
+head -2 $QRD_OUT_DIR/seeds2_per_subject.csv 2>/dev/null || echo "(MISSING)"
+echo "combos: $(cut -d, -f1 $QRD_OUT_DIR/seeds2_per_subject.csv 2>/dev/null | tail -n +2 | sort -u | wc -l) (dich 45 = 9 x 5)"
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/seeds2_per_subject.csv 2>/dev/null | wc -l) (dich 4635 = 45 x 103)"
+echo "===== END $(date +%T) ====="

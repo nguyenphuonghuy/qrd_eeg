@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -N qrd_smk_C
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=00:40:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/smoke_groupC.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_OUT_DIR=$PROJ/results/smoke
+export QRD_N_FOLDS=3
+export QRD_N_SEEDS=2
+export QRD_MAX_EPOCHS=2
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "PWD=$(pwd)  PY=$($PY --version 2>&1)"
+
+echo "===== SMOKE 1/2: RIEMANN (CPU, 1 fold) ====="
+timeout 1500 $PY $PROJ/scripts/run_riemann.py ; echo "rc_riemann=$?"
+
+echo "===== SMOKE 2/2: ENSEMBLE (GPU, 1 fold x 2 seed x 2 ep) ====="
+timeout 1500 $PY $PROJ/scripts/run_ensemble.py ; echo "rc_ensemble=$?"
+
+echo "===== KIEM OUTPUT ====="
+for f in riemann_per_subject ensemble_per_subject; do
+  echo "--- $f ---"
+  head -3 $QRD_OUT_DIR/$f.csv 2>/dev/null || echo "(MISSING)"
+  echo "methods: $(cut -d, -f1 $QRD_OUT_DIR/$f.csv 2>/dev/null | tail -n +2 | sort -u | tr '\n' ' ')"
+  echo "n_subject(1 fold, chua du 103): $(cut -d, -f3 $QRD_OUT_DIR/$f.csv 2>/dev/null | tail -n +2 | sort -u | wc -l)"
+done
+echo "===== END $(date +%T) ====="

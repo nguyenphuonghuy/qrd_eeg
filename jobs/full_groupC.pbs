@@ -1,0 +1,48 @@
+#!/bin/bash
+#PBS -N qrd_full_C
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=05:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/full_groupC.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_OUT_DIR=$PROJ/results
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "PWD=$(pwd)  PY=$($PY --version 2>&1)"
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 60
+  done ) &
+HB=$!
+
+echo "===== FULL 1/2: RIEMANN (CPU, 5 fold) ====="
+timeout 5400 $PY $PROJ/scripts/run_riemann.py ; echo "rc_riemann=$?"
+
+echo "===== FULL 2/2: ENSEMBLE (GPU, 5 fold x 5 seed x 30 ep) ====="
+timeout 12000 $PY $PROJ/scripts/run_ensemble.py ; echo "rc_ensemble=$?"
+
+kill $HB 2>/dev/null
+
+echo "===== KIEM OUTPUT ====="
+for f in riemann_per_subject ensemble_per_subject; do
+  echo "--- $f ---"
+  head -2 $QRD_OUT_DIR/$f.csv 2>/dev/null || echo "(MISSING)"
+  echo "methods: $(cut -d, -f1 $QRD_OUT_DIR/$f.csv 2>/dev/null | tail -n +2 | sort -u | tr '\n' ' ')"
+  echo "n_subject: $(cut -d, -f3 $QRD_OUT_DIR/$f.csv 2>/dev/null | tail -n +2 | sort -u | wc -l)"
+done
+echo "===== END $(date +%T) ====="

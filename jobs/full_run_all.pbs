@@ -1,0 +1,44 @@
+#!/bin/bash
+#PBS -N qrd_full
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/full_run_all.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "PWD=$(pwd)  PY=$($PY --version 2>&1)"
+echo "teacher: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)  .pkl: $(ls preprocessed_data/PhysionetMI/*.pkl 2>/dev/null | wc -l)"
+
+# HEARTBEAT nen: mem+GPU moi 60s (job dai, khong can day)
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 60
+  done ) &
+HB=$!
+
+echo "===== FULL RUN: MAC DINH (5 fold, 30 epoch, 10 method + sensitivity) ====="
+echo "===== (KHONG truyen --folds/--epochs/--methods -> dung default) ====="
+timeout 42000 $PY $PROJ/scripts/run_all.py --skip_teacher
+rc=$?
+kill $HB 2>/dev/null
+echo "===== rc_full=$rc  (124=timeout, 137=OOM) ====="
+
+echo "===== KET QUA ====="
+ls -la $QRD_OUT_DIR/*.xlsx $QRD_OUT_DIR/*.csv 2>/dev/null || echo "(chua co)"
+echo "===== END $(date +%T) $(date +%F) ====="

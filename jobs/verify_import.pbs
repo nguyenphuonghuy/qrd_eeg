@@ -1,0 +1,32 @@
+#!/bin/bash
+#PBS -N qrd_verify
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=4:mem=16gb:gpu_slots=1
+#PBS -l walltime=00:20:00
+#PBS -j oe
+#PBS -o /gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/verify_import.out
+
+set -e
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+echo "===== NODE: $(hostname)  TIME: $(date +%T) ====="
+echo "===== PYTHON: $($PY --version 2>&1) ====="
+
+echo "===== IMPORT (co timeout de treo -> loi co ma) ====="
+timeout 300 $PY - << 'PYEOF'
+import time
+def t(name):
+    s=time.time(); mod=__import__(name); print(f"[OK] {name:12s} {time.time()-s:5.1f}s  v={getattr(mod,'__version__','?')}"); return mod
+torch = t("torch")
+t("torchvision"); t("mne"); t("moabb"); t("braindecode"); t("pennylane"); t("sklearn"); t("pyriemann")
+print("----- CUDA -----")
+print("device_count :", torch.cuda.device_count())
+print("is_available :", torch.cuda.is_available())
+if torch.cuda.is_available():
+    print("device_name  :", torch.cuda.get_device_name(0))
+    x = torch.randn(1000,1000,device='cuda'); print("matmul cuda  :", (x@x).sum().item() is not None)
+print("===== DONE =====")
+PYEOF
+rc=$?
+echo "===== EXIT CODE: $rc (124 = timeout/treo) ====="

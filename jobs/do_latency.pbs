@@ -1,0 +1,22 @@
+#!/bin/bash
+#PBS -N qrd_latency
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=01:00:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/latency.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_DATASET=PhysionetMI
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+$PY -u /gpfs0/users/gv_nphuy/do_latency.py
+echo "rc=$?"
+echo "===== END $(date +%T) ====="

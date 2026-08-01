@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -N qrd_full_seed
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=08:00:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/full_seeds.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results
+export QRD_SEEDS=1,2,3,4,5
+# KHONG set QRD_N_FOLDS/MAX_EPOCHS -> default 5/30
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "PWD=$(pwd)  teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 60
+  done ) &
+HB=$!
+echo "===== FULL SEEDS: 5 seed x 3 run x 5 fold x 30ep ====="
+timeout 27000 $PY $PROJ/scripts/run_seeds.py ; echo "rc_seeds=$?"
+kill $HB 2>/dev/null
+echo "===== KIEM OUTPUT ====="
+head -2 $QRD_OUT_DIR/seeds_per_subject.csv 2>/dev/null || echo "(MISSING)"
+echo "combos: $(cut -d, -f1 $QRD_OUT_DIR/seeds_per_subject.csv 2>/dev/null | tail -n +2 | sort -u | wc -l) (dich 15 = 3 run x 5 seed)"
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/seeds_per_subject.csv 2>/dev/null | wc -l) (dich ~103 x 15 = 1545)"
+echo "===== END $(date +%T) ====="

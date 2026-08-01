@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -N qrd_preproc
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+# --- Log ghi song trong than script (103 subject chay lau, xem tien do song) ---
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/preprocess.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) node=$(hostname) ====="
+
+# --- Bat buoc: moabb tim raw .edf o MNE_DATA (khong set -> thu tai -> compute node khong Internet -> gaierror) ---
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+# --- Phong xa: braindecode co the cham CUDA init ---
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+REPO=/gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+# --- cwd = repo: os.getcwd() ghi .pkl vao $REPO/preprocessed_data/ (dung cho train doc), va 'src' nam tren path ---
+cd "$REPO" || { echo "LOI: khong cd duoc vao $REPO"; exit 2; }
+echo "PWD=$(pwd)"
+echo "MNE_DATA=$MNE_DATA"
+echo "PYTHON=$($PY --version 2>&1)"
+
+echo "===== KIEM raw .edf co san (khong tai) ====="
+ls -d "$MNE_DATA/MNE-eegbci-data/files/eegmmidb/1.0.0/S001" 2>/dev/null \
+  && echo "  -> raw S001 OK" || echo "  -> CANH BAO: khong thay raw S001"
+
+echo "===== CHAY PREPROCESS 103 subject (timeout 110 phut) ====="
+timeout 6600 $PY preprocess_dataset.py
+rc=$?
+echo "===== rc_preprocess=$rc  (124=timeout) ====="
+
+echo "===== KET QUA: dem .pkl da sinh ====="
+ls preprocessed_data/PhysionetMI/*.pkl 2>/dev/null | wc -l | xargs echo "So file .pkl:"
+ls -la preprocessed_data/PhysionetMI/ 2>/dev/null | head -5
+echo "===== END $(date +%T) ====="

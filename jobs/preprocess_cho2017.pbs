@@ -1,0 +1,59 @@
+#!/bin/bash
+#PBS -N cho_prep
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=12:00:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/preprocess_cho2017.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+REPO=$PROJ/external/Ensemble-MI
+export ENSEMBLE_MI_DIR=$REPO
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$REPO" || { echo "LOI cd repo"; exit 2; }
+
+echo "===== 0. NODE CO RA INTERNET KHONG (quyet dinh) ====="
+timeout 30 curl -sI https://s3.ap-northeast-1.wasabisys.com 2>&1 | head -2 \
+  && echo "NODE_INTERNET=OK" || echo "NODE_INTERNET=FAIL -> phai tai truoc tren login node"
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM | done=$(ls preprocessed_data/Cho2017/*.pkl 2>/dev/null | wc -l)/49"
+    sleep 60
+  done ) &
+HB=$!
+
+echo "===== 0b. KIEM CACHE (MOABB doc file local duoc khong) ====="
+$PY -c "
+from moabb.datasets import Cho2017
+try: print('CACHE_OK', Cho2017().data_path(subject=1))
+except Exception as e: print('CACHE_FAIL', repr(e))
+" 2>&1 | grep -E "CACHE_OK|CACHE_FAIL"
+
+echo "===== 1. TIEN XU LY (bo qua file da co) ====="
+export QRD_DATASET=Cho2017
+timeout 39600 $PY $PROJ/scripts/prep_dataset.py
+echo "rc_prep=$?"
+kill $HB 2>/dev/null
+
+echo "===== 2. KIEM KET QUA ====="
+echo "so file: $(ls preprocessed_data/Cho2017/*.pkl 2>/dev/null | wc -l) (dich 49)"
+du -sh preprocessed_data/Cho2017/
+
+echo "===== 3. SO SANH BIEN DO 2 DATASET ====="
+$PY - <<'PYEOF'
+import pickle, numpy as np, glob
+for name in ["PhysionetMI", "Cho2017"]:
+    fs = sorted(glob.glob("preprocessed_data/%s/*.pkl" % name))[:3]
+    for f in fs:
+        ds = pickle.load(open(f, "rb"))
+        A = np.stack([np.asarray(ds[i][0]) for i in range(min(50, len(ds)))])
+        print("%-12s %s n=%3d shape=%s std=%7.2f p99=%8.1f" %
+              (name, f.split("_")[-1], len(ds), A.shape[1:], A.std(), np.percentile(np.abs(A), 99)), flush=True)
+PYEOF
+echo "===== END $(date +%T) ====="

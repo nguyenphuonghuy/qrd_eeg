@@ -1,0 +1,19 @@
+#!/bin/bash
+#PBS -N qrd_check_circ
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=4:mem=8gb:gpu_slots=1
+#PBS -l walltime=00:20:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/check_circuit.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || exit 2
+$PY -u /gpfs0/users/gv_nphuy/check_circuit.py
+echo "rc=$?"
+echo "===== END $(date +%T) ====="

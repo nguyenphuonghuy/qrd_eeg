@@ -1,0 +1,22 @@
+#!/bin/bash
+#PBS -N qrd_check_v1
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=4:mem=8gb:gpu_slots=1
+#PBS -l walltime=00:20:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/check_v1.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "-- phien ban thu vien --"
+$PY -u -c "import torch, pennylane; print('torch', torch.__version__, '| pennylane', pennylane.__version__)"
+echo "-- kiem tra duong ma reduce=chunk --"
+$PY -u /gpfs0/users/gv_nphuy/check_v1.py
+echo "rc=$?"
+echo "===== END $(date +%T) ====="

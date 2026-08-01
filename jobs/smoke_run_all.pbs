@@ -1,0 +1,48 @@
+#!/bin/bash
+#PBS -N qrd_smkall
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=01:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/smoke_run_all.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) node=$(hostname) ====="
+
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+# cwd = repo: os.getcwd() doc preprocessed_data/ + save results
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "PWD=$(pwd)  PY=$($PY --version 2>&1)"
+echo "teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l) file"
+echo ".pkl: $(ls preprocessed_data/PhysionetMI/*.pkl 2>/dev/null | wc -l) file"
+
+# HEARTBEAT nen: mem + GPU moi 20s
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 20
+  done ) &
+HB=$!
+
+echo "===== SMOKE run_all: fold 0, 3 epoch, 4 method, skip_teacher ====="
+timeout 3000 $PY $PROJ/scripts/run_all.py \
+    --folds 0 --epochs 3 \
+    --methods no_kd,kd_base,qrd_teacher_guided,ck_rbf_tg \
+    --skip_teacher
+rc=$?
+kill $HB 2>/dev/null
+echo "===== rc_smoke=$rc  (124=timeout, 137=OOM) ====="
+
+echo "===== ket qua sinh ra ====="
+ls -la $QRD_OUT_DIR/*.xlsx $QRD_OUT_DIR/*.csv 2>/dev/null || echo "(chua co file ket qua)"
+echo "===== END $(date +%T) ====="

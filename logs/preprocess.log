@@ -1,0 +1,128 @@
+===== START 20:19:28 node=ai01 =====
+PWD=/gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI
+MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+PYTHON=Python 3.11.15
+===== KIEM raw .edf co san (khong tai) =====
+/gpfs0/users/gv_nphuy/datasets/mne_data/MNE-eegbci-data/files/eegmmidb/1.0.0/S001
+  -> raw S001 OK
+===== CHAY PREPROCESS 103 subject (timeout 110 phut) =====
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:75: UserWarning: Preprocessing choices with lambda functions cannot be saved.
+  warn("Preprocessing choices with lambda functions cannot be saved.")
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+Preprocessing dataset: PhysionetMI
+
+Dataset: PhysionetMI | Subject: #001 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_001.pkl
+Dataset: PhysionetMI | Subject: #002 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_002.pkl
+Dataset: PhysionetMI | Subject: #003 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_003.pkl
+Dataset: PhysionetMI | Subject: #004 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_004.pkl
+Dataset: PhysionetMI | Subject: #005 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_005.pkl
+Dataset: PhysionetMI | Subject: #006 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_006.pkl
+Dataset: PhysionetMI | Subject: #007 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_007.pkl
+Dataset: PhysionetMI | Subject: #008 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_008.pkl
+Dataset: PhysionetMI | Subject: #009 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_009.pkl
+Dataset: PhysionetMI | Subject: #010 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_010.pkl
+Dataset: PhysionetMI | Subject: #011 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_011.pkl
+Dataset: PhysionetMI | Subject: #012 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_012.pkl
+Dataset: PhysionetMI | Subject: #013 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_013.pkl
+Dataset: PhysionetMI | Subject: #014 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_014.pkl
+Dataset: PhysionetMI | Subject: #015 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_015.pkl
+Dataset: PhysionetMI | Subject: #016 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_016.pkl
+Dataset: PhysionetMI | Subject: #017 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_017.pkl
+Dataset: PhysionetMI | Subject: #018 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_018.pkl
+Dataset: PhysionetMI | Subject: #019 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_019.pkl
+Dataset: PhysionetMI | Subject: #020 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_020.pkl
+Dataset: PhysionetMI | Subject: #021 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_021.pkl
+Dataset: PhysionetMI | Subject: #022 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_022.pkl
+Dataset: PhysionetMI | Subject: #023 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_023.pkl
+Dataset: PhysionetMI | Subject: #024 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_024.pkl
+Dataset: PhysionetMI | Subject: #025 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_025.pkl
+Dataset: PhysionetMI | Subject: #026 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_026.pkl
+Dataset: PhysionetMI | Subject: #027 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_027.pkl
+Dataset: PhysionetMI | Subject: #028 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_028.pkl
+Dataset: PhysionetMI | Subject: #029 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_029.pkl
+Dataset: PhysionetMI | Subject: #030 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_030.pkl
+Dataset: PhysionetMI | Subject: #031 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_031.pkl
+Dataset: PhysionetMI | Subject: #032 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_032.pkl
+Dataset: PhysionetMI | Subject: #033 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_033.pkl
+Dataset: PhysionetMI | Subject: #034 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_034.pkl
+Dataset: PhysionetMI | Subject: #035 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_035.pkl
+Dataset: PhysionetMI | Subject: #036 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_036.pkl
+Dataset: PhysionetMI | Subject: #037 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_037.pkl
+Dataset: PhysionetMI | Subject: #038 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_038.pkl
+Dataset: PhysionetMI | Subject: #039 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_039.pkl
+Dataset: PhysionetMI | Subject: #040 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_040.pkl
+Dataset: PhysionetMI | Subject: #041 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_041.pkl
+Dataset: PhysionetMI | Subject: #042 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_042.pkl
+Dataset: PhysionetMI | Subject: #043 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_043.pkl
+Dataset: PhysionetMI | Subject: #044 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_044.pkl
+Dataset: PhysionetMI | Subject: #045 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_045.pkl
+Dataset: PhysionetMI | Subject: #046 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_046.pkl
+Dataset: PhysionetMI | Subject: #047 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_047.pkl
+Dataset: PhysionetMI | Subject: #048 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_048.pkl
+Dataset: PhysionetMI | Subject: #049 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_049.pkl
+Dataset: PhysionetMI | Subject: #050 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_050.pkl
+Dataset: PhysionetMI | Subject: #051 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_051.pkl
+Dataset: PhysionetMI | Subject: #052 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_052.pkl
+Dataset: PhysionetMI | Subject: #053 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_053.pkl
+Dataset: PhysionetMI | Subject: #054 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_054.pkl
+Dataset: PhysionetMI | Subject: #055 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_055.pkl
+Dataset: PhysionetMI | Subject: #056 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_056.pkl
+Dataset: PhysionetMI | Subject: #057 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_057.pkl
+Dataset: PhysionetMI | Subject: #058 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_058.pkl
+Dataset: PhysionetMI | Subject: #059 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_059.pkl
+Dataset: PhysionetMI | Subject: #060 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_060.pkl
+Dataset: PhysionetMI | Subject: #061 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_061.pkl
+Dataset: PhysionetMI | Subject: #062 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_062.pkl
+Dataset: PhysionetMI | Subject: #063 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_063.pkl
+Dataset: PhysionetMI | Subject: #064 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_064.pkl
+Dataset: PhysionetMI | Subject: #065 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_065.pkl
+Dataset: PhysionetMI | Subject: #066 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_066.pkl
+Dataset: PhysionetMI | Subject: #067 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_067.pkl
+Dataset: PhysionetMI | Subject: #068 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_068.pkl
+Dataset: PhysionetMI | Subject: #069 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_069.pkl
+Dataset: PhysionetMI | Subject: #070 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_070.pkl
+Dataset: PhysionetMI | Subject: #071 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_071.pkl
+Dataset: PhysionetMI | Subject: #072 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_072.pkl
+Dataset: PhysionetMI | Subject: #073 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_073.pkl
+Dataset: PhysionetMI | Subject: #074 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_074.pkl
+Dataset: PhysionetMI | Subject: #075 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_075.pkl
+Dataset: PhysionetMI | Subject: #076 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_076.pkl
+Dataset: PhysionetMI | Subject: #077 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_077.pkl
+Dataset: PhysionetMI | Subject: #078 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_078.pkl
+Dataset: PhysionetMI | Subject: #079 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_079.pkl
+Dataset: PhysionetMI | Subject: #080 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_080.pkl
+Dataset: PhysionetMI | Subject: #081 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_081.pkl
+Dataset: PhysionetMI | Subject: #082 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_082.pkl
+Dataset: PhysionetMI | Subject: #083 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_083.pkl
+Dataset: PhysionetMI | Subject: #084 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_084.pkl
+Dataset: PhysionetMI | Subject: #085 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_085.pkl
+Dataset: PhysionetMI | Subject: #086 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_086.pkl
+Dataset: PhysionetMI | Subject: #087 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_087.pkl
+Dataset: PhysionetMI | Subject: #089 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_089.pkl
+Dataset: PhysionetMI | Subject: #091 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_091.pkl
+Dataset: PhysionetMI | Subject: #093 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_093.pkl
+Dataset: PhysionetMI | Subject: #094 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_094.pkl
+Dataset: PhysionetMI | Subject: #095 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_095.pkl
+Dataset: PhysionetMI | Subject: #096 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_096.pkl
+Dataset: PhysionetMI | Subject: #097 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_097.pkl
+Dataset: PhysionetMI | Subject: #098 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_098.pkl
+Dataset: PhysionetMI | Subject: #099 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_099.pkl
+Dataset: PhysionetMI | Subject: #101 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_101.pkl
+Dataset: PhysionetMI | Subject: #102 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_102.pkl
+Dataset: PhysionetMI | Subject: #103 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_103.pkl
+Dataset: PhysionetMI | Subject: #105 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_105.pkl
+Dataset: PhysionetMI | Subject: #107 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_107.pkl
+Dataset: PhysionetMI | Subject: #108 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_108.pkl
+Dataset: PhysionetMI | Subject: #109 | Saved .pkl file: /gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/preprocessed_data/PhysionetMI/windows_dataset_109.pkl
+
+Finished!
+===== rc_preprocess=0  (124=timeout) =====
+===== KET QUA: dem .pkl da sinh =====
+So file .pkl: 103
+total 7654545
+drwx------ 2 gv_nphuy hpc_lecturers     8192 Jul 20 20:23 .
+drwx------ 3 gv_nphuy hpc_lecturers     4096 Jul 20 20:20 ..
+-rw------- 1 gv_nphuy hpc_lecturers 38586517 Jul 20 20:20 windows_dataset_001.pkl
+-rw------- 1 gv_nphuy hpc_lecturers 37972117 Jul 20 20:20 windows_dataset_002.pkl
+===== END 20:23:43 =====

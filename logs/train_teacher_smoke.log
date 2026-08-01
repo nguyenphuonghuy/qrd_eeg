@@ -1,0 +1,73 @@
+===== START 21:01:05 node=ai01 =====
+PWD=/gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI  PYTHON=Python 3.11.15
+So .pkl: 103
+===== SMOKE TRAIN: fold 0 x 3 epoch (mem=64gb) =====
+[HB 21:01:06] procmem=0.1GB | gpu=0 %, 67 MiB
+[HB 21:01:21] procmem=0.1GB | gpu=0 %, 67 MiB
+[HB 21:01:36] procmem=0.2GB | gpu=0 %, 67 MiB
+[HB 21:01:51] procmem=0.2GB | gpu=0 %, 67 MiB
+[HB 21:02:06] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:02:21] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:02:36] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:02:51] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:03:06] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:03:21] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:03:36] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:03:52] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:04:07] procmem=0.4GB | gpu=0 %, 67 MiB
+[HB 21:04:22] procmem=0.5GB | gpu=0 %, 67 MiB
+[HB 21:04:37] procmem=0.6GB | gpu=0 %, 67 MiB
+[HB 21:04:52] procmem=0.7GB | gpu=0 %, 67 MiB
+[HB 21:05:07] procmem=0.7GB | gpu=0 %, 67 MiB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/util.py:52: UserWarning: torch.backends.cudnn.benchmark was set to True which may results in lack of reproducibility. In some cases to ensure reproducibility you may need to set torch.backends.cudnn.benchmark to False.
+  warn(
+[HB 21:05:22] procmem=1.2GB | gpu=0 %, 67 MiB
+[HB 21:05:37] procmem=2.2GB | gpu=0 %, 67 MiB
+[HB 21:05:52] procmem=3.3GB | gpu=0 %, 67 MiB
+[HB 21:06:07] procmem=4.4GB | gpu=0 %, 67 MiB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+[HB 21:06:22] procmem=4.9GB | gpu=0 %, 67 MiB
+[HB 21:06:37] procmem=5.5GB | gpu=0 %, 67 MiB
+[HB 21:06:52] procmem=5.7GB | gpu=0 %, 750 MiB
+[HB 21:07:07] procmem=5.7GB | gpu=0 %, 750 MiB
+Training on PhysionetMI dataset
+
+Preprocessing pre-loaded dataset
+Train subjects (N=062) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Val   subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Test  subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 27.11 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2696, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2696 | Val: 945 | Test: 900
+Model parameters: 15074
+
+Training...
+
+  epoch    test_acc    test_loss    train_acc    train_loss    val_acc    val_loss      dur
+-------  ----------  -----------  -----------  ------------  ---------  ----------  -------
+      1     [36m50.2200[0m       [32m5.8873[0m      [35m49.1800[0m       [31m47.4554[0m    [94m50.6900[0m      [36m5.8257[0m  35.8181
+      2     [36m51.4400[0m       [32m5.1431[0m      [35m52.4200[0m       [31m27.7621[0m    [94m51.2200[0m      [36m5.0543[0m  1.1630
+      3     [36m53.8900[0m       [32m4.9654[0m      [35m52.7200[0m       [31m17.9991[0m    [94m54.8100[0m      [36m4.8747[0m  1.1884
+[HB 21:07:23] procmem=5.9GB | gpu=0 %, 1642 MiB
+
+
+Fold 1 (1/1) | Test accuracy: 53.89
+
+Mean test accuracy: 53.89
+
+
+
+Mean test accuracy over 5 fold(s): 53.89 ± 0.00
+
+===== rc_train=0  (124=timeout, 137=SIGKILL/OOM) =====
+-rw------- 1 gv_nphuy hpc_lecturers 111269 Jul 20 20:58 checkpoints/net_best_2026_07_20-205426_fold_00.pth
+-rw------- 1 gv_nphuy hpc_lecturers 111269 Jul 20 21:07 checkpoints/net_best_2026_07_20-210515_fold_00.pth
+===== END 21:07:38 =====

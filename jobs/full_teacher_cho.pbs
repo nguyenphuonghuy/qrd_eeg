@@ -1,0 +1,35 @@
+#!/bin/bash
+#PBS -N cho_tfull
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=12:00:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/full_teacher_cho.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+REPO=$PROJ/external/Ensemble-MI
+export ENSEMBLE_MI_DIR=$REPO
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$REPO" || { echo "LOI cd repo"; exit 2; }
+
+export QRD_DATASET=Cho2017
+export QRD_TEACHER_EPOCHS=120
+echo "dataset=$QRD_DATASET epochs=$QRD_TEACHER_EPOCHS | pkl=$(ls preprocessed_data/Cho2017/*.pkl | wc -l)"
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 60
+  done ) &
+HB=$!
+echo "===== SMOKE TEACHER Cho2017: 5 fold x 120 epoch (FULL) ====="
+timeout 39600 $PY run_experiment.py ; echo "rc=$?"
+kill $HB 2>/dev/null
+echo "===== RAM DINH ====="
+grep "^\[HB" $LOG | sed 's/.*procmem=//;s/GB.*//' | sort -rn | head -1
+echo "===== END $(date +%T) ====="

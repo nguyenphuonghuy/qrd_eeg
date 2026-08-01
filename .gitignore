@@ -1,0 +1,13 @@
+external/Ensemble-MI/
+datasets/
+*.pkl
+mne_data/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+envs/
+conda_pkgs/
+.DS_Store
+Thumbs.db
+*.bak*
+*.o[0-9]*

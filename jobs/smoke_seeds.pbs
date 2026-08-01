@@ -1,0 +1,30 @@
+#!/bin/bash
+#PBS -N qrd_smk_seed
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=00:40:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/smoke_seeds.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/smoke
+export QRD_SEEDS=1,2
+export QRD_N_FOLDS=3
+export QRD_MAX_EPOCHS=2
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "PWD=$(pwd)  teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+timeout 2000 $PY $PROJ/scripts/run_seeds.py ; echo "rc_seeds=$?"
+echo "===== KIEM ACC KHAC NHAU GIUA SEED ====="
+grep -E "\[seed" $LOG | head -20
+echo "===== KIEM OUTPUT ====="
+head -3 $QRD_OUT_DIR/seeds_per_subject.csv 2>/dev/null || echo "(MISSING)"
+echo "combos: $(cut -d, -f1 $QRD_OUT_DIR/seeds_per_subject.csv 2>/dev/null | tail -n +2 | sort -u | tr '\n' ' ')"
+echo "===== END $(date +%T) ====="

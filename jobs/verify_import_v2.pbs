@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -N qrd_verify2
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=4:mem=16gb:gpu_slots=1
+#PBS -l walltime=00:20:00
+#PBS -j oe
+
+# --- Ghi log trong THAN script (khong doi PBS epilogue copy stdout) ---
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/verify_v2.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) node=$(hostname) ====="
+
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+echo "PYTHON: $($PY --version 2>&1)"
+
+echo "===== PHAN 1: IMPORT (cai nay chan preprocess — quan trong nhat) ====="
+timeout 240 $PY - << 'PYEOF'
+import time
+for name in ["torch","torchvision","mne","moabb","braindecode","pennylane","sklearn","pyriemann"]:
+    s=time.time(); m=__import__(name)
+    print(f"[OK] {name:12s} {time.time()-s:5.1f}s  v={getattr(m,'__version__','?')}", flush=True)
+print("===== IMPORT DONE =====", flush=True)
+PYEOF
+echo "rc_import=$?  (124=treo import)"
+
+echo "===== PHAN 2: CUDA (tach rieng — neu treo, phan 1 da xong & da ghi log) ====="
+timeout 120 $PY - << 'PYEOF'
+import torch
+print("device_count:", torch.cuda.device_count(), flush=True)
+print("is_available:", torch.cuda.is_available(), flush=True)
+if torch.cuda.is_available():
+    print("device_name :", torch.cuda.get_device_name(0), flush=True)
+PYEOF
+echo "rc_cuda=$?  (124=treo o CUDA/MPS)"
+
+echo "===== END $(date +%T) ====="

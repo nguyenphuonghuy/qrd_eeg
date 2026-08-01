@@ -1,0 +1,38 @@
+#!/bin/bash
+#PBS -N cho_smoke_tg
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/cho/smoke_qrd_tg.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints_cho2017
+export QRD_DATASET=Cho2017
+export QRD_OUT_DIR=$PROJ/results/cho_smoke_check
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+cd "$ENSEMBLE_MI_DIR" || exit 2
+
+echo "teacher=$(ls $QRD_TEACHER_DIR/teacher_fold0*.pth | wc -l) pkl=$(ls preprocessed_data/Cho2017/*.pkl | wc -l)"
+
+$PY -u "$PROJ/scripts/run_all.py" \
+  --folds 0 \
+  --methods qrd_teacher_guided \
+  --epochs 30 \
+  --skip_teacher \
+  --out "$QRD_OUT_DIR/results_smoke_cho.xlsx"
+
+echo "rc=$?"
+echo "===== END $(date +%T) ====="

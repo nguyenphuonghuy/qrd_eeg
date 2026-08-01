@@ -1,0 +1,40 @@
+#!/bin/bash
+#PBS -N qrd_smoke_s2
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=04:00:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/smoke_seeds2.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results
+export QRD_SEEDS=1
+export QRD_MAX_EPOCHS=5
+# KHONG set QRD_N_FOLDS -> giu 5 fold that, teacher ckpt khop split
+export QRD_SEEDS_OUT=smoke_seeds2_per_subject.csv
+export QRD_RUNS="qrd_dense:qrd_dense,qrd_anchor:qrd_anchor,qrd_global_local:qrd_global_local,qrd_tg_b0.01:qrd_teacher_guided:0.01,no_kd:no_kd,feature_kd:feature_kd,rkd_classical:rkd_classical,ck_cosine_tg:ck_cosine_tg,ck_rbf_tg:ck_rbf_tg"
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "PWD=$(pwd)  teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 60
+  done ) &
+HB=$!
+echo "===== SMOKE SEEDS2: 9 method x 1 seed x 5 fold x 5ep (DO THOI GIAN) ====="
+timeout 10800 $PY $PROJ/scripts/run_seeds.py ; echo "rc_smoke=$?"
+kill $HB 2>/dev/null
+echo "===== BANG THOI GIAN /RUN ====="
+grep -o "\] [a-z0-9_.]*: acc=[0-9.]* dt=[0-9.]*s" $LOG | awk '{gsub("dt=","",$4); gsub("s$","",$4); gsub(":$","",$2); a[$2]+=$4; n[$2]++} END {for (m in a) printf "%-20s mean_dt=%6.1fs  (n=%d)\n", m, a[m]/n[m], n[m]}' | sort -t= -k2 -rn
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/smoke_seeds2_per_subject.csv 2>/dev/null | wc -l)"
+echo "combos: $(cut -d, -f1 $QRD_OUT_DIR/smoke_seeds2_per_subject.csv 2>/dev/null | tail -n +2 | sort -u | wc -l) (dich 9)"
+echo "===== END $(date +%T) ====="

@@ -1,0 +1,37 @@
+#!/bin/bash
+#PBS -N qrd_tsmoke
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/train_teacher_smoke.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) node=$(hostname) ====="
+
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+
+REPO=/gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$REPO" || { echo "LOI cd $REPO"; exit 2; }
+echo "PWD=$(pwd)  PYTHON=$($PY --version 2>&1)"
+echo "So .pkl: $(ls preprocessed_data/PhysionetMI/*.pkl 2>/dev/null | wc -l)"
+
+# --- HEARTBEAT nen: moi 15s in mem tien trinh + GPU, de thay tai nguyen truoc khi chet ---
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 15
+  done ) &
+HB=$!
+
+echo "===== SMOKE TRAIN: fold 0 x 3 epoch (mem=64gb) ====="
+timeout 1500 $PY run_experiment_smoke.py
+rc=$?
+kill $HB 2>/dev/null
+echo "===== rc_train=$rc  (124=timeout, 137=SIGKILL/OOM) ====="
+ls -la checkpoints/*.pth 2>/dev/null || echo "(khong co .pth)"
+echo "===== END $(date +%T) ====="

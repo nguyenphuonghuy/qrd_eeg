@@ -1,0 +1,38 @@
+#!/bin/bash
+#PBS -N cho_ssmoke
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=04:00:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/smoke_seeds_cho.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints_cho2017
+export QRD_OUT_DIR=$PROJ/results
+export QRD_DATASET=Cho2017
+export QRD_SEEDS=1
+export QRD_MAX_EPOCHS=5
+export QRD_SEEDS_OUT=smoke_cho_per_subject.csv
+export QRD_RUNS="qrd_dense:qrd_dense,qrd_teacher_guided:qrd_teacher_guided:0.02,ck_cosine_tg:ck_cosine_tg,kd_base:kd_base,no_kd:no_kd"
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "dataset=$QRD_DATASET | teacher=$(ls $QRD_TEACHER_DIR/teacher_fold0*.pth | wc -l) | pkl=$(ls preprocessed_data/Cho2017/*.pkl | wc -l)"
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    GPU=$(nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader 2>/dev/null | head -1)
+    echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+    sleep 60
+  done ) &
+HB=$!
+echo "===== SMOKE Cho2017: 5 method x 1 seed x 5 fold x 5ep (DO OVERHEAD) ====="
+timeout 12600 $PY $PROJ/scripts/run_seeds.py ; echo "rc=$?"
+kill $HB 2>/dev/null
+echo "===== KIEM ====="
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/smoke_cho_per_subject.csv 2>/dev/null | wc -l) (dich 245 = 5 x 49)"
+echo "RAM dinh: $(grep '^\[HB' $LOG | sed 's/.*procmem=//;s/GB.*//' | sort -rn | head -1) GB"
+echo "===== END $(date +%T) ====="

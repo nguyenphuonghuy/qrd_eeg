@@ -1,0 +1,15 @@
+===== START 09:24:14 node=ai01 =====
+1. Sai khac kernel vs tich cosine: 0.473624
+   -> DAT: mach co tac dung
+
+2. q_weights.requires_grad = True
+3. teacher_proj.requires_grad = False -> DAT: da dong bang
+4. Tham so hoc duoc nhanh luong tu: 604 (ky vong 604 = 580 student_proj + 24 mach)
+
+5. |grad| q_weights: 3.231062e-02
+   |grad| s_feats  : 1.457589e-01
+   -> DAT: mach hoc duoc
+
+6. Chan doan collapse: {'var_Ks': 0.0011112246321844114, 'var_Kt': 0.004918905851696754, 'mean_Ks': 0.03243628726238488, 'w_s': 0.040919676423072815}
+rc=0
+===== END 09:26:01 =====

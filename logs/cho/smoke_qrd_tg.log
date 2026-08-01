@@ -1,0 +1,168 @@
+===== START 08:58:02 node=ai01 =====
+teacher=5 pkl=49
+[compat] Patched EEGWindowsDataset.raw for legacy pickles.
+Training on Cho2017 dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=030) : [np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41)]
+Val   subjects (N=010) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10)]
+Test  subjects (N=009) : [np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(47), np.int64(48), np.int64(50), np.int64(51), np.int64(52)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 45.62 seconds
+
+Cho2017 dataset | Dataset info:
+{'N_datasets': 30, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 6000, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 6000 | Val: 2080 | Test: 1800
+
+=== method=qrd_teacher_guided | student_params=2402 | kernel=quantum sel=teacher_guided ===
+  ep001 val_acc=50.58 test_acc=50.44 kappa=0.009 f1=0.473 (48.1s) | QRD varKs=6.34e-02 varKt=4.87e-02 meanKs=0.581 |Ws|=0.0416
+  ep002 val_acc=51.35 test_acc=50.78 kappa=0.016 f1=0.508 (30.4s) | QRD varKs=1.90e-02 varKt=3.34e-02 meanKs=0.848 |Ws|=0.0417
+  ep003 val_acc=50.10 test_acc=49.56 kappa=-0.009 f1=0.340 (30.1s) | QRD varKs=1.85e-02 varKt=2.10e-02 meanKs=0.831 |Ws|=0.0417
+  ep004 val_acc=49.90 test_acc=50.94 kappa=0.019 f1=0.459 (30.2s) | QRD varKs=3.05e-02 varKt=1.92e-02 meanKs=0.844 |Ws|=0.0418
+  ep005 val_acc=51.25 test_acc=52.06 kappa=0.041 f1=0.445 (30.4s) | QRD varKs=2.31e-02 varKt=1.44e-02 meanKs=0.789 |Ws|=0.0418
+  ep006 val_acc=49.76 test_acc=52.11 kappa=0.042 f1=0.514 (30.3s) | QRD varKs=1.68e-02 varKt=1.92e-02 meanKs=0.808 |Ws|=0.0419
+  ep007 val_acc=51.63 test_acc=54.22 kappa=0.084 f1=0.535 (30.4s) | QRD varKs=1.76e-02 varKt=1.89e-02 meanKs=0.829 |Ws|=0.0419
+  ep008 val_acc=52.55 test_acc=54.94 kappa=0.099 f1=0.501 (30.5s) | QRD varKs=3.43e-02 varKt=7.43e-02 meanKs=0.792 |Ws|=0.0420
+  ep009 val_acc=51.92 test_acc=56.44 kappa=0.129 f1=0.497 (30.1s) | QRD varKs=2.63e-02 varKt=3.75e-02 meanKs=0.794 |Ws|=0.0420
+  ep010 val_acc=57.45 test_acc=64.22 kappa=0.284 f1=0.628 (30.1s) | QRD varKs=2.88e-02 varKt=6.05e-02 meanKs=0.755 |Ws|=0.0422
+  ep011 val_acc=63.32 test_acc=71.28 kappa=0.426 f1=0.713 (30.3s) | QRD varKs=2.96e-02 varKt=4.21e-02 meanKs=0.796 |Ws|=0.0423
+  ep012 val_acc=64.38 test_acc=73.11 kappa=0.462 f1=0.729 (30.2s) | QRD varKs=3.68e-02 varKt=3.82e-02 meanKs=0.761 |Ws|=0.0424
+  ep013 val_acc=67.98 test_acc=74.28 kappa=0.486 f1=0.743 (30.3s) | QRD varKs=3.02e-02 varKt=3.98e-02 meanKs=0.777 |Ws|=0.0426
+  ep014 val_acc=69.04 test_acc=74.89 kappa=0.498 f1=0.745 (30.0s) | QRD varKs=3.66e-02 varKt=3.83e-02 meanKs=0.722 |Ws|=0.0427
+  ep015 val_acc=68.17 test_acc=76.00 kappa=0.520 f1=0.760 (30.2s) | QRD varKs=5.00e-02 varKt=1.36e-02 meanKs=0.675 |Ws|=0.0429
+  ep016 val_acc=69.57 test_acc=77.17 kappa=0.543 f1=0.771 (30.5s) | QRD varKs=4.24e-02 varKt=3.07e-02 meanKs=0.723 |Ws|=0.0430
+  ep017 val_acc=69.57 test_acc=78.22 kappa=0.564 f1=0.782 (30.2s) | QRD varKs=5.94e-02 varKt=3.12e-02 meanKs=0.674 |Ws|=0.0432
+  ep018 val_acc=70.19 test_acc=76.61 kappa=0.532 f1=0.765 (30.4s) | QRD varKs=1.64e-02 varKt=1.60e-02 meanKs=0.815 |Ws|=0.0433
+  ep019 val_acc=70.62 test_acc=77.56 kappa=0.551 f1=0.774 (30.7s) | QRD varKs=2.74e-02 varKt=2.07e-02 meanKs=0.780 |Ws|=0.0433
+  ep020 val_acc=71.39 test_acc=78.61 kappa=0.572 f1=0.786 (29.8s) | QRD varKs=3.07e-02 varKt=4.44e-02 meanKs=0.738 |Ws|=0.0434
+  ep021 val_acc=72.36 test_acc=79.61 kappa=0.592 f1=0.796 (30.1s) | QRD varKs=4.32e-02 varKt=2.82e-02 meanKs=0.717 |Ws|=0.0435
+  ep022 val_acc=70.34 test_acc=77.94 kappa=0.559 f1=0.778 (30.4s) | QRD varKs=8.98e-03 varKt=1.68e-02 meanKs=0.869 |Ws|=0.0435
+  ep023 val_acc=71.54 test_acc=78.83 kappa=0.577 f1=0.788 (30.1s) | QRD varKs=1.67e-02 varKt=2.61e-02 meanKs=0.843 |Ws|=0.0436
+  ep024 val_acc=72.93 test_acc=78.94 kappa=0.579 f1=0.789 (30.0s) | QRD varKs=4.89e-02 varKt=2.76e-02 meanKs=0.720 |Ws|=0.0436
+  ep025 val_acc=71.54 test_acc=79.06 kappa=0.581 f1=0.790 (30.2s) | QRD varKs=4.43e-02 varKt=8.20e-02 meanKs=0.764 |Ws|=0.0437
+  ep026 val_acc=72.21 test_acc=78.50 kappa=0.570 f1=0.784 (30.1s) | QRD varKs=2.68e-02 varKt=3.28e-02 meanKs=0.789 |Ws|=0.0437
+  ep027 val_acc=73.17 test_acc=79.28 kappa=0.586 f1=0.792 (29.8s) | QRD varKs=3.22e-02 varKt=1.50e-02 meanKs=0.771 |Ws|=0.0438
+  ep028 val_acc=72.36 test_acc=79.61 kappa=0.592 f1=0.796 (30.1s) | QRD varKs=1.19e-02 varKt=1.93e-02 meanKs=0.847 |Ws|=0.0438
+  ep029 val_acc=73.22 test_acc=78.72 kappa=0.574 f1=0.786 (30.3s) | QRD varKs=5.19e-02 varKt=3.71e-02 meanKs=0.772 |Ws|=0.0438
+  ep030 val_acc=72.21 test_acc=78.83 kappa=0.577 f1=0.788 (30.1s) | QRD varKs=7.08e-02 varKt=9.02e-02 meanKs=0.722 |Ws|=0.0438
+Training on Cho2017 dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=030) : [np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41)]
+Val   subjects (N=010) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10)]
+Test  subjects (N=009) : [np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(47), np.int64(48), np.int64(50), np.int64(51), np.int64(52)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 44.41 seconds
+
+Cho2017 dataset | Dataset info:
+{'N_datasets': 30, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 6000, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 6000 | Val: 2080 | Test: 1800
+
+=== method=qrd_teacher_guided | student_params=2402 | kernel=quantum sel=teacher_guided ===
+  ep001 val_acc=50.62 test_acc=50.39 kappa=0.008 f1=0.472 (30.3s) | QRD varKs=6.47e-02 varKt=4.86e-02 meanKs=0.301 |Ws|=0.0416
+  ep002 val_acc=51.25 test_acc=51.00 kappa=0.020 f1=0.510 (31.1s) | QRD varKs=8.33e-02 varKt=3.34e-02 meanKs=0.680 |Ws|=0.0415
+  ep003 val_acc=50.14 test_acc=49.61 kappa=-0.008 f1=0.342 (30.2s) | QRD varKs=2.85e-02 varKt=2.10e-02 meanKs=0.778 |Ws|=0.0416
+  ep004 val_acc=50.29 test_acc=50.89 kappa=0.018 f1=0.456 (30.5s) | QRD varKs=3.52e-02 varKt=1.92e-02 meanKs=0.815 |Ws|=0.0417
+  ep005 val_acc=51.25 test_acc=51.78 kappa=0.036 f1=0.444 (30.2s) | QRD varKs=3.22e-02 varKt=1.44e-02 meanKs=0.745 |Ws|=0.0417
+  ep006 val_acc=50.77 test_acc=52.00 kappa=0.040 f1=0.514 (30.8s) | QRD varKs=2.31e-02 varKt=1.92e-02 meanKs=0.766 |Ws|=0.0418
+  ep007 val_acc=52.02 test_acc=53.56 kappa=0.071 f1=0.524 (30.3s) | QRD varKs=2.48e-02 varKt=1.87e-02 meanKs=0.808 |Ws|=0.0418
+  ep008 val_acc=53.61 test_acc=55.28 kappa=0.106 f1=0.508 (30.3s) | QRD varKs=3.85e-02 varKt=4.18e-02 meanKs=0.775 |Ws|=0.0419
+  ep009 val_acc=52.50 test_acc=57.00 kappa=0.140 f1=0.508 (30.4s) | QRD varKs=3.14e-02 varKt=3.76e-02 meanKs=0.756 |Ws|=0.0419
+  ep010 val_acc=57.64 test_acc=64.83 kappa=0.297 f1=0.636 (30.2s) | QRD varKs=4.15e-02 varKt=6.05e-02 meanKs=0.686 |Ws|=0.0420
+  ep011 val_acc=62.98 test_acc=71.00 kappa=0.420 f1=0.710 (30.6s) | QRD varKs=3.90e-02 varKt=4.22e-02 meanKs=0.751 |Ws|=0.0421
+  ep012 val_acc=64.81 test_acc=73.22 kappa=0.464 f1=0.730 (30.4s) | QRD varKs=4.72e-02 varKt=3.85e-02 meanKs=0.710 |Ws|=0.0421
+  ep013 val_acc=67.36 test_acc=74.33 kappa=0.487 f1=0.743 (30.1s) | QRD varKs=5.11e-02 varKt=4.69e-02 meanKs=0.696 |Ws|=0.0422
+  ep014 val_acc=68.41 test_acc=74.44 kappa=0.489 f1=0.740 (30.2s) | QRD varKs=5.36e-02 varKt=3.85e-02 meanKs=0.641 |Ws|=0.0423
+  ep015 val_acc=68.27 test_acc=75.44 kappa=0.509 f1=0.754 (30.7s) | QRD varKs=6.79e-02 varKt=1.36e-02 meanKs=0.592 |Ws|=0.0424
+  ep016 val_acc=69.18 test_acc=76.94 kappa=0.539 f1=0.769 (30.4s) | QRD varKs=5.80e-02 varKt=3.19e-02 meanKs=0.660 |Ws|=0.0425
+  ep017 val_acc=69.95 test_acc=77.67 kappa=0.553 f1=0.776 (30.3s) | QRD varKs=7.41e-02 varKt=3.12e-02 meanKs=0.611 |Ws|=0.0426
+  ep018 val_acc=69.95 test_acc=76.83 kappa=0.537 f1=0.767 (29.8s) | QRD varKs=3.03e-02 varKt=1.61e-02 meanKs=0.745 |Ws|=0.0426
+  ep019 val_acc=70.38 test_acc=77.11 kappa=0.542 f1=0.770 (30.2s) | QRD varKs=4.02e-02 varKt=2.09e-02 meanKs=0.715 |Ws|=0.0427
+  ep020 val_acc=71.73 test_acc=79.06 kappa=0.581 f1=0.790 (30.4s) | QRD varKs=5.01e-02 varKt=4.46e-02 meanKs=0.646 |Ws|=0.0427
+  ep021 val_acc=72.02 test_acc=79.06 kappa=0.581 f1=0.791 (29.9s) | QRD varKs=5.91e-02 varKt=3.05e-02 meanKs=0.610 |Ws|=0.0428
+  ep022 val_acc=70.77 test_acc=77.33 kappa=0.547 f1=0.772 (30.6s) | QRD varKs=1.50e-02 varKt=1.63e-02 meanKs=0.824 |Ws|=0.0428
+  ep023 val_acc=71.49 test_acc=78.50 kappa=0.570 f1=0.784 (30.3s) | QRD varKs=3.43e-02 varKt=2.63e-02 meanKs=0.781 |Ws|=0.0429
+  ep024 val_acc=72.07 test_acc=79.11 kappa=0.582 f1=0.791 (30.5s) | QRD varKs=6.44e-02 varKt=2.79e-02 meanKs=0.663 |Ws|=0.0429
+  ep025 val_acc=71.35 test_acc=80.11 kappa=0.602 f1=0.801 (30.3s) | QRD varKs=5.38e-02 varKt=8.17e-02 meanKs=0.715 |Ws|=0.0429
+  ep026 val_acc=71.44 test_acc=78.28 kappa=0.566 f1=0.782 (30.2s) | QRD varKs=4.16e-02 varKt=3.20e-02 meanKs=0.741 |Ws|=0.0429
+  ep027 val_acc=72.55 test_acc=78.67 kappa=0.573 f1=0.786 (30.4s) | QRD varKs=4.61e-02 varKt=1.35e-02 meanKs=0.720 |Ws|=0.0429
+  ep028 val_acc=72.21 test_acc=79.56 kappa=0.591 f1=0.795 (30.3s) | QRD varKs=1.77e-02 varKt=2.72e-02 meanKs=0.808 |Ws|=0.0429
+  ep029 val_acc=72.93 test_acc=78.56 kappa=0.571 f1=0.784 (30.4s) | QRD varKs=6.68e-02 varKt=3.71e-02 meanKs=0.722 |Ws|=0.0429
+  ep030 val_acc=72.55 test_acc=79.22 kappa=0.584 f1=0.792 (30.3s) | QRD varKs=7.77e-02 varKt=9.01e-02 meanKs=0.695 |Ws|=0.0429
+[fold 0] qrd_tg_b0.01: acc=78.56
+Training on Cho2017 dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=030) : [np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41)]
+Val   subjects (N=010) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10)]
+Test  subjects (N=009) : [np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(47), np.int64(48), np.int64(50), np.int64(51), np.int64(52)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 46.46 seconds
+
+Cho2017 dataset | Dataset info:
+{'N_datasets': 30, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 6000, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 6000 | Val: 2080 | Test: 1800
+
+=== method=qrd_teacher_guided | student_params=2402 | kernel=quantum sel=teacher_guided ===
+  ep001 val_acc=50.62 test_acc=50.94 kappa=0.019 f1=0.477 (30.5s) | QRD varKs=2.92e-02 varKt=4.86e-02 meanKs=0.754 |Ws|=0.0417
+  ep002 val_acc=50.29 test_acc=51.11 kappa=0.022 f1=0.511 (30.5s) | QRD varKs=1.08e-02 varKt=3.33e-02 meanKs=0.882 |Ws|=0.0417
+  ep003 val_acc=50.19 test_acc=49.67 kappa=-0.007 f1=0.342 (30.4s) | QRD varKs=1.86e-02 varKt=2.09e-02 meanKs=0.842 |Ws|=0.0416
+  ep004 val_acc=49.76 test_acc=51.06 kappa=0.021 f1=0.459 (29.4s) | QRD varKs=2.24e-02 varKt=1.91e-02 meanKs=0.866 |Ws|=0.0417
+  ep005 val_acc=50.87 test_acc=51.61 kappa=0.032 f1=0.439 (30.1s) | QRD varKs=1.80e-02 varKt=1.43e-02 meanKs=0.815 |Ws|=0.0417
+  ep006 val_acc=50.29 test_acc=52.50 kappa=0.050 f1=0.521 (30.2s) | QRD varKs=1.64e-02 varKt=1.90e-02 meanKs=0.816 |Ws|=0.0417
+  ep007 val_acc=51.73 test_acc=54.39 kappa=0.088 f1=0.536 (30.1s) | QRD varKs=1.49e-02 varKt=1.83e-02 meanKs=0.861 |Ws|=0.0418
+  ep008 val_acc=53.12 test_acc=54.67 kappa=0.093 f1=0.496 (30.0s) | QRD varKs=2.90e-02 varKt=7.38e-02 meanKs=0.818 |Ws|=0.0419
+  ep009 val_acc=52.31 test_acc=56.39 kappa=0.128 f1=0.493 (30.2s) | QRD varKs=1.85e-02 varKt=3.71e-02 meanKs=0.829 |Ws|=0.0419
+  ep010 val_acc=56.78 test_acc=64.56 kappa=0.291 f1=0.632 (30.2s) | QRD varKs=2.03e-02 varKt=6.03e-02 meanKs=0.803 |Ws|=0.0421
+  ep011 val_acc=62.74 test_acc=70.67 kappa=0.413 f1=0.707 (29.3s) | QRD varKs=2.43e-02 varKt=4.18e-02 meanKs=0.824 |Ws|=0.0422
+  ep012 val_acc=65.24 test_acc=72.83 kappa=0.457 f1=0.726 (30.1s) | QRD varKs=3.41e-02 varKt=3.74e-02 meanKs=0.780 |Ws|=0.0424
+  ep013 val_acc=67.84 test_acc=75.11 kappa=0.502 f1=0.751 (30.2s) | QRD varKs=1.93e-02 varKt=3.77e-02 meanKs=0.827 |Ws|=0.0426
+  ep014 val_acc=68.85 test_acc=74.61 kappa=0.492 f1=0.742 (30.1s) | QRD varKs=2.66e-02 varKt=3.77e-02 meanKs=0.777 |Ws|=0.0427
+  ep015 val_acc=68.61 test_acc=76.50 kappa=0.530 f1=0.765 (30.2s) | QRD varKs=3.04e-02 varKt=1.33e-02 meanKs=0.747 |Ws|=0.0429
+  ep016 val_acc=70.19 test_acc=77.33 kappa=0.547 f1=0.773 (29.9s) | QRD varKs=3.82e-02 varKt=3.13e-02 meanKs=0.764 |Ws|=0.0430
+  ep017 val_acc=70.05 test_acc=78.00 kappa=0.560 f1=0.780 (30.3s) | QRD varKs=3.92e-02 varKt=3.14e-02 meanKs=0.742 |Ws|=0.0431
+  ep018 val_acc=70.19 test_acc=77.78 kappa=0.556 f1=0.777 (30.2s) | QRD varKs=1.55e-02 varKt=1.57e-02 meanKs=0.821 |Ws|=0.0431
+  ep019 val_acc=70.29 test_acc=76.83 kappa=0.537 f1=0.767 (29.7s) | QRD varKs=2.10e-02 varKt=2.02e-02 meanKs=0.800 |Ws|=0.0432
+  ep020 val_acc=71.44 test_acc=78.39 kappa=0.568 f1=0.784 (29.9s) | QRD varKs=1.71e-02 varKt=4.62e-02 meanKs=0.796 |Ws|=0.0433
+  ep021 val_acc=72.64 test_acc=79.61 kappa=0.592 f1=0.796 (30.1s) | QRD varKs=3.46e-02 varKt=2.94e-02 meanKs=0.735 |Ws|=0.0433
+  ep022 val_acc=70.77 test_acc=77.39 kappa=0.548 f1=0.773 (30.3s) | QRD varKs=8.71e-03 varKt=1.59e-02 meanKs=0.873 |Ws|=0.0433
+  ep023 val_acc=71.78 test_acc=78.89 kappa=0.578 f1=0.789 (29.9s) | QRD varKs=1.27e-02 varKt=2.57e-02 meanKs=0.863 |Ws|=0.0433
+  ep024 val_acc=72.93 test_acc=79.06 kappa=0.581 f1=0.791 (30.3s) | QRD varKs=3.14e-02 varKt=2.67e-02 meanKs=0.760 |Ws|=0.0433
+  ep025 val_acc=72.26 test_acc=79.28 kappa=0.586 f1=0.793 (30.1s) | QRD varKs=3.85e-02 varKt=8.26e-02 meanKs=0.778 |Ws|=0.0433
+  ep026 val_acc=72.12 test_acc=78.39 kappa=0.568 f1=0.783 (30.5s) | QRD varKs=2.44e-02 varKt=3.27e-02 meanKs=0.821 |Ws|=0.0434
+  ep027 val_acc=71.88 test_acc=79.06 kappa=0.581 f1=0.790 (30.0s) | QRD varKs=2.63e-02 varKt=1.51e-02 meanKs=0.794 |Ws|=0.0434
+  ep028 val_acc=72.26 test_acc=79.11 kappa=0.582 f1=0.791 (30.0s) | QRD varKs=1.72e-02 varKt=2.60e-02 meanKs=0.841 |Ws|=0.0434
+  ep029 val_acc=72.40 test_acc=78.50 kappa=0.570 f1=0.784 (30.4s) | QRD varKs=4.63e-02 varKt=3.69e-02 meanKs=0.791 |Ws|=0.0434
+  ep030 val_acc=71.63 test_acc=79.11 kappa=0.582 f1=0.791 (30.3s) | QRD varKs=2.63e-02 varKt=3.73e-02 meanKs=0.816 |Ws|=0.0434
+[fold 0] qrd_tg_b0.05: acc=79.06
+[fold 0] qrd_teacher_guided: acc=78.72 kappa=0.574 f1=0.786
+
+======================================================================
+SUMMARY (mean +/- std)
+======================================================================
+  qrd_teacher_guided | acc 78.72+/-nan | kappa 0.574 | f1 0.786 | 30.8s/ep | n=1
+        qrd_tg_b0.01 | acc 78.56+/-nan | kappa 0.571 | f1 0.784 | 30.3s/ep | n=1
+        qrd_tg_b0.05 | acc 79.06+/-nan | kappa 0.581 | f1 0.791 | 30.1s/ep | n=1
+
+Saved: /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/cho_smoke_check/results_smoke_cho.xlsx and /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/cho_smoke_check/results_smoke_cho_summary.xlsx
+Wall: 65.4 min
+rc=0
+===== END 10:05:55 =====

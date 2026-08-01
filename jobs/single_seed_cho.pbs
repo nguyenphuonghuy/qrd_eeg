@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -N cho_single
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/single_seed_cho.log
+exec > "$LOG" 2>&1
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints_cho2017
+export QRD_OUT_DIR=$PROJ/results
+export QRD_DATASET=Cho2017
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "dataset=$QRD_DATASET teacher=$(ls $QRD_TEACHER_DIR/teacher_fold0*.pth | wc -l) pkl=$(ls preprocessed_data/Cho2017/*.pkl | wc -l)"
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM"
+    sleep 120
+  done ) &
+HB=$!
+echo "===== SINGLE-SEED Cho2017 (GLOBAL_SEED=1312, 12 method, 5 fold, 30ep) ====="
+timeout 82800 $PY $PROJ/scripts/run_all.py --skip_teacher --out $QRD_OUT_DIR/results_all_cho.xlsx
+echo "rc=$?"
+kill $HB 2>/dev/null
+echo "===== KET QUA ====="
+ls -la $QRD_OUT_DIR/results_all_cho*.xlsx $QRD_OUT_DIR/results_all_cho*_per_subject.csv 2>/dev/null || echo "(chua co)"
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/results_all_cho_per_subject.csv 2>/dev/null | wc -l)"
+echo "===== END $(date +%T) ====="

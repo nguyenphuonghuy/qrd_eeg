@@ -1,0 +1,57 @@
+#!/bin/bash
+#PBS -N qrd_teacher
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+REPO="$PROJ/external/Ensemble-MI"
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+LOG="$PROJ/logs/train_teacher_full_${PBS_JOBID}.log"
+
+exec > "$LOG" 2>&1
+
+echo "===== START $(date '+%F %T') node=$(hostname) job=$PBS_JOBID ====="
+
+export CONDA_PKGS_DIRS=/gpfs0/users/gv_nphuy/conda_pkgs
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export MNE_DATA=/gpfs0/users/gv_nphuy/datasets/mne_data
+export MNE_DATASETS_EEGBCI_PATH=/gpfs0/users/gv_nphuy/datasets/mne_data
+
+cd "$REPO" || {
+    echo "ERROR: cannot cd to $REPO"
+    exit 2
+}
+
+echo "PWD=$(pwd)"
+echo "PYTHON=$($PY --version 2>&1)"
+echo "PKL_COUNT=$(find preprocessed_data/PhysionetMI -maxdepth 1 -name '*.pkl' | wc -l)"
+echo "CONFIG: folds=5 epochs=120 lr=0.01"
+
+(
+    while true; do
+        MEM=$(ps -u "$USER" -o rss= 2>/dev/null |
+              awk '{s+=$1} END {printf "%.1fGB", s/1048576}')
+        GPU=$(nvidia-smi \
+              --query-gpu=utilization.gpu,memory.used \
+              --format=csv,noheader 2>/dev/null | head -1)
+        echo "[HB $(date +%T)] procmem=$MEM | gpu=$GPU"
+        sleep 60
+    done
+) &
+HB=$!
+
+timeout 42600 "$PY" run_experiment.py
+RC=$?
+
+kill "$HB" 2>/dev/null
+wait "$HB" 2>/dev/null
+
+echo "===== rc_train=$RC (124=timeout, 137=OOM/SIGKILL) ====="
+echo "===== CHECKPOINTS ====="
+find checkpoints -maxdepth 1 -name 'net_best_*_fold_*.pth' \
+    -printf '%TY-%Tm-%Td %TH:%TM:%TS %s %f\n' | sort | tail -n 20
+
+echo "===== END $(date '+%F %T') ====="
+exit "$RC"

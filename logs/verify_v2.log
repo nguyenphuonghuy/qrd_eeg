@@ -1,0 +1,19 @@
+===== START 19:41:48 node=ai01 =====
+PYTHON: Python 3.11.15
+===== PHAN 1: IMPORT (cai nay chan preprocess — quan trong nhat) =====
+[OK] torch          9.7s  v=2.7.1+cu118
+[OK] torchvision   21.5s  v=0.22.1+cu118
+[OK] mne            0.6s  v=1.12.1
+[OK] moabb         32.1s  v=1.5.0
+[OK] braindecode    5.1s  v=1.4.0
+[OK] pennylane      9.5s  v=0.45.1
+[OK] sklearn        0.0s  v=1.9.0
+[OK] pyriemann      0.0s  v=0.12
+===== IMPORT DONE =====
+rc_import=0  (124=treo import)
+===== PHAN 2: CUDA (tach rieng — neu treo, phan 1 da xong & da ghi log) =====
+device_count: 1
+is_available: True
+device_name : NVIDIA H100 NVL
+rc_cuda=0  (124=treo o CUDA/MPS)
+===== END 19:43:24 =====

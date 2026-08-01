@@ -1,0 +1,232 @@
+===== START 01:23:47 2026-07-23 node=ai01 =====
+dataset=Cho2017 epochs=5 | pkl=49
+===== SMOKE TEACHER Cho2017: 5 fold x 5 epoch (DO RAM + KIEM HOI TU) =====
+[HB 01:23:47] procmem=0.1GB | gpu=0 %, 67 MiB
+[HB 01:24:47] procmem=0.7GB | gpu=0 %, 67 MiB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/util.py:52: UserWarning: torch.backends.cudnn.benchmark was set to True which may results in lack of reproducibility. In some cases to ensure reproducibility you may need to set torch.backends.cudnn.benchmark to False.
+  warn(
+Training on Cho2017 dataset
+[HB 01:25:47] procmem=3.5GB | gpu=0 %, 67 MiB
+[HB 01:26:47] procmem=6.9GB | gpu=0 %, 67 MiB
+[HB 01:27:47] procmem=10.0GB | gpu=0 %, 67 MiB
+[HB 01:28:47] procmem=14.1GB | gpu=0 %, 67 MiB
+[HB 01:29:48] procmem=18.5GB | gpu=0 %, 67 MiB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=030) : [np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41)]
+Val   subjects (N=010) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10)]
+Test  subjects (N=009) : [np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(47), np.int64(48), np.int64(50), np.int64(51), np.int64(52)]
+
+Creating custom dataset
+[HB 01:30:48] procmem=23.3GB | gpu=0 %, 67 MiB
+Randomly assigning subjects to subsets
+Time elapsed: 45.59 seconds
+
+Cho2017 dataset | Dataset info:
+{'N_datasets': 30, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 6000, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 6000 | Val: 2080 | Test: 1800
+Model parameters: 15074
+
+Training...
+
+[HB 01:31:48] procmem=3.7GB | gpu=0 %, 702 MiB
+  epoch    test_acc    test_loss    train_acc    train_loss    val_acc    val_loss      dur
+-------  ----------  -----------  -----------  ------------  ---------  ----------  -------
+      1     [36m52.8900[0m       [32m4.9402[0m      [35m49.1900[0m       [31m41.3993[0m    [94m51.1500[0m      [36m4.9882[0m  41.0939
+      2     50.2800       5.1599      [35m51.5600[0m       [31m30.4683[0m    49.9000      5.2175  2.6479
+      3     [36m58.7800[0m       [32m4.7336[0m      [35m55.9000[0m       [31m23.5124[0m    [94m56.3500[0m      [36m4.8420[0m  2.7163
+      4     [36m63.4400[0m       [32m4.5506[0m      [35m62.1800[0m       [31m17.7932[0m    [94m62.0200[0m      [36m4.7351[0m  2.6977
+      5     [36m65.2800[0m       [32m4.3144[0m      [35m65.1000[0m       [31m12.3350[0m    [94m63.7000[0m      [36m4.5504[0m  2.7450
+
+
+Fold 1 (1/5) | Test accuracy: 65.28
+
+Mean test accuracy: 65.28
+
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/util.py:52: UserWarning: torch.backends.cudnn.benchmark was set to True which may results in lack of reproducibility. In some cases to ensure reproducibility you may need to set torch.backends.cudnn.benchmark to False.
+  warn(
+Training on Cho2017 dataset
+[HB 01:32:48] procmem=3.1GB | gpu=0 %, 1642 MiB
+[HB 01:33:48] procmem=6.5GB | gpu=0 %, 1642 MiB
+[HB 01:34:48] procmem=11.0GB | gpu=0 %, 1642 MiB
+[HB 01:35:48] procmem=15.3GB | gpu=0 %, 1642 MiB
+[HB 01:36:48] procmem=18.7GB | gpu=0 %, 1642 MiB
+[HB 01:37:48] procmem=21.8GB | gpu=0 %, 1642 MiB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=030) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30)]
+Val   subjects (N=009) : [np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(47), np.int64(48), np.int64(50), np.int64(51), np.int64(52)]
+Test  subjects (N=010) : [np.int64(31), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+[HB 01:38:48] procmem=25.1GB | gpu=0 %, 1642 MiB
+Time elapsed: 44.63 seconds
+
+Cho2017 dataset | Dataset info:
+{'N_datasets': 30, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 6080, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 6080 | Val: 1800 | Test: 2000
+Model parameters: 15074
+
+Training...
+
+  epoch    test_acc    test_loss    train_acc    train_loss    val_acc    val_loss     dur
+-------  ----------  -----------  -----------  ------------  ---------  ----------  ------
+      1     [36m49.9500[0m       [32m5.3400[0m      [35m50.6100[0m       [31m41.2434[0m    [94m50.0600[0m      [36m5.3407[0m  2.4976
+      2     [36m50.0000[0m       5.4778      [35m52.0900[0m       [31m29.4896[0m    50.0000      5.4421  2.4706
+      3     [36m50.9000[0m       [32m5.2413[0m      [35m55.2300[0m       [31m23.7028[0m    [94m52.1100[0m      [36m5.0992[0m  2.4811
+      4     [36m62.5000[0m       [32m4.7184[0m      [35m62.6300[0m       [31m17.8500[0m    [94m68.3900[0m      [36m4.4395[0m  2.5846
+      5     [36m65.5000[0m       [32m4.6260[0m      [35m66.7400[0m       [31m12.2436[0m    [94m73.6700[0m      [36m4.1417[0m  2.4702
+
+
+Fold 2 (2/5) | Test accuracy: 65.50
+
+Mean test accuracy: 65.39
+
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/util.py:52: UserWarning: torch.backends.cudnn.benchmark was set to True which may results in lack of reproducibility. In some cases to ensure reproducibility you may need to set torch.backends.cudnn.benchmark to False.
+  warn(
+Training on Cho2017 dataset
+[HB 01:39:48] procmem=4.4GB | gpu=0 %, 1642 MiB
+[HB 01:40:48] procmem=8.5GB | gpu=0 %, 1642 MiB
+[HB 01:41:48] procmem=12.0GB | gpu=0 %, 1642 MiB
+[HB 01:42:48] procmem=15.0GB | gpu=0 %, 1642 MiB
+[HB 01:43:48] procmem=19.2GB | gpu=0 %, 1642 MiB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=029) : [np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(47), np.int64(48), np.int64(50), np.int64(51), np.int64(52), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20)]
+Val   subjects (N=010) : [np.int64(31), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41)]
+Test  subjects (N=010) : [np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30)]
+
+Creating custom dataset
+[HB 01:44:48] procmem=24.3GB | gpu=0 %, 1642 MiB
+Randomly assigning subjects to subsets
+Time elapsed: 45.69 seconds
+
+Cho2017 dataset | Dataset info:
+{'N_datasets': 29, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 5880, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 5880 | Val: 2000 | Test: 2000
+Model parameters: 15074
+
+Training...
+
+  epoch    test_acc    test_loss    train_acc    train_loss    val_acc    val_loss     dur
+-------  ----------  -----------  -----------  ------------  ---------  ----------  ------
+      1     [36m51.2500[0m       [32m5.0213[0m      [35m50.6700[0m       [31m39.3462[0m    [94m49.1500[0m      [36m5.0418[0m  2.7634
+      2     [36m57.1000[0m       [32m4.8303[0m      [35m53.3000[0m       [31m29.9692[0m    [94m55.2000[0m      [36m4.8356[0m  2.8442
+      3     [36m62.3000[0m       [32m4.7893[0m      [35m61.5600[0m       [31m22.9962[0m    [94m60.6500[0m      [36m4.7456[0m  2.7345
+      4     [36m64.4500[0m       [32m4.7470[0m      [35m69.4400[0m       [31m16.9459[0m    [94m64.5500[0m      [36m4.7080[0m  2.7564
+      5     [36m67.5000[0m       [32m4.5842[0m      [35m72.6600[0m       [31m11.1973[0m    [94m68.1500[0m      [36m4.4125[0m  2.8932
+[HB 01:45:48] procmem=6.1GB | gpu=0 %, 1642 MiB
+
+
+Fold 3 (3/5) | Test accuracy: 67.50
+
+Mean test accuracy: 66.09
+
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/util.py:52: UserWarning: torch.backends.cudnn.benchmark was set to True which may results in lack of reproducibility. In some cases to ensure reproducibility you may need to set torch.backends.cudnn.benchmark to False.
+  warn(
+Training on Cho2017 dataset
+[HB 01:46:49] procmem=5.0GB | gpu=0 %, 1642 MiB
+[HB 01:47:49] procmem=8.0GB | gpu=0 %, 1642 MiB
+[HB 01:48:49] procmem=12.1GB | gpu=0 %, 1642 MiB
+[HB 01:49:49] procmem=16.5GB | gpu=0 %, 1642 MiB
+[HB 01:50:49] procmem=20.9GB | gpu=0 %, 1642 MiB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=029) : [np.int64(31), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(47), np.int64(48), np.int64(50), np.int64(51), np.int64(52), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10)]
+Val   subjects (N=010) : [np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30)]
+Test  subjects (N=010) : [np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20)]
+
+Creating custom dataset
+[HB 01:51:49] procmem=24.3GB | gpu=0 %, 1642 MiB
+Randomly assigning subjects to subsets
+Time elapsed: 45.65 seconds
+
+Cho2017 dataset | Dataset info:
+{'N_datasets': 29, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 5880, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 5880 | Val: 2000 | Test: 2000
+Model parameters: 15074
+
+Training...
+
+  epoch    test_acc    test_loss    train_acc    train_loss    val_acc    val_loss     dur
+-------  ----------  -----------  -----------  ------------  ---------  ----------  ------
+      1     [36m51.4000[0m       [32m4.9435[0m      [35m50.4800[0m       [31m40.9065[0m    [94m52.1000[0m      [36m4.9682[0m  3.2812
+      2     [36m55.8000[0m       [32m4.8433[0m      [35m54.1600[0m       [31m29.3297[0m    [94m56.9500[0m      [36m4.8225[0m  2.8342
+      3     51.6000       4.9967      [35m60.4900[0m       [31m22.9597[0m    54.7500      4.9479  2.9334
+      4     [36m66.2000[0m       [32m4.6824[0m      [35m67.7500[0m       [31m17.0071[0m    [94m65.8000[0m      [36m4.8053[0m  2.9883
+      5     [36m67.6500[0m       [32m4.4101[0m      [35m72.8000[0m       [31m11.0720[0m    [94m68.3000[0m      [36m4.4533[0m  2.9883
+
+
+Fold 4 (4/5) | Test accuracy: 67.65
+
+Mean test accuracy: 66.48
+
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/util.py:52: UserWarning: torch.backends.cudnn.benchmark was set to True which may results in lack of reproducibility. In some cases to ensure reproducibility you may need to set torch.backends.cudnn.benchmark to False.
+  warn(
+Training on Cho2017 dataset
+[HB 01:52:49] procmem=3.2GB | gpu=0 %, 1642 MiB
+[HB 01:53:49] procmem=7.1GB | gpu=0 %, 1642 MiB
+[HB 01:54:49] procmem=11.5GB | gpu=0 %, 1642 MiB
+[HB 01:55:49] procmem=15.9GB | gpu=0 %, 1642 MiB
+[HB 01:56:49] procmem=19.3GB | gpu=0 %, 1642 MiB
+[HB 01:57:49] procmem=22.4GB | gpu=0 %, 1642 MiB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['Fp1', 'AF7', 'AF3', 'F1', 'F3', 'F5', 'F7', 'FT7', 'FC5', 'FC3', 'FC1', 'C1', 'C3', 'C5', 'T7', 'TP7', 'CP5', 'CP3', 'CP1', 'P1', 'P3', 'P5', 'P7', 'P9', 'PO7', 'PO3', 'O1', 'Iz', 'Oz', 'POz', 'Pz', 'CPz', 'Fpz', 'Fp2', 'AF8', 'AF4', 'AFz', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT8', 'FC6', 'FC4', 'FC2', 'FCz', 'Cz', 'C2', 'C4', 'C6', 'T8', 'TP8', 'CP6', 'CP4', 'CP2', 'P2', 'P4', 'P6', 'P8', 'P10', 'PO8', 'PO4', 'O2'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=029) : [np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(47), np.int64(48), np.int64(50), np.int64(51), np.int64(52)]
+Val   subjects (N=010) : [np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20)]
+Test  subjects (N=010) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 46.61 seconds
+
+Cho2017 dataset | Dataset info:
+{'N_datasets': 29, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 5800, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 5800 | Val: 2000 | Test: 2080
+Model parameters: 15074
+
+Training...
+
+[HB 01:58:49] procmem=5.7GB | gpu=24 %, 1642 MiB
+  epoch    test_acc    test_loss    train_acc    train_loss    val_acc    val_loss     dur
+-------  ----------  -----------  -----------  ------------  ---------  ----------  ------
+      1     [36m50.3800[0m       [32m5.0138[0m      [35m50.6100[0m       [31m41.2475[0m    [94m54.0000[0m      [36m4.9598[0m  3.1502
+      2     [36m50.6700[0m       [32m4.9767[0m      [35m56.4100[0m       [31m29.2534[0m    50.7000      [36m4.9476[0m  2.7197
+      3     [36m59.5700[0m       [32m4.7860[0m      [35m61.6800[0m       [31m22.6408[0m    [94m57.1500[0m      [36m4.7696[0m  2.7824
+      4     [36m69.4700[0m       [32m4.4105[0m      [35m67.6700[0m       [31m16.6458[0m    [94m66.8500[0m      [36m4.6228[0m  2.7205
+      5     [36m69.4700[0m       [32m4.3325[0m      [35m70.3100[0m       [31m11.4187[0m    [94m67.1500[0m      [36m4.5479[0m  2.8678
+
+
+Fold 5 (5/5) | Test accuracy: 69.47
+
+Mean test accuracy: 67.08
+
+
+
+Mean test accuracy over 5 fold(s): 67.08 ± 1.55
+
+rc=0
+===== RAM DINH =====
+25.1
+===== END 01:59:18 =====
