@@ -1,0 +1,72 @@
+#!/bin/bash
+#PBS -N pool64_control
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=06:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/pool64_control.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (Van de lon 4 review IJRCS: doi chung candidate pool - qrd_random_pool64 vs V5/V2) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/pool64_control_2026_08_04
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+echo "----- BUOC 1: kiem tra co che select_random_idx, khong can dataset -----"
+$PY -c "
+import sys, torch
+sys.path.insert(0, '$PROJ/scripts')
+import importlib.util as u
+s = u.spec_from_file_location('ta', '$PROJ/scripts/train_all.py')
+m = u.module_from_spec(s); s.loader.exec_module(m)
+N, Q = 64, 16
+idxs = [set(m.select_random_idx(N, Q).tolist()) for _ in range(20)]
+sizes_ok = all(len(x) == Q for x in idxs)
+uses_full_pool = any(max(x) >= 16 for x in idxs)
+varies = len(set(frozenset(x) for x in idxs)) > 1
+print('kich thuoc tap chon = %d moi lan (ky vong %d): %s' % (Q, Q, sizes_ok))
+print('co chon mau o vi tri >=16 (ky vong True - xac nhan dung dung candidate pool 64, khong chi 16 dau): %s' % uses_full_pool)
+print('tap chi so thay doi giua cac lan goi (ky vong True - khong co dinh nhu V1-V4): %s' % varies)
+ok = sizes_ok and uses_full_pool and varies
+print('KET QUA KIEM TRA select_random_idx:', 'PASS' if ok else 'FAIL - DUNG LAI')
+sys.exit(0 if ok else 1)
+"
+RC1=$?
+echo "rc buoc 1 = $RC1"
+if [ $RC1 -ne 0 ]; then echo "DUNG LAI: kiem tra co che select_random_idx that bai"; exit 3; fi
+
+echo "----- BUOC 2: chay that qrd_random_pool64, 5 seed x 5 fold -----"
+echo "V5 (qrd_teacher_guided) va V2 (qrd_dense) KHONG chay lai o day; da co san"
+echo "trong ket qua chinh cua bai (Bang tab:bienthe / seeds_per_subject.csv)."
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="1,2,3,4,5"
+export QRD_SEEDS_OUT="pool64_control_per_subject.csv"
+export QRD_RUNS="random_pool64:qrd_random_pool64:0.02"
+
+echo "teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+echo "RUNS=$QRD_RUNS SEEDS=$QRD_SEEDS"
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM"
+    sleep 300
+  done ) &
+HB=$!
+
+timeout 18000 $PY $PROJ/scripts/run_seeds.py ; echo "rc=$?"
+kill $HB 2>/dev/null
+
+echo "----- file ket qua -----"
+ls -la $QRD_OUT_DIR/
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/pool64_control_per_subject.csv 2>/dev/null | wc -l) (dich 1 method x 515 = 515)"
+echo "===== END $(date +%T) ====="

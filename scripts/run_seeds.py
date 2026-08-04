@@ -29,7 +29,8 @@ N_FOLDS     = int(os.environ.get("QRD_N_FOLDS",   "5"))
 MAX_EPOCHS  = int(os.environ.get("QRD_MAX_EPOCHS","30"))
 SEEDS       = [int(s) for s in os.environ.get("QRD_SEEDS", "1,2,3,4,5").split(",")]
 
-HP = dict(alpha=0.5, temperature=4.0, beta_qrd=0.02, gamma_feat=1.0, gamma_rkd=1.0,
+HP = dict(alpha=float(os.environ.get("QRD_ALPHA", "0.5")), temperature=4.0, beta_qrd=0.02,
+          gamma_feat=1.0, gamma_rkd=1.0,
           n_qubits=4, n_q_layers=2, qrd_batch_size=16, num_anchors=8, knn_k=4,
           entropy_weight=0.5, disagreement_weight=0.5)
 

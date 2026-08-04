@@ -11,3 +11,11 @@ conda_pkgs/
 Thumbs.db
 *.bak*
 *.o[0-9]*
+
+# Ban dong goi nop bao/ban dich xuat (khong phai source)
+IJRCS2026.zip
+paper/main.pdf
+paper/main.docx
+paper/QRD_overleaf.zip
+paper/main.log
+paper/main.blg

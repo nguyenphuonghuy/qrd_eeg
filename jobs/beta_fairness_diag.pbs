@@ -1,0 +1,41 @@
+#!/bin/bash
+#PBS -N beta_fairness_diag
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=4:mem=16gb:gpu_slots=1
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/beta_fairness_diag.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (Van de lon 3 review IJRCS: do do lon L_QRD tho va gradient-norm len student cua 3 dang ham nhan voi cung beta=0,02) ====="
+echo "Smoke test chan doan, uoc tinh <10 phut thuc te: 3 method x 5 epoch x 1 fold, khong doi cong thuc loss, khong sua ma tran thi nghiem chinh."
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export QRD_GRAD_DIAG=1
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+OUT_DIR=$PROJ/results/beta_fairness_diag_2026_08_04
+mkdir -p "$OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+echo "teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+echo "----- chay 3 kernel (quantum dense / cosine / rbf) tren fold 0, 5 epoch, verbose=True -----"
+echo "Doc dong 'rawL=' (gia tri L_QRD truoc khi nhan beta) va 'gradNormS=' (chuan L2 gradient"
+echo "cua beta*L_QRD len tham so student, do doc lap qua backward rieng batch dau moi epoch)."
+
+$PY $PROJ/scripts/run_all.py \
+    --methods qrd_dense,ck_cosine_tg,ck_rbf_tg \
+    --folds 0 --epochs 5 --skip_teacher \
+    --out $OUT_DIR/beta_fairness_diag.xlsx
+RC=$?
+echo "rc run_all.py = $RC"
+
+echo "----- file ket qua -----"
+ls -la $OUT_DIR/
+echo "===== END $(date +%T) ====="

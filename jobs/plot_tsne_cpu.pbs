@@ -1,0 +1,23 @@
+#!/bin/bash
+#PBS -N plot_tsne_cpu
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=4:mem=8gb:gpu_slots=0
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/plot_tsne_cpu.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (Van de 12: ve lai Hinh 3 tu tsne_feats_2026_08_03, chi CPU numpy/sklearn/matplotlib) ====="
+echo "Ly do chay qua qsub: chay truc tiep tren login node hom nay bi nghen trang thai Dl (NFS cold-read cua threadpool BLAS/sklearn), da kill an toan, khong thu lai tren login node."
+export PYTHONUNBUFFERED=1
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+timeout 1200 $PY $PROJ/scripts/plot_tsne.py ; echo "rc=$?"
+
+echo "----- file ket qua -----"
+ls -la $PROJ/paper/figs/image3.png $PROJ/results/tsne_feats_2026_08_03/tsne_meta.json
+echo "===== END $(date +%T) ====="

@@ -1,0 +1,90 @@
+#!/bin/bash
+#PBS -N theta_mode_ablation
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=16:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/theta_mode_ablation.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (doi chung theta_mode - Van de lon 1 review IJRCS) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/theta_mode_ablation_2026_08_04
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+echo "----- BUOC 1: kiem tra co che theta_mode, khong can dataset -----"
+$PY -c "
+import sys, torch
+sys.path.insert(0, '$PROJ/scripts')
+import importlib.util as u
+s = u.spec_from_file_location('ta', '$PROJ/scripts/train_all.py')
+m = u.module_from_spec(s); s.loader.exec_module(m)
+B, D, Q = 16, 144, 4
+sf = torch.randn(B, D, requires_grad=True); tf = torch.randn(B, D, requires_grad=True)
+ok = True
+for mode in ['shared', 'shared_fixed', 'split']:
+    L = m.RelationalDistillLoss('quantum', D, D, n_qubits=Q, n_q_layers=2, reduce='proj', theta_mode=mode)
+    if mode == 'split':
+        wt0, ws0 = L.q_weights_teacher.clone(), L.q_weights_student.clone()
+        same_init = torch.allclose(wt0, ws0)
+        req_t, req_s = L.q_weights_teacher.requires_grad, L.q_weights_student.requires_grad
+    else:
+        w0 = L.q_weights.clone(); req = L.q_weights.requires_grad
+    opt = torch.optim.SGD([p for p in L.parameters() if p.requires_grad], lr=0.1)
+    out = L(sf, tf); out.backward(); opt.step()
+    if mode == 'split':
+        wt1, ws1 = L.q_weights_teacher.clone(), L.q_weights_student.clone()
+        t_changed, s_changed = not torch.allclose(wt0, wt1), not torch.allclose(ws0, ws1)
+        good = same_init and (not t_changed) and s_changed and (not req_t) and req_s
+        print('mode=split  | init giong nhau=%s (ky vong True) | theta_T doi=%s (ky vong False) | theta_S doi=%s (ky vong True) | req_grad theta_T=%s theta_S=%s (ky vong False/True) | %s'
+              % (same_init, t_changed, s_changed, req_t, req_s, 'PASS' if good else 'FAIL'))
+    else:
+        w1 = L.q_weights.clone(); changed = not torch.allclose(w0, w1)
+        expect = (mode == 'shared')
+        good = (changed == expect) and (req == expect)
+        print('mode=%-12s | theta doi=%s (ky vong %s) | requires_grad=%s (ky vong %s) | %s'
+              % (mode, changed, expect, req, expect, 'PASS' if good else 'FAIL'))
+    ok = ok and good
+print('KET QUA KIEM TRA THETA_MODE:', 'TAT CA PASS' if ok else 'CO FAIL - DUNG LAI')
+sys.exit(0 if ok else 1)
+"
+RC1=$?
+echo "rc buoc 1 = $RC1"
+if [ $RC1 -ne 0 ]; then echo "DUNG LAI: kiem tra co che theta_mode that bai"; exit 3; fi
+
+echo "----- BUOC 2: chay that 5 seed x 5 fold x 2 method moi (theta_fixed, theta_split) -----"
+echo "Nhanh 'shared' (mac dinh, = V2 qrd_dense hien tai) KHONG chay lai o day;"
+echo "da co san 5-seed tu results/qrd_seeds_rerun_2026_07_30/seeds_quantum_rerun_per_subject.csv"
+echo "(cot method=qrd_dense_s1..s5, cung dung de bao cao trong Bang tab:bienthe cua bai)."
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="1,2,3,4,5"
+export QRD_SEEDS_OUT="theta_mode_ablation_per_subject.csv"
+export QRD_RUNS="theta_fixed:qrd_dense_theta_fixed:0.02,theta_split:qrd_dense_theta_split:0.02"
+
+echo "teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+echo "RUNS=$QRD_RUNS SEEDS=$QRD_SEEDS"
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM"
+    sleep 300
+  done ) &
+HB=$!
+
+timeout 54000 $PY $PROJ/scripts/run_seeds.py ; echo "rc=$?"
+kill $HB 2>/dev/null
+
+echo "----- file ket qua -----"
+ls -la $QRD_OUT_DIR/
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/theta_mode_ablation_per_subject.csv 2>/dev/null | wc -l) (dich 2 method x 515 = 1030)"
+echo "===== END $(date +%T) ====="

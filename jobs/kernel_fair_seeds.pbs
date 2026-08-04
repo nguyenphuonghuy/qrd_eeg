@@ -1,0 +1,69 @@
+#!/bin/bash
+#PBS -N kernel_fair
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=03:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/kernel_fair_seeds.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (cosine/RBF tren khong gian 4 chieu, kiem soat cong bang Van de 7) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/kernel_fair_2026_08_03
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+echo "----- BUOC 1: kiem tra nhanh RelationalDistillLoss(proj_input=True), khong can dataset -----"
+$PY -c "
+import sys, torch
+sys.path.insert(0, '$PROJ/scripts')
+import importlib.util as u
+s = u.spec_from_file_location('ta', '$PROJ/scripts/train_all.py')
+m = u.module_from_spec(s); s.loader.exec_module(m)
+B, D, Q = 16, 144, 4
+sf = torch.randn(B, D, requires_grad=True); tf = torch.randn(B, D)
+for kt in ['cosine', 'rbf']:
+    L = m.RelationalDistillLoss(kt, D, D, n_qubits=Q, n_q_layers=2, proj_input=True)
+    npar_s = sum(p.numel() for p in L.student_proj.parameters() if p.requires_grad)
+    npar_t = sum(p.numel() for p in L.teacher_proj.parameters() if p.requires_grad)
+    out = L(sf, tf); out.backward(retain_graph=True)
+    g = sf.grad.abs().sum().item()
+    print('kernel=%-6s | W_S hoc duoc: %4d | W_T hoc duoc (ky vong 0): %d | loss=%.6f | |grad| tren s_feats=%.6f'
+          % (kt, npar_s, npar_t, out.item(), g))
+    sf.grad = None
+print('Ky vong: W_S hoc duoc = 580 (144*4+4), W_T hoc duoc = 0 (dong bang), |grad| > 0.')
+"
+RC1=$?
+echo "rc buoc 1 = $RC1"
+if [ $RC1 -ne 0 ]; then echo "DUNG LAI: kiem tra buoc 1 that bai"; exit 3; fi
+
+echo "----- BUOC 2: chay that 5 seed x 5 fold x 2 method -----"
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="1,2,3,4,5"
+export QRD_SEEDS_OUT="kernel_fair_per_subject.csv"
+export QRD_RUNS="ck_cosine_tg_proj:ck_cosine_tg_proj,ck_rbf_tg_proj:ck_rbf_tg_proj"
+
+echo "teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+echo "RUNS=$QRD_RUNS SEEDS=$QRD_SEEDS"
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM"
+    sleep 300
+  done ) &
+HB=$!
+
+timeout 9600 $PY $PROJ/scripts/run_seeds.py ; echo "rc=$?"
+kill $HB 2>/dev/null
+
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/kernel_fair_per_subject.csv 2>/dev/null | wc -l) (dich 1030 = 2 method x 5 seed x 103 subject)"
+echo "===== END $(date +%T) ====="

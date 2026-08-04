@@ -1,0 +1,56 @@
+#!/bin/bash
+#PBS -N cpu_queue_probe
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=2:mem=4gb
+#PBS -l walltime=00:10:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/cpu_queue_probe.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (thu nghiem: job KHONG xin gpu_slots co bo qua hang doi gpu_slots=1 khong; kiem tra co che teacher_proj_seed moi) ====="
+export PYTHONUNBUFFERED=1
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+
+echo "----- kiem tra co che teacher_proj_seed (khong can dataset/GPU) -----"
+$PY -c "
+import sys, torch
+sys.path.insert(0, '$PROJ/scripts')
+import importlib.util as u
+s = u.spec_from_file_location('ta', '$PROJ/scripts/train_all.py')
+m = u.module_from_spec(s); s.loader.exec_module(m)
+D, Q = 144, 4
+ok = True
+Ws = {}
+for sd in [90001, 90002, 90003, 90005]:
+    L = m.RelationalDistillLoss('quantum', D, D, n_qubits=Q, n_q_layers=2, reduce='proj', teacher_proj_seed=sd)
+    Ws[sd] = L.teacher_proj.weight.detach().clone()
+    req = L.teacher_proj.weight.requires_grad
+    if req:
+        print('FAIL: teacher_proj_seed=%d nhung requires_grad=True' % sd); ok = False
+# lap lai voi CUNG mot seed -> phai cho DUNG mot ket qua (tai lap duoc)
+L_repeat = m.RelationalDistillLoss('quantum', D, D, n_qubits=Q, n_q_layers=2, reduce='proj', teacher_proj_seed=90001)
+same_seed_reproducible = torch.allclose(Ws[90001], L_repeat.teacher_proj.weight)
+# 4 seed khac nhau phai cho 4 W_T khac nhau
+keys = list(Ws.keys())
+all_diff = all(not torch.allclose(Ws[keys[i]], Ws[keys[j]]) for i in range(len(keys)) for j in range(i+1, len(keys)))
+print('teacher_proj_seed=90001 tai lap duoc giua 2 lan khoi tao: %s (ky vong True)' % same_seed_reproducible)
+print('4 gia tri teacher_proj_seed khac nhau cho 4 W_T khac nhau tung doi mot: %s (ky vong True)' % all_diff)
+ok = ok and same_seed_reproducible and all_diff
+# doi chieu: teacher_proj_seed=None (mac dinh) phai giu nguyen hanh vi cu (khong loi)
+L_default = m.RelationalDistillLoss('quantum', D, D, n_qubits=Q, n_q_layers=2, reduce='proj')
+print('teacher_proj_seed=None (mac dinh) khoi tao khong loi: True')
+print('KET QUA:', 'TAT CA PASS' if ok else 'CO FAIL')
+sys.exit(0 if ok else 1)
+"
+RC=$?
+echo "rc kiem tra = $RC"
+
+echo "----- thong tin job (de doi chieu voi qstat luc submit) -----"
+echo "PBS_JOBID=$PBS_JOBID"
+qstat -f "$PBS_JOBID" 2>&1 | head -20
+
+echo "===== END $(date +%T) ====="

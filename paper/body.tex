@@ -1,0 +1,2187 @@
+\section{Giới thiệu}
+\label{sec:gioithieu}
+
+Giao diện não--máy tính (brain--computer interface, BCI) chuyển hoạt động
+điện não thành tín hiệu điều khiển cho thiết bị bên ngoài, không đi qua
+đường dẫn thần kinh--cơ thông thường \cite{chen2025brain, tonin2021noninvasive,
+ding2026brain}. Đối với người mất chức năng vận động, đây là phương tiện
+khả dĩ để vận hành thiết bị hỗ trợ. Phạm vi ứng dụng đã mở rộng từ phòng
+thí nghiệm sang nhiều hệ thống thực tế \cite{varbu2022present,
+pang2024applications}: xe lăn điện \cite{palumbo2021motorimagery,
+lei2022intention, mai2024hybrid}, tay máy hỗ trợ và chi giả
+\cite{casey2021bci}, thiết bị phục hồi chức năng chi trên
+\cite{baniqued2021brain}, phương tiện di chuyển vận hành bằng ý định
+\cite{lu2020model}. Trong các mô hình tín hiệu khả dụng, tưởng tượng vận
+động (motor imagery, MI) cho phép người dùng phát lệnh chủ động, không phụ
+thuộc kích thích ngoại vi, nên phù hợp với các tác vụ điều khiển liên tục
+kéo dài.
+
+Trong mọi hệ thống nêu trên, bộ giải mã EEG không hoạt động độc lập mà là
+một khâu trong vòng điều khiển kín: ý định người dùng chuyển thành lệnh,
+lệnh được cơ cấu chấp hành thực thi, kết quả quay lại người dùng dưới dạng
+phản hồi. Vị trí này áp đặt lên bộ giải mã những yêu cầu mà bài toán phân
+loại thuần túy không xét đến. Thời gian suy luận phải nằm trong ngân sách
+thời gian của vòng kín, vì độ trễ tích lũy làm suy giảm khả năng hiệu chỉnh
+của người dùng \cite{an2024development, tonin2020role}. Tài nguyên tính
+toán bị giới hạn bởi phần cứng nhúng đi kèm thiết bị thay vì máy trạm có
+GPU rời \cite{wang2024mibminet, sun2025signal, craighero2024ondevice}. Yêu
+cầu nghiêm ngặt nhất là độ tin cậy. Hậu quả của một lệnh sai không đối
+xứng với lợi ích của một lệnh đúng. Lệnh sai đòi hỏi thao tác khắc phục và
+có thể gây rủi ro an toàn, đặc biệt trong các hệ thống chia sẻ quyền điều
+khiển với cơ chế tự hành \cite{choi2023asynchronous,
+deng2020selfadaptive}. Cộng đồng BCI định lượng băng thông của kênh điều
+khiển bằng tốc độ truyền thông tin, một chỉ số gộp đồng thời độ chính xác
+và thời gian phát lệnh \cite{wolpaw2002brain}.
+
+Các ràng buộc này trở nên gay gắt hơn khi hệ thống chuyển từ thiết bị EEG y
+tế nhiều kênh sang thiết bị phổ thông có số kênh thấp, một xu hướng được
+thúc đẩy bởi chi phí và thời gian chuẩn bị cho người dùng cuối
+\cite{wu2022deepbrain, tarara2025motor}. Bộ giải mã khi đó phải đạt độ
+chính xác cao hơn trên dữ liệu kém hơn, đồng thời vẫn chạy được trên phần
+cứng hạn chế.
+
+Các phương pháp học sâu đã cải thiện đáng kể chất lượng giải mã tưởng tượng
+vận động so với quy trình dựa trên đặc trưng thủ công \cite{al-saegh2021deep,
+sadiq2021development}. Dù vậy, y văn hiện nay phân thành hai nhánh đối lập
+về mặt triển khai: một bên là kiến trúc gọn nhẹ thiết kế riêng cho EEG, đủ
+điều kiện chạy trên vi điều khiển \cite{lawhern2018eegnet,
+ingolfsson2020eegtcnet, wang2024mibminet}; bên kia tăng dung lượng mô hình
+bằng mạng tích chập sâu, kiến trúc transformer hoặc tập hợp nhiều mô hình,
+đạt độ chính xác cao hơn nhưng vượt xa ngân sách tính toán của vòng điều
+khiển \cite{schirrmeister2017deep, zhao2024ctnet, ding2025eegdeformer,
+zoumpourlis2024motor}. Các mô hình dung lượng lớn còn phụ thuộc mạnh vào
+lượng dữ liệu huấn luyện, vốn hạn chế đối với EEG \cite{keutayeva2024data}.
+Bài toán tổng quát hóa xuyên đối tượng làm mâu thuẫn này thêm sâu sắc
+\cite{keutayeva2024compact, wei2023intra}. Người thiết kế do đó đứng trước
+lựa chọn giữa một bộ giải mã triển khai được nhưng kém chính xác, và một
+bộ giải mã chính xác nhưng không đưa được vào vòng điều khiển.
+
+Chưng cất tri thức là chiến lược trực tiếp nhắm vào mâu thuẫn này, cho phép
+chuyển một phần năng lực của mô hình dung lượng lớn sang mô hình gọn nhẹ mà
+không làm thay đổi chi phí suy luận \cite{hinton2015distilling,
+gou2021knowledge, li2025lightweight}. Trong các dạng tri thức có thể
+truyền, quan hệ giữa các mẫu tỏ ra đặc biệt phù hợp với tín hiệu EEG, nơi
+thông tin phân biệt thường nằm ở cấu trúc tương đối thay vì giá trị tuyệt
+đối \cite{park2019relational, gou2025neighborhood}. Các nghiên cứu gần đây
+đã áp dụng nguyên lý này cho EEG, từ việc bảo toàn cấu trúc tương đồng khi
+chuyển sang hệ thống mật độ điện cực thấp \cite{huang2024enhancing} đến các
+khung chưng cất nhiều mức cho bài toán tưởng tượng vận động
+\cite{wu2026multilevel, mai2025eegskdnet}. Tuy nhiên, trong hầu hết các
+công trình, tập quan hệ giữa các mẫu được cố định theo kinh nghiệm. Ảnh
+hưởng của lựa chọn này chưa được khảo sát một cách có hệ thống.
+
+Song song với đó, học máy lượng tử cung cấp một không gian biểu diễn thay
+thế, trong đó dữ liệu được ánh xạ vào không gian Hilbert nhiều chiều và
+quan hệ giữa các mẫu được mô tả bằng hàm nhân lượng tử
+\cite{schuld2019quantum}. Hướng này đã được thử nghiệm trên tín hiệu EEG
+thông qua các backbone lai \cite{chen2024qeegnet, chen2026exploring,
+olvera2024eegbased}. Điểm hạn chế là thành phần lượng tử thường nằm trong
+chuỗi suy luận, khiến mô hình triển khai phải truy cập phần cứng lượng tử
+hoặc bộ mô phỏng lúc chạy. Điều này mâu thuẫn trực tiếp với ràng buộc thời
+gian thực nêu trên. Một số công trình gần đây đã chuyển thành phần lượng tử
+sang giai đoạn huấn luyện \cite{liu2025quantum, liu2025quantumtrain}, nhưng
+chưa được kiểm chứng trên bài toán giải mã tưởng tượng vận động dưới ràng
+buộc của vòng điều khiển.
+
+Nghiên cứu này đề xuất khung Quantum Relational Distillation (QRD) cho bộ
+giải mã tưởng tượng vận động trong các hệ thống điều khiển bằng tín hiệu
+não. Ý tưởng trung tâm là chuyển việc mô tả quan hệ giữa các mẫu sang một
+không gian biểu diễn khác, nhưng chỉ ở giai đoạn huấn luyện. Cụ thể, biểu
+diễn trung gian của teacher và của student được mã hóa thành trạng thái
+lượng tử qua một mạch tham số hóa. Mức tương đồng giữa hai mẫu bất kỳ được
+đo bằng độ trung thực giữa hai trạng thái tương ứng, tạo thành một ma trận
+quan hệ cho mỗi mô hình. Sai lệch giữa ma trận quan hệ của teacher và của
+student trở thành thành phần mất mát bổ sung, buộc student tái tạo cấu trúc
+quan hệ mà teacher đã học thay vì chỉ khớp từng dự đoán riêng lẻ. Vì mạch
+lượng tử chỉ tham gia vào việc tính hàm mất mát, nó biến mất hoàn toàn sau
+khi huấn luyện kết thúc. Mô hình đưa vào vòng điều khiển vẫn là một mạng
+cổ điển gọn nhẹ.
+
+Điểm phân biệt QRD với các phương pháp chưng cất quan hệ hiện có không chỉ
+nằm ở không gian biểu diễn. Trong các công trình trước, tập các cặp mẫu
+dùng để dựng quan hệ thường được lấy toàn bộ mini-batch theo mặc định. QRD
+coi việc chọn cặp mẫu là một tham số thiết kế độc lập, và khảo sát năm cách
+tổ chức khác nhau trên cùng một hàm mất mát: từ quan hệ dày đặc, đến quan
+hệ thưa dựa trên mẫu đại diện, đến lựa chọn có định hướng theo mức bất định
+của teacher. Nhờ giữ nguyên mọi thành phần còn lại giữa các biến thể, ảnh
+hưởng của không gian biểu diễn có thể tách khỏi ảnh hưởng của cấu trúc quan
+hệ. Các thiết kế hiện có không cho phép tách hai ảnh hưởng này, vì hai yếu
+tố luôn thay đổi cùng nhau.
+
+Trên cơ sở đó, bài báo đóng góp bốn nội dung sau.
+
+\begin{itemize}
+\item Một khung chưng cất trong đó thành phần lượng tử chỉ hoạt động ở
+giai đoạn huấn luyện, nhờ đó mô hình triển khai giữ nguyên số tham số và
+thời gian suy luận cần thiết cho vòng điều khiển thời gian thực.
+
+\item Một họ năm chiến lược hình thành quan hệ trên cùng một khung chưng
+cất, cho phép tách biệt ảnh hưởng của không gian biểu diễn khỏi ảnh hưởng
+của cấu trúc quan hệ.
+
+\item Một quy trình đánh giá hướng điều khiển, sử dụng tốc độ truyền thông
+tin, ngân sách thời gian của vòng kín và độ tin cậy lệnh đã hiệu chỉnh ngẫu
+nhiên thay vì chỉ dựa trên độ chính xác phân loại.
+
+\item Một phân tích chi phí--lợi ích tường minh, định lượng cụ thể chênh
+lệch độ chính xác giữa hàm nhân lượng tử và hai hàm nhân phi tuyến cổ điển,
+đối chiếu với chi phí thời gian huấn luyện đo được, để làm cơ sở cho quyết
+định lựa chọn thiết kế.
+\end{itemize}
+
+Phần còn lại của bài báo được tổ chức như sau. Mục~\ref{sec:lienquan} khảo
+sát các hướng nghiên cứu liên quan và định vị nghiên cứu này. Mục~\ref{sec:phuongphap} trình
+bày khung QRD và các biến thể. Mục~\ref{sec:thucnghiem} mô tả thiết lập thực nghiệm và phân
+tích kết quả. Mục~\ref{sec:ketluan} kết luận và nêu hướng phát triển.
+
+\section{Công trình liên quan}
+\label{sec:lienquan}
+
+\subsection{Giao diện não--máy tính trong điều khiển thiết bị hỗ trợ và robot}
+
+Mục~\ref{sec:gioithieu} đã nêu ba nhóm thiết bị BCI được kiểm chứng thực
+tế: xe lăn điện, tay máy hỗ trợ/chi giả và thiết bị phục hồi chức năng chi
+trên \cite{varbu2022present}. Trong các mô hình tín hiệu được sử dụng cho
+những thiết bị này, tưởng tượng vận động (motor imagery, MI) giữ vị trí
+riêng. Người dùng phát lệnh chủ động, không phụ thuộc kích thích ngoại vi
+như SSVEP hay P300, nên phù hợp với các tác vụ điều khiển liên tục kéo dài
+\cite{palumbo2021motorimagery}.
+
+Điều khiển xe lăn là ứng dụng được khảo sát nhiều nhất trong nhóm thiết bị
+hỗ trợ di chuyển \cite{palumbo2021motorimagery}. Dù vậy, các hệ thống chỉ
+dựa trên MI gặp giới hạn về độ tin cậy khi số lệnh cần phân biệt tăng lên.
+Y văn xử lý theo hai hướng khác nhau: bổ sung mô hình tín hiệu khác để
+tăng số lệnh khả dụng mà không làm giảm độ chính xác của từng lệnh
+\cite{mai2024hybrid}, hoặc giữ nguyên bộ giải mã nhưng chia sẻ quyền điều
+khiển với một hệ thống tự hành, trong đó BCI chỉ phát lệnh ở mức ý định
+còn việc bám quỹ đạo và tránh vật cản do cảm biến đảm nhiệm
+\cite{choi2023asynchronous}. Cả hai hướng đều thừa nhận cùng một thực tế:
+chất lượng của bộ giải mã quyết định trực tiếp mức độ can thiệp cần thiết
+từ các lớp bổ trợ phía sau.
+
+Ở nhóm thiết bị thao tác và phục hồi chức năng, yêu cầu đặt lên bộ giải mã
+có phần khác. Các hệ thống tay máy hỗ trợ và ngoại cốt bàn tay thường hoạt
+động trong vòng lặp có phản hồi thị giác trực tiếp, nên sai lệnh không chỉ
+làm giảm hiệu quả mà còn ảnh hưởng đến quá trình luyện tập của người dùng
+\cite{casey2021bci, baniqued2021brain}. An và cộng sự \cite{an2024development}
+chỉ ra rằng khi chuyển từ phân loại ngoại tuyến sang điều khiển thời gian
+thực, ràng buộc về thời gian đáp ứng trở thành yếu tố quyết định tính khả
+dụng, ngay cả khi độ chính xác ngoại tuyến đã đạt mức chấp nhận được.
+
+Một hướng phát triển đáng chú ý là dịch chuyển từ thiết bị EEG y tế nhiều
+kênh sang thiết bị phổ thông có số kênh thấp, nhằm giảm chi phí và thời
+gian chuẩn bị cho người dùng cuối \cite{wu2022deepbrain}. Tarara và cộng
+sự \cite{tarara2025motor} khảo sát khả năng điều khiển đa lớp trên một
+thiết bị 14 kênh và cho thấy giới hạn về số kênh làm thu hẹp đáng kể không
+gian lệnh có thể phân biệt tin cậy. Xu hướng tương tự cũng xuất hiện ở các
+giao diện nhập liệu dựa trên vận động tưởng tượng, nơi mô hình học sâu
+được dùng để bù lại chất lượng tín hiệu thấp hơn \cite{paneru2025eeg}. Dịch
+chuyển này đặt bộ giải mã vào tình thế phải đạt độ chính xác cao hơn trên
+dữ liệu kém hơn, đồng thời vẫn phải chạy được trên phần cứng hạn chế đi kèm
+thiết bị.
+
+Y văn về BCI ứng dụng, do đó, cho thấy bộ giải mã EEG không phải một bộ
+phân loại độc lập mà là một khâu trong vòng điều khiển, chịu ba ràng buộc
+mà bài toán phân loại thuần túy không xét đến: thời gian đáp ứng phải nằm
+trong ngân sách của vòng kín \cite{an2024development}, tài nguyên tính
+toán phải phù hợp với phần cứng nhúng đi kèm thiết bị
+\cite{wu2022deepbrain}, và độ tin cậy của lệnh phải ổn định vì hậu quả của
+một lệnh sai không đối xứng với lợi ích của một lệnh đúng
+\cite{choi2023asynchronous}. Ba ràng buộc này thường chỉ được nêu ở dạng
+định tính, trong khi so sánh các bộ giải mã đòi hỏi chúng được biểu diễn
+bằng những đại lượng đo được.
+
+\subsection{Ràng buộc thời gian thực và triển khai nhúng trong vòng điều khiển BCI}
+\label{sec:rangbuoc}
+Khi bộ giải mã EEG được đặt vào một vòng điều khiển, độ chính xác phân loại
+không còn là đại lượng đủ để mô tả chất lượng hệ thống. Cộng đồng BCI từ
+lâu đã sử dụng tốc độ truyền thông tin (information transfer rate, ITR) để
+đo băng thông của kênh điều khiển, trong đó độ chính xác và thời gian phát
+lệnh được gộp thành một chỉ số duy nhất \cite{wolpaw2002brain}. Với bài
+toán $N$ lớp và độ chính xác $P$, lượng thông tin thu được trên mỗi lần
+phát lệnh là
+
+\begin{equation}
+\label{eq:itr-bits}
+B = \log_2 N + P\log_2 P + (1-P)\log_2\!\left(\frac{1-P}{N-1}\right),
+\end{equation}
+
+và tốc độ truyền thông tin tính theo bit mỗi phút là
+
+\begin{equation}
+\label{eq:itr-rate}
+\mathrm{ITR} = B \times \frac{60}{T},
+\end{equation}
+
+với $T$ là thời gian cần thiết cho một lần phát lệnh, tính bằng giây. Với
+trường hợp hai lớp, biểu thức \eqref{eq:itr-bits} rút gọn thành
+$B = 1 - H(P)$, trong đó $H$ là hàm entropy nhị phân. Quan hệ phi tuyến
+này có một hệ quả đáng chú ý cho thiết kế. Ở vùng độ chính xác trung bình,
+một mức cải thiện nhỏ về độ chính xác tạo ra mức tăng băng thông lớn hơn
+nhiều so với tỷ lệ tương ứng. ITR tính theo \eqref{eq:itr-rate} dựa trên
+một số giả định về điều kiện vận hành. Áp dụng không thận trọng trong các
+hệ thống trực tuyến có thể dẫn tới ước lượng sai lệch \cite{yuan2013study}.
+
+Thời gian $T$ trong \eqref{eq:itr-rate} không chỉ gồm độ dài cửa sổ tín
+hiệu. Trong một hệ thống hoạt động thực tế, ngân sách thời gian của vòng
+kín được phân rã thành
+
+\begin{equation}
+\label{eq:latency}
+T_{\mathrm{loop}} = T_{\mathrm{window}} + T_{\mathrm{infer}}
+                  + T_{\mathrm{command}},
+\end{equation}
+
+trong đó $T_{\mathrm{window}}$ là độ dài đoạn tín hiệu cần thu thập,
+$T_{\mathrm{infer}}$ là thời gian suy luận của mô hình, và
+$T_{\mathrm{command}}$ là thời gian truyền và thực thi lệnh trên thiết bị
+chấp hành. Thành phần thứ hai là thành phần duy nhất mà thiết kế mô hình
+có thể tác động trực tiếp, và cũng là thành phần bị bỏ qua nhiều nhất
+trong các nghiên cứu đánh giá ngoại tuyến.
+
+Ràng buộc về $T_{\mathrm{infer}}$ trở nên chặt chẽ hơn khi bộ giải mã được
+đưa lên phần cứng đi kèm thiết bị thay vì chạy trên máy trạm. Xu hướng này
+xuất phát từ ba động cơ: giảm độ trễ do không phải truyền dữ liệu, bảo vệ
+dữ liệu sinh học của người dùng, và tăng tính di động của hệ thống
+\cite{sun2025signal}. Wang và cộng sự \cite{wang2024mibminet} triển khai
+một mạng tích chập cho phân loại tưởng tượng vận động trên vi điều khiển
+siêu tiết kiệm năng lượng, đạt thời gian suy luận ở mức vài mili giây với
+mức tiêu thụ cỡ vài chục micro-joule cho mỗi lần suy luận. Kết quả này cho
+thấy một bộ giải mã đủ nhẹ có thể đáp ứng ràng buộc thời gian thực trên
+phần cứng nhúng, còn các mô hình dung lượng lớn thì không.
+
+Yêu cầu triển khai trên vi điều khiển đặt ra các giới hạn không chỉ về thời
+gian mà còn về bộ nhớ và năng lượng, và các giới hạn này cần được xét đồng
+thời chứ không tách rời \cite{akbari2025atrial, craighero2024ondevice}. Bộ
+nhớ khả dụng quyết định số tham số tối đa, ngân sách năng lượng quyết định
+thời lượng pin, còn thời gian suy luận quyết định tần suất phát lệnh. Ba
+đại lượng này ràng buộc lẫn nhau, nên một mô hình chỉ đạt yêu cầu ở một
+chiều mà vi phạm hai chiều còn lại vẫn không triển khai được.
+
+Bên cạnh tốc độ, độ tin cậy của lệnh là chiều đánh giá thứ hai mà bài toán
+phân loại thuần túy không xét đến. Trong một hệ thống điều khiển thiết bị
+hỗ trợ, hậu quả của một lệnh sai không đối xứng với lợi ích của một lệnh
+đúng, vì lệnh sai có thể đòi hỏi thao tác khắc phục hoặc gây rủi ro an
+toàn. Vì lý do này, hệ số Cohen's kappa được ưa dùng hơn độ chính xác thô
+trong đánh giá BCI, do nó hiệu chỉnh phần trùng khớp ngẫu nhiên và phản ánh sát hơn mức độ đáng tin của lệnh phát ra. Sự ổn định của độ tin
+cậy giữa các phiên và giữa các đối tượng cũng là một vấn đề thực tế, và
+đây là động lực cho các hướng nghiên cứu nhằm giảm công sức hiệu chỉnh
+trước khi sử dụng \cite{wei2023intra}.
+
+Ba đại lượng nêu ở mục trước đều định lượng được: băng thông kênh điều
+khiển qua \eqref{eq:itr-rate}, ngân sách thời gian qua \eqref{eq:latency},
+và độ tin cậy lệnh qua hệ số kappa. Bài báo này dùng cả ba làm tiêu chí
+đánh giá bên cạnh độ chính xác phân loại, nhờ đó các kiến trúc giải mã có
+thể được đối chiếu theo cả độ chính xác lẫn khả năng đáp ứng ngân sách của
+vòng điều khiển. Tuy vậy, ưu điểm hiệu chỉnh theo may rủi của kappa chỉ
+phát huy tác dụng khi số lớp không cân bằng hoặc lớn hơn hai. Với bài toán
+hai lớp cân bằng được khảo sát ở đây, kappa là một biến đổi tuyến tính tất
+định của độ chính xác ($\kappa = 2\,\mathrm{acc} - 1$) và không mang thêm
+thông tin, như sẽ nêu lại ở Mục~\ref{sec:ketqua}.
+
+\subsection{Bộ giải mã học sâu cho tưởng tượng vận động}
+
+Việc giải mã tín hiệu tưởng tượng vận động đã chuyển dần từ các quy trình
+dựa trên đặc trưng thiết kế thủ công sang các mô hình học sâu đầu cuối,
+trong đó bước trích xuất đặc trưng và bước phân loại được tối ưu đồng thời
+\cite{al-saegh2021deep, sadiq2021development}. Chuyển dịch này cải thiện
+đáng kể độ chính xác, nhưng đồng thời làm nảy sinh mâu thuẫn thiết kế đã
+nêu ở các mục trước. Mô hình càng có năng lực biểu diễn cao thì càng khó
+thỏa mãn các ràng buộc của vòng điều khiển.
+
+Một nhánh trong y văn theo đuổi các kiến trúc gọn nhẹ được thiết kế
+riêng cho tín hiệu EEG. EEGNet \cite{lawhern2018eegnet} sử dụng tích chập
+theo chiều sâu và tích chập tách biệt để giảm mạnh số tham số trong khi vẫn
+giữ được cấu trúc không gian--thời gian đặc thù của EEG, và trở thành kiến
+trúc tham chiếu cho hầu hết các nghiên cứu sau đó. Các công trình kế tiếp
+mở rộng theo hai hướng: bổ sung mô-đun tích chập theo thời gian để nắm bắt
+phụ thuộc dài hơn \cite{ingolfsson2020eegtcnet}, hoặc tinh chỉnh cấu trúc
+và lượng tử hóa trọng số nhằm phù hợp với vi điều khiển
+\cite{wang2024mibminet}. Một số biến thể khác tập trung vào việc kết hợp
+biểu diễn miền tần số hoặc miền thời gian--tần số để tăng độ chính xác mà
+không làm tăng nhiều chi phí tính toán \cite{deng2021advanced,
+wang2022mieeg, wang2023ifnet}.
+
+Nhánh còn lại đi theo hướng ngược lại, tăng dung lượng mô hình để khai thác
+tối đa thông tin trong tín hiệu. Các mạng tích chập sâu áp dụng trực tiếp
+lên chuỗi EEG thô đã cho thấy khả năng học được các đặc trưng có ý nghĩa
+sinh lý \cite{schirrmeister2017deep}. Gần đây, kiến trúc transformer được
+đưa vào lĩnh vực này nhằm mô hình hóa phụ thuộc tầm xa mà tích chập khó
+nắm bắt \cite{vafaei2025transformers}. Nhiều biến thể lai giữa tích chập
+và transformer đã được đề xuất, trong đó thành phần tích chập đảm nhiệm
+đặc trưng cục bộ còn thành phần chú ý đảm nhiệm quan hệ toàn cục
+\cite{zhao2024ctnet, ding2025eegdeformer, altaheri2025temporal}. Các kiến
+trúc hồi quy kết hợp tích chập cũng được khảo sát theo hướng tương tự
+\cite{wang20232d}. Cách tiếp cận dùng tập hợp nhiều mô hình cùng lúc đẩy độ
+chính xác lên cao hơn nữa, nhưng chi phí suy luận tăng theo số thành phần
+\cite{zoumpourlis2024motor}.
+
+Sự khác biệt giữa hai nhánh không chỉ nằm ở độ chính xác. Các mô hình dung
+lượng lớn đòi hỏi lượng dữ liệu huấn luyện lớn hơn đáng kể, trong khi dữ
+liệu EEG vốn tốn kém để thu thập và bị giới hạn bởi thời gian mà người
+tham gia có thể duy trì sự tập trung. Keutayeva và Abibullaev
+\cite{keutayeva2024data} khảo sát vấn đề này một cách hệ thống và cho thấy
+hiệu năng của các mô hình dựa trên transformer trong BCI phụ thuộc mạnh vào
+lượng dữ liệu khả dụng, khiến ưu thế về năng lực biểu diễn không phải lúc
+nào cũng chuyển hóa thành ưu thế thực tế.
+
+Bài toán tổng quát hóa xuyên đối tượng làm mâu thuẫn này thêm gay gắt. Do
+đặc trưng EEG biến thiên mạnh giữa các cá nhân, mô hình huấn luyện trên một
+nhóm đối tượng thường suy giảm rõ rệt khi áp dụng cho đối tượng mới. Hướng
+xử lý truyền thống là hiệu chỉnh riêng cho từng người dùng, nhưng điều này
+kéo dài thời gian chuẩn bị và làm giảm tính khả dụng của hệ thống
+\cite{wei2023intra}. Các kiến trúc hướng tới hoạt động không
+phụ thuộc đối tượng đang thu hút nhiều quan tâm, trong đó có các biến
+thể transformer gọn nhẹ nhằm cân bằng giữa khả năng tổng quát hóa và chi
+phí tính toán \cite{keutayeva2024compact}.
+
+Y văn hiện nay do đó đặt người thiết kế trước một lựa chọn nhị nguyên. Các
+mô hình gọn nhẹ thỏa mãn ràng buộc triển khai nêu ở Mục~\ref{sec:rangbuoc}
+nhưng chấp nhận mức độ chính xác thấp hơn; các mô hình dung lượng lớn đạt
+độ chính xác cao hơn nhưng vượt quá ngân sách thời gian và tài nguyên của
+vòng điều khiển, đồng thời phụ thuộc nhiều hơn vào lượng dữ liệu sẵn có.
+Câu hỏi đặt ra là liệu có thể chuyển phần năng lực của nhóm dung lượng lớn
+sang nhóm gọn nhẹ mà không kéo theo chi phí triển khai của nó hay không.
+
+\subsection{Chưng cất tri thức và chưng cất dựa trên quan hệ}
+\label{sec:kd}
+
+Chưng cất tri thức (knowledge distillation, KD) ban đầu được đề xuất nhằm
+nén mô hình thông qua việc truyền tri thức từ một mô hình teacher sang một
+mô hình student có kích thước nhỏ hơn, dựa trên các phân bố dự đoán mềm ở
+tầng đầu ra \cite{hinton2015distilling}. Cách tiếp cận này giúp student học được cấu trúc xác suất giữa các lớp mà nhãn cứng không phản ánh đầy đủ.
+Theo các khảo sát hệ thống, các phương pháp KD hiện được phân thành ba
+nhóm chính tùy theo dạng tri thức được truyền: dựa trên đầu ra, dựa trên
+đặc trưng, và dựa trên quan hệ giữa các mẫu \cite{gou2021knowledge,mansourian2025comprehensive}.
+
+Nhóm dựa trên đặc trưng truyền tri thức ở các tầng biểu diễn trung gian
+thay vì chỉ ở đầu ra. FitNets sử dụng thông tin gợi ý từ các tầng ẩn của teacher để dẫn
+hướng quá trình huấn luyện student \cite{romero2015fitnets}, trong khi
+Attention Transfer khai thác bản đồ chú ý như một dạng tri thức có tổ chức
+hơn \cite{zagoruyko2017paying}. Hướng giám sát đồng thời nhiều tầng đặc
+trưng cũng đã được áp dụng thành công trong các bài toán ảnh y sinh
+\cite{javed2023knowledge}.
+
+Nhóm dựa trên quan hệ giữa các mẫu, gần với nghiên cứu này nhất, mô hình
+hóa tri thức thông qua quan hệ giữa các mẫu thay vì thuộc tính của từng
+mẫu riêng lẻ. Relational Knowledge Distillation biểu diễn tri thức bằng
+các đại lượng hình học như khoảng cách và góc giữa các vector biểu diễn
+trong không gian đặc trưng \cite{park2019relational}. Các biến thể sau đó
+khai thác những cấu trúc quan hệ khác nhau: quan hệ dựa trên độ tương đồng
+theo cặp \cite{feng2021double}, quan hệ trong lân cận cục bộ của từng mẫu
+\cite{gou2025neighborhood}, hoặc quan hệ được xây dựng đệ quy qua nhiều
+bước \cite{ye2021unsupervised}. Điểm chung của nhóm này là giả định rằng
+cấu trúc tương đối giữa các mẫu mang thông tin phân biệt mà biểu diễn
+tuyệt đối của từng mẫu không thể hiện được. Điểm chưa được làm rõ là việc
+lựa chọn cặp mẫu nào để xây dựng quan hệ phần lớn vẫn theo kinh nghiệm.
+Ảnh hưởng của lựa chọn này chưa được khảo sát một cách hệ thống.
+
+Một nhánh phát triển khác là tự chưng cất, trong đó tri thức được tái sử
+dụng ngay trong quá trình huấn luyện của chính mô hình mà không cần một
+teacher riêng biệt \cite{zhang2019be}. Trong miền EEG, EEG-SKDNet
+\cite{mai2025eegskdnet} kết hợp cơ chế tự chưng cất với chiến lược gán
+trọng số thích nghi nhằm cải thiện hiệu năng nhận dạng cảm xúc.
+
+Trên tín hiệu sinh lý, KD được sử dụng với hai mục tiêu song song: giảm
+kích thước mô hình và cải thiện chất lượng biểu diễn trong điều kiện dữ
+liệu hạn chế. Các khung chưng cất ở mức khung tín hiệu đã được đề xuất cho
+nhận dạng cảm xúc từ EEG, trong đó tri thức được truyền theo từng đoạn thời
+gian thay vì trên toàn bộ chuỗi \cite{wang2021fldnet,gu2023framelevel}.
+Hướng chưng cất biểu diễn thông qua các cấu trúc phân cấp cũng cho thấy
+hiệu quả trên bài toán tính toán cảm xúc \cite{zhang2023distilling}. Ngoài
+EEG, KD còn được áp dụng cho dữ liệu y tế dạng bản ghi điện tử
+\cite{ibrahim2022knowledge} và cho các bài toán học tăng dần trên tín hiệu
+thần kinh \cite{garcia-salinas2023intrasubject}, cho thấy tính phổ quát của
+khung phương pháp này trong lĩnh vực tín hiệu sinh học.
+
+KD là một trong những chiến lược chính được dùng để xây dựng các mô hình
+giải mã EEG gọn nhẹ đủ điều kiện triển khai thực tế, bên cạnh các hướng
+tối ưu cấu trúc và lượng tử hóa \cite{li2025lightweight}. Điều này liên
+kết trực tiếp với ràng buộc đã trình bày ở Mục~\ref{sec:rangbuoc}. Chưng
+cất tri thức giữ lại một phần năng lực của mô hình dung lượng lớn trong
+một mô hình có chi phí suy luận phù hợp với vòng điều khiển.
+
+Trong bối cảnh EEG, việc bảo toàn cấu trúc quan hệ giữa các mẫu tỏ ra đặc
+biệt phù hợp. Similarity-Keeping Knowledge Distillation
+\cite{huang2024enhancing} bảo toàn cấu trúc tương đồng giữa các mẫu khi
+truyền tri thức từ hệ thống EEG mật độ điện cực cao sang hệ thống mật độ
+thấp, qua đó cải thiện hiệu năng của các hệ thống BCI thực tế. Các khung
+chưng cất nhiều mức với cơ chế phản hồi động cũng đã được đề xuất cho bài
+toán tưởng tượng vận động \cite{wu2026multilevel}, trong đó tri thức
+được truyền qua nhiều cấp độ và điều chỉnh thích ứng trong quá trình huấn
+luyện.
+
+Những kết quả trên cho thấy quan hệ giữa các mẫu giữ vai trò quan trọng đối
+với hiệu quả của chưng cất trong bài toán EEG, nơi thông tin phân biệt
+thường được biểu diễn dưới dạng cấu trúc tương đối thay vì giá trị tuyệt
+đối. Tuy nhiên, toàn bộ các công trình nêu trên đều xây dựng quan hệ trong
+không gian đặc trưng Euclid. Câu hỏi còn để ngỏ là liệu giới hạn quan sát được có xuất phát từ bản thân cấu trúc quan hệ hay từ không gian metric dùng để đo chúng.
+
+\subsection{Học máy lượng tử cho tín hiệu sinh học và EEG}
+\label{sec:qml}
+
+Cơ sở lý thuyết của học máy lượng tử trong bài toán phân loại nằm ở nhận
+xét rằng một mạch lượng tử tham số có thể được xem như một phép ánh xạ dữ
+liệu cổ điển vào một không gian Hilbert nhiều chiều, trong đó tích vô hướng
+giữa hai trạng thái đóng vai trò của một hàm nhân
+\cite{schuld2019quantum}. Cách nhìn này đặt học máy lượng tử vào cùng
+khuôn khổ với các phương pháp dựa trên hàm nhân cổ điển, đồng thời mở ra khả năng xây dựng các hàm nhân khó tính toán hiệu quả bằng máy tính cổ điển. Trên
+cơ sở đó, nhiều cấu trúc mạch phân loại đã được đề xuất, trong đó các tầng
+xoay tham số hóa xen kẽ với các tầng cổng vướng víu tạo nên khả năng biểu
+diễn phi tuyến \cite{schuld2020circuitcentric}. Trên thực tế, khả năng khai thác của các cấu trúc này vẫn bị giới hạn bởi số qubit khả dụng,
+độ sâu mạch và mức nhiễu của phần cứng hiện nay \cite{xie2025advances}.
+
+Trong lĩnh vực y sinh, học máy lượng tử đã được khảo sát trên nhiều loại
+dữ liệu khác nhau, từ ảnh y tế đến tín hiệu sinh lý, với kỳ vọng khai thác
+khả năng biểu diễn của không gian Hilbert trong điều kiện dữ liệu huấn
+luyện hạn chế \cite{idzikowski2026survey}. Đặc điểm này khiến hướng nghiên
+cứu phù hợp với tín hiệu EEG, vốn tốn kém để thu thập và có tỷ lệ tín hiệu
+trên nhiễu thấp.
+
+Đối với tín hiệu EEG, hướng phổ biến nhất là tích hợp các mạch lượng tử
+tham số vào các backbone học sâu cổ điển. QEEGNet mở rộng kiến trúc EEGNet
+\cite{lawhern2018eegnet} bằng cách chèn mạch lượng tử vào quá trình trích
+xuất đặc trưng, qua đó khai thác biểu diễn phi tuyến của không gian Hilbert
+trong bước mã hóa tín hiệu \cite{chen2024qeegnet}. Các nghiên cứu kế tiếp
+mở rộng đánh giá sang kịch bản chéo nhiệm vụ và chéo bộ dữ liệu, cho thấy
+hiệu quả của mô hình phụ thuộc đáng kể vào cách tích hợp thành phần lượng
+tử cũng như cấu hình huấn luyện \cite{chen2026exploring}.
+
+Một nhóm công trình khác đặt thành phần lượng tử ở cuối chuỗi xử lý, nơi
+đặc trưng được trích xuất bởi mạng cổ điển trước khi đưa vào bộ phân loại
+lượng tử hoặc lai \cite{olvera2024eegbased}. Hướng này cũng được áp dụng
+cho giao diện não--máy tính với các bộ phân loại kết hợp máy vector hỗ trợ
+lượng tử và mạng nơ-ron lượng tử \cite{behera2026qsvmqnn}. Các kiến trúc
+phức tạp hơn sử dụng nhiều nhánh song song, tiêu biểu là mạng tích chập
+hai nhánh lượng tử--cổ điển cho bài toán phát hiện động kinh
+\cite{dutta2026duoqepinet}. Gần đây, hướng tìm kiếm kiến trúc lượng tử khả
+vi kết hợp học chuyển giao cũng được thử nghiệm trên dữ liệu EEG
+\cite{park2026qdiver}.
+
+Các mẫu thiết kế tương tự xuất hiện trong nhiều lĩnh vực ứng dụng khác, từ
+nhận dạng ảnh \cite{wang2022development} đến phát hiện tín hiệu yếu
+\cite{griol-barres2021variational}, cũng như trong các khung học đầu cuối
+kết hợp mạng tensor với mạch lượng tử biến phân \cite{qi2024qtnvqc}. Điểm
+chung của toàn bộ nhóm công trình này là thành phần lượng tử được đưa trực
+tiếp vào chuỗi suy luận của mô hình.
+
+Đây chính là điểm mà nghiên cứu hiện tại tách khỏi hướng đi trên. Khi mạch
+lượng tử nằm trong chuỗi suy luận, mô hình triển khai bắt buộc phải truy
+cập phần cứng lượng tử hoặc bộ mô phỏng ở thời điểm chạy. Điều này mâu
+thuẫn trực tiếp với ràng buộc về độ trễ và tài nguyên đã trình bày ở
+Mục~\ref{sec:rangbuoc}. Nghiên cứu này không đề xuất một backbone EEG
+lượng tử mới. Thay vào đó, thành phần lượng tử chỉ tham gia vào giai đoạn
+huấn luyện với vai trò mô hình hóa quan hệ giữa các mẫu, còn mô hình được
+triển khai là một mạng cổ điển hoàn toàn. Nhờ đó, lợi ích của không gian
+biểu diễn lượng tử được giữ lại mà không kéo theo chi phí triển khai của
+nó.
+
+\subsection{Chưng cất tri thức trong bối cảnh lượng tử}
+\label{sec:qkd}
+
+Chưng cất tri thức gần đây đã được mở rộng sang lĩnh vực tính toán lượng
+tử, phản ánh xu hướng kết hợp giữa học sâu cổ điển và các mô hình lượng
+tử. Các nghiên cứu theo hướng này có thể phân nhóm theo vai trò của
+teacher, student và thành phần lượng tử trong toàn bộ chuỗi xử lý.
+
+Nhóm thứ nhất sử dụng chưng cất để nén chính các mô hình lượng tử, trong
+đó cả teacher và student đều là mạng nơ-ron lượng tử
+\cite{yan2026distilling}. Động lực của hướng này xuất phát từ giới hạn
+thực tế của phần cứng hiện nay, nơi số qubit và độ sâu mạch bị ràng buộc
+chặt chẽ, đồng thời nhiễu làm suy giảm chất lượng suy luận
+\cite{alam2022qnet}. Ở quy mô phân tán, chưng cất còn được sử dụng để đồng
+bộ nhiều mô hình lượng tử huấn luyện song song, trong đó độ bất trung thực giữa
+các trạng thái làm tín hiệu dẫn hướng \cite{oh2025quantum}.
+
+Nhóm thứ hai truyền tri thức từ mô hình cổ điển sang mô hình lượng tử, với
+teacher là một mạng học sâu và student là một mô hình lượng tử nhỏ hơn
+\cite{nishan2026quantummedkd, li2025quantum}. Hướng ngược lại cũng đã được
+khảo sát, trong đó mạng nơ-ron cổ điển học cách mô phỏng động lực học lượng
+tử thông qua cơ chế chưng cất \cite{yao2023emulating}. Điểm chung của cả
+hai nhóm trên là thành phần lượng tử vẫn hiện diện trong mô hình suy luận
+cuối cùng.
+
+Nhóm thứ ba, và cũng là nhóm gần với nghiên cứu này nhất, sử dụng lượng tử
+như một công cụ hỗ trợ trong giai đoạn huấn luyện thay vì như một bộ phận
+của mô hình triển khai. Quantum Relational Knowledge Distillation
+\cite{liu2025quantum} ánh xạ các biểu diễn trung gian của teacher và
+student vào không gian lượng tử, sau đó mô hình hóa quan hệ giữa các mẫu
+thông qua quantum kernel. Trong thiết lập này, cả teacher và student đều
+là mô hình cổ điển, còn thành phần lượng tử chỉ tham gia vào việc xây dựng
+hàm mất mát. Theo cùng triết lý đó, Quantum-Train
+\cite{liu2025quantumtrain} sử dụng mạch lượng tử trong quá trình huấn luyện
+để giảm số tham số khả huấn của mạng cổ điển, qua đó đạt hiệu năng cạnh
+tranh với chi phí tham số thấp hơn đáng kể. Cơ sở lý thuyết cho các hướng
+này nằm ở việc hàm nhân lượng tử có thể mô tả quan hệ giữa các biểu diễn
+theo cách khác biệt với hàm nhân cổ điển \cite{liu2022representation}.
+
+Cách tiếp cận này có một ưu điểm quan trọng đối với các hệ thống chịu ràng
+buộc triển khai. Nó khai thác không gian biểu diễn lượng tử mà không đưa
+bất kỳ chi phí lượng tử nào vào chuỗi suy luận. Với bộ giải mã EEG hoạt
+động trong vòng điều khiển, đây là điều kiện cần để phương pháp có thể áp
+dụng trong thực tế.
+
+Tuy nhiên, các nghiên cứu hiện có về chưng cất quan hệ lượng tử chủ yếu
+được phát triển và kiểm chứng trên bài toán thị giác máy tính hoặc xử lý
+ngôn ngữ tự nhiên. Khi chuyển sang tín hiệu EEG, vốn có tỷ lệ tín hiệu
+trên nhiễu thấp và biến thiên mạnh giữa các cá nhân, hiệu quả của cách
+tiếp cận này chưa được kiểm chứng. Bên cạnh đó, hàm mất mát quan hệ lượng
+tử thường chỉ xuất hiện như một thành phần đơn lẻ trong chuỗi chưng cất,
+với một cấu trúc quan hệ cố định được chọn theo kinh nghiệm.
+
+Từ đó nảy sinh một câu hỏi chưa được trả lời trong y văn: hiệu quả quan sát
+được của chưng cất quan hệ lượng tử đến từ bản thân không gian biểu diễn
+lượng tử, hay từ cách tổ chức và lựa chọn quan hệ giữa các mẫu. Hai yếu tố
+này luôn xuất hiện đồng thời trong các công trình hiện có nên không thể
+tách rời. Việc phân tách chúng đòi hỏi một khung khảo sát cho phép thay đổi
+độc lập từng yếu tố trong khi giữ nguyên các thành phần còn lại. Đây chính
+là điểm xuất phát của khung QRD được đề xuất trong nghiên cứu này.
+
+\subsection{Định vị của nghiên cứu này}
+\label{sec:dinhvi}
+
+Các mục trên cho thấy một khoảng trống nằm ở giao điểm của ba hướng nghiên
+cứu. Y văn về BCI ứng dụng đặt bộ giải mã EEG vào trong vòng điều khiển và
+áp đặt lên nó các ràng buộc về độ trễ, tài nguyên và độ tin cậy lệnh
+(Mục~\ref{sec:rangbuoc}), nhưng phần lớn các nghiên cứu giải mã vẫn đánh
+giá mô hình bằng độ chính xác ngoại tuyến. Y văn về chưng cất tri thức
+cung cấp công cụ để thu hẹp khoảng cách giữa mô hình dung lượng lớn và mô
+hình triển khai được (Mục~\ref{sec:kd}), nhưng chiến lược xây dựng quan hệ
+giữa các mẫu hầu như luôn được cố định theo kinh nghiệm. Y văn về học máy
+lượng tử đề xuất các không gian biểu diễn thay thế
+(Mục~\ref{sec:qml},~\ref{sec:qkd}), nhưng thành phần lượng tử thường nằm
+trong chuỗi suy luận. Điều này mâu thuẫn với chính các ràng buộc triển
+khai nêu trên.
+
+Trong số các công trình đã khảo sát, bốn nghiên cứu gần với nghiên cứu này
+nhất, và mỗi công trình dừng lại ở một giới hạn khác nhau.
+Similarity-Keeping Knowledge Distillation \cite{huang2024enhancing} bảo
+toàn cấu trúc tương đồng giữa các mẫu khi chuyển tri thức sang hệ thống EEG
+mật độ điện cực thấp, nhưng quan hệ được xây dựng trong không gian đặc
+trưng Euclid và theo một chiến lược cố định. Khung chưng cất nhiều mức có
+phản hồi động \cite{wu2026multilevel} tổ chức việc truyền tri thức theo
+nhiều cấp cho bài toán tưởng tượng vận động, song trọng tâm nằm ở phân cấp
+truyền tri thức chứ không ở cách hình thành quan hệ giữa các mẫu. Ở hướng
+lượng tử, Quantum Relational Knowledge Distillation \cite{liu2025quantum}
+đưa quan hệ vào không gian Hilbert nhưng chỉ được kiểm chứng trên bài toán
+thị giác và ngôn ngữ, nơi đặc tính nhiễu và biến thiên giữa các cá nhân
+không đặt ra như với tín hiệu EEG. Quantum-Train
+\cite{liu2025quantumtrain} giữ thành phần lượng tử hoàn toàn ngoài chuỗi
+suy luận, đúng với ràng buộc triển khai nêu ở Mục~\ref{sec:rangbuoc}, nhưng
+sử dụng mạch lượng tử để giảm số tham số chứ không để mô hình hóa quan hệ
+giữa các mẫu.
+
+Nghiên cứu này nằm ở giao điểm của bốn hướng trên. Nó giữ thành phần lượng
+tử hoàn toàn ngoài chuỗi suy luận, mô hình hóa tri thức thông qua quan hệ
+giữa các mẫu, và áp dụng cho bài toán giải mã tưởng tượng vận động dưới
+ràng buộc của vòng điều khiển. Điểm khác biệt so với cả bốn công trình nằm
+ở chỗ chiến lược xây dựng quan hệ được xem như một biến khảo sát thay vì
+một lựa chọn thiết kế cố định. Ảnh hưởng của không gian biểu diễn khi đó
+tách được khỏi ảnh hưởng của cấu trúc quan hệ. Các đóng góp cụ thể đã được
+trình bày ở Mục~\ref{sec:gioithieu}.
+
+Việc đưa hàm nhân lượng tử vào khảo sát không nhằm đề xuất nó như một giải
+pháp, mà nhằm mở rộng phạm vi của kết luận. Các chiến lược quan hệ cổ điển
+đều dựng cấu trúc trong cùng một không gian metric, nên nếu chỉ so sánh chúng
+với nhau thì một kết quả âm có thể quy cho việc chưa thực sự thay đổi không
+gian biểu diễn. Hàm nhân lượng tử cung cấp một không gian khác về bản chất,
+với cấu trúc hình học không rút gọn được về khoảng cách Euclid trong không
+gian đặc trưng gốc. Nó đóng vai trò ca kiểm chứng khắt khe nhất trong dãy
+khảo sát. Nếu ngay cả cách mô tả quan hệ này cũng không tách khỏi đường cơ
+sở, hoặc nếu dữ liệu thu được không đủ để kết luận theo bất kỳ chiều nào
+(trường hợp thực tế xảy ra ở đây, xem Mục~\ref{sec:ketqua}), phát biểu về
+vai trò của cấu trúc quan hệ trong chưng cất có phạm vi rộng hơn đáng kể
+\emph{xét theo lựa chọn không gian biểu diễn}, tức không chỉ đúng cho các
+không gian metric cổ điển mà cả cho một không gian khác hẳn về bản chất.
+Cả hai trường hợp đều không tương đương với việc xác nhận không gian biểu
+diễn hoàn toàn không có vai trò gì, một khẳng định mạnh hơn dữ liệu hiện có
+cho phép. Lập luận này không mở rộng phạm vi kết luận sang bộ dữ liệu hay
+bài toán khác. Toàn bộ khảo sát vẫn giới hạn trong PhysionetMI và bài toán
+phân biệt hai lớp đã mô tả ở Mục~\ref{sec:dulieu}.
+
+Mục tiêu của nghiên cứu không phải là khẳng định ưu thế phổ quát của biểu
+diễn lượng tử so với các phương pháp cổ điển, mà là xây dựng một khung
+phân tích có kiểm soát nhằm làm rõ hiệu quả của chưng
+cất dựa trên quan hệ phụ thuộc như thế nào vào không gian biểu diễn và vào
+cách tổ chức quan hệ giữa các mẫu, trong bối cảnh một bộ giải mã EEG phải
+hoạt động dưới ràng buộc của vòng điều khiển.
+
+\section{Phương pháp đề xuất}
+\label{sec:phuongphap}
+
+\subsection{Tổng quan khung phương pháp đề xuất}
+
+Mục này mô tả cách các thành phần của khung QRD ghép nối với nhau và xác
+định vai trò của từng thành phần trong quá trình huấn luyện.
+Hình~\ref{fig:khung} thể hiện toàn bộ kiến trúc.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{figs/image1.png}
+\caption{Khung teacher--student tổng thể với nhánh chưng cất quan hệ lượng tử đề xuất. Teacher ensemble đã huấn luyện trước và student EEGNet gọn nhẹ cùng nhận đầu vào EEG tưởng tượng vận động. Các hàm mất mát chưng cất được xây dựng từ so sánh giữa teacher và student ở mức logits, đặc trưng và quan hệ. Teacher được giữ cố định và chỉ cung cấp tín hiệu giám sát. Nhánh quan hệ lượng tử mô hình hóa và chọn lọc quan hệ giữa các mẫu trong không gian lượng tử, và chỉ hoạt động ở giai đoạn huấn luyện. Quá trình suy luận chỉ sử dụng student gọn nhẹ.}
+\label{fig:khung}
+\end{figure}
+
+Khung được tổ chức theo thiết lập teacher--student. Teacher là một mô hình
+tập hợp đã huấn luyện trước \cite{zoumpourlis2024motor}, được giữ cố định
+và chỉ đóng vai trò nguồn tín hiệu giám sát. Student là một mạng EEGNet
+\cite{lawhern2018eegnet} và là thành phần duy nhất trong cặp teacher--student
+được cập nhật tham số \cite{hinton2015distilling}. Điểm ngoại lệ liên quan
+đến mạch lượng tử dùng chung giữa hai nhánh được nêu ở Mục~\ref{sec:qrd}.
+
+Cặp mô hình này được chọn để hiện thực hóa đúng mâu thuẫn mà
+Mục~\ref{sec:rangbuoc} đã nêu. Mô hình tập hợp tổng hợp thông tin từ nhiều
+thành phần nên cho tín hiệu giám sát ổn định. Nhưng chi phí bộ nhớ và tính
+toán của nó tăng theo số thành phần, khiến nó kém phù hợp với phần cứng
+nhúng đi kèm thiết bị. EEGNet ở chiều ngược lại có số tham số và thời gian suy luận phù hợp
+với phần cứng nhúng, và đã được kiểm chứng trong các hệ thống BCI triển
+khai thực tế \cite{wang2024mibminet}. Khoảng cách hiệu năng giữa hai mô
+hình chính là đại lượng mà khung chưng cất tìm cách thu hẹp.
+
+Tín hiệu giám sát truyền tới student gồm bốn thành phần. Ba thành phần đầu
+thuộc về chưng cất cổ điển và tương ứng với ba nhóm tri thức trong các khảo
+sát hiện hành \cite{gou2021knowledge, mansourian2025comprehensive}: khớp
+phân bố dự đoán mềm ở mức logits \cite{hinton2015distilling}, căn chỉnh đặc
+trưng trung gian \cite{romero2015fitnets}, và bảo toàn cấu trúc hình học
+giữa các mẫu trong không gian đặc trưng \cite{park2019relational}. Ba thành
+phần này được trình bày ở Mục~\ref{sec:cocdien} và được dùng làm cơ sở so
+sánh.
+
+Thành phần thứ tư là nhánh quan hệ lượng tử, phần đóng góp của nghiên cứu
+này. Nhánh này nhận đặc trưng trung gian của cả hai mô hình, dựng ma trận
+quan hệ trong không gian Hilbert, và sinh ra một thành phần mất mát bổ
+sung. Nó chỉ tồn tại trong đồ thị tính toán của giai đoạn huấn luyện, không
+xuất hiện ở đường suy luận, nên không làm thay đổi cấu hình của mô hình
+được triển khai. Cách xây dựng cụ thể được trình bày ở Mục~\ref{sec:qrd}.
+
+Về mặt cài đặt, ma trận quan hệ không được dựng theo một quy tắc duy nhất.
+Năm phương án khác nhau cùng chia sẻ một hàm mất mát và một bộ siêu tham
+số, khác nhau ở tập chỉ số đầu vào. Với bốn phương án đầu (V1--V4), tập chỉ
+số này được xác định trên cùng một mẫu con cố định theo vị trí, nên khác
+biệt quan sát được giữa chúng quy trực tiếp về cách chọn quan hệ. Phương án
+thứ năm (V5) không chỉ đổi cách chọn quan hệ mà còn mở rộng candidate pool
+dùng để chọn. Điểm khác biệt bổ sung này, và cách nó ảnh hưởng tới việc
+diễn giải kết quả của V5, được nêu chi tiết ở Mục~\ref{sec:bienthe}.
+
+Ký hiệu thống nhất dùng cho toàn bộ Mục~3 được quy ước ở
+Mục~\ref{sec:kyhieu}.
+
+\subsection{Các thiết lập chưng cất cổ điển}
+\label{sec:cocdien}
+
+Mục này định nghĩa ba cấu hình chưng cất cổ điển được dùng làm đường cơ sở.
+Cả ba chia sẻ chung teacher, student, bộ dữ liệu và giao thức tối ưu. Thành
+phần duy nhất thay đổi là dạng tín hiệu giám sát bổ sung. Nhờ ràng buộc này,
+khác biệt hiệu năng quan sát được đều quy về cơ chế truyền tri thức.
+
+Ký hiệu $z_S, z_T \in \mathbb{R}^{C}$ lần lượt là logits của student và
+teacher, còn $f_S, f_T \in \mathbb{R}^{N \times d}$ là ma trận đặc trưng
+trung gian của một mini-batch gồm $N$ mẫu, với $d = 144$ cho cả hai mô hình.
+
+\textbf{KDBase} thực hiện chưng cất ở mức đầu ra, khớp phân bố dự đoán mềm
+của student với của teacher thông qua phân kỳ Kullback--Leibler có làm mềm
+nhiệt độ \cite{hinton2015distilling}:
+
+\begin{equation}
+\label{eq:kd}
+\mathcal{L}_{\mathrm{KD}} = \tau^{2}\,
+  \mathrm{KL}\!\left(
+  \sigma\!\left(\tfrac{z_T}{\tau}\right) \,\middle\|\,
+  \sigma\!\left(\tfrac{z_S}{\tau}\right)\right),
+\end{equation}
+
+trong đó $\sigma(\cdot)$ là hàm softmax và $\tau = 4{,}0$ là nhiệt độ làm
+mềm. Hệ số $\tau^{2}$ giữ độ lớn gradient không phụ thuộc vào $\tau$.
+
+\textbf{FeatureKD} bổ sung ràng buộc ở mức đặc trưng trung gian
+\cite{romero2015fitnets}. Vì student và teacher có cùng số chiều đặc trưng,
+ràng buộc được áp trực tiếp mà không cần lớp chiếu trung gian:
+
+\begin{equation}
+\label{eq:feat}
+\mathcal{L}_{\mathrm{feat}} = \frac{1}{Nd}
+  \left\| f_S - f_T \right\|_{F}^{2}.
+\end{equation}
+
+\textbf{RelationalKD} chuyển trọng tâm từ từng mẫu sang quan hệ giữa các
+mẫu \cite{park2019relational}. Nghiên cứu sử dụng thành phần khoảng cách
+theo cặp của phương pháp gốc. Với mỗi mô hình, ma trận khoảng cách Euclid
+theo cặp được chuẩn hóa bằng giá trị trung bình của các phần tử ngoài đường
+chéo:
+
+\begin{equation}
+\label{eq:pdist}
+\tilde{D}_{ij} = \frac{\|f_i - f_j\|_2}
+  {\dfrac{1}{N(N-1)}\displaystyle\sum_{p \neq q} \|f_p - f_q\|_2},
+\end{equation}
+
+và sai lệch giữa hai ma trận đã chuẩn hóa được đo bằng hàm Huber:
+
+\begin{equation}
+\label{eq:rkd}
+\mathcal{L}_{\mathrm{rel}} = \ell_{\delta}\!\left(
+  \tilde{D}^{S}, \tilde{D}^{T} \right),
+\end{equation}
+
+với $\ell_{\delta}$ là hàm mất mát smooth L1. Phép chuẩn hóa theo giá trị
+trung bình khiến hàm mất mát bất biến với phép co giãn đồng nhất của không gian đặc trưng, khiến student không bị buộc tái tạo độ lớn tuyệt đối của
+biểu diễn teacher mà chỉ cần tái tạo cấu trúc tương đối.
+
+Hàm mất mát tổng của một cấu hình bất kỳ có dạng
+
+\begin{equation}
+\label{eq:total}
+\mathcal{L} = \alpha\,\mathcal{L}_{\mathrm{CE}}
+  + (1-\alpha)\,\mathcal{L}_{\mathrm{KD}}
+  + \gamma_{f}\,\mathcal{L}_{\mathrm{feat}}
+  + \gamma_{r}\,\mathcal{L}_{\mathrm{rel}}
+  + \beta\,\mathcal{L}_{\mathrm{QRD}},
+\end{equation}
+
+trong đó $\mathcal{L}_{\mathrm{CE}}$ là entropy chéo với nhãn thật, và các
+thành phần không thuộc cấu hình đang xét được đặt hệ số bằng không. Thành
+phần $\mathcal{L}_{\mathrm{QRD}}$ được trình bày ở Mục~\ref{sec:qrd}. Giá
+trị các hệ số được nêu ở Mục~\ref{sec:cauhinh}.
+
+Ba cấu hình trên tạo thành một dãy tăng dần về mức trừu tượng của tri thức
+được truyền, từ đầu ra đến đặc trưng riêng lẻ rồi đến quan hệ giữa các mẫu.
+RelationalKD là cấu hình đầu tiên trong dãy biểu diễn tri thức dưới dạng
+quan hệ, và cũng là điểm mà khung QRD mở rộng: thay vì đo quan hệ bằng
+khoảng cách Euclid trong không gian đặc trưng, QRD đo chúng bằng hàm nhân
+trong không gian Hilbert.
+
+\subsection{Phát biểu bài toán và ký hiệu}
+\label{sec:kyhieu}
+
+Xét một mini-batch gồm $N$ mẫu EEG $\{x_i\}_{i=1}^{N}$. Với mỗi mẫu, hai mô
+hình sinh ra hai dạng đầu ra: vector logits $z(x_i) \in \mathbb{R}^{C}$ ở
+tầng phân loại, và vector đặc trưng $f(x_i) \in \mathbb{R}^{d}$ ở tầng biểu
+diễn cuối trước lớp phân loại. Với cặp mô hình được sử dụng, $C = 2$ và
+$d = 144$ cho cả teacher và student.
+
+Xếp các vector đặc trưng theo hàng cho ma trận đặc trưng của mini-batch:
+
+\begin{equation}
+\label{eq:featmat}
+F_T = \begin{bmatrix} f_T(x_1)^{\!\top} \\ \vdots \\ f_T(x_N)^{\!\top} \end{bmatrix}
+\in \mathbb{R}^{N \times d},
+\qquad
+F_S = \begin{bmatrix} f_S(x_1)^{\!\top} \\ \vdots \\ f_S(x_N)^{\!\top} \end{bmatrix}
+\in \mathbb{R}^{N \times d}.
+\end{equation}
+
+Chưng cất ở mức quan hệ không so sánh trực tiếp $F_T$ với $F_S$ mà so sánh
+cấu trúc quan hệ giữa các mẫu trong từng mô hình. Cấu trúc này được biểu diễn
+bằng hai ma trận đối xứng $R_T$ và $R_S$, trong đó phần tử $(i,j)$ đo mức
+tương đồng giữa hai mẫu $x_i$ và $x_j$ theo biểu diễn của mô hình tương ứng.
+Trong các phương pháp chưng cất quan hệ cổ điển, hai ma trận này được xây
+dựng từ khoảng cách Euclid hoặc độ tương đồng cosine trong không gian đặc
+trưng \cite{park2019relational}. Mục tiếp theo thay không gian đó bằng một
+không gian Hilbert, trong đó mức tương đồng được đo bằng hàm nhân lượng tử.
+
+Ma trận quan hệ không nhất thiết được tính trên toàn bộ mini-batch. Tập cặp chỉ số tham gia, ký hiệu $\mathcal{I}$, là một tham số cấu hình và
+được xác định riêng cho từng biến thể ở Mục~\ref{sec:bienthe}.
+
+\subsection{Khung chưng cất quan hệ lượng tử}
+\label{sec:qrd}
+
+Nhánh quan hệ lượng tử gồm bốn bước: giảm chiều đặc trưng, mã hóa thành góc
+quay, chuẩn bị trạng thái lượng tử, và tính hàm nhân.
+
+\textbf{Giảm chiều và mã hóa góc.} Vector đặc trưng $d = 144$ chiều không thể
+mã hóa trực tiếp vào một mạch $n_q = 4$ qubit. Mỗi mô hình được gán một phép
+chiếu tuyến tính riêng $W_T, W_S : \mathbb{R}^{d} \to \mathbb{R}^{n_q}$. Phép
+chiếu phía teacher $W_T$ được khởi tạo và \textbf{giữ cố định} trong suốt quá
+trình huấn luyện. Chỉ phép chiếu phía student $W_S$ là tham số khả huấn duy
+nhất trong hai phép chiếu này. Biến thể V1 ở Mục~\ref{sec:bienthe} thay $W_S$
+bằng một phép giảm chiều tất định, khi đó nhánh lượng tử phía student cũng
+không còn tham số học được ở bước chiếu.
+
+Về mặt cài đặt, $W_T$ và $W_S$ đều là lớp \texttt{nn.Linear} của PyTorch,
+khởi tạo bằng phân bố mặc định của thư viện (Kaiming-uniform cho trọng số,
+uniform cho bias, theo số chiều đầu vào), không qua bước chuẩn hóa nào
+khác. Vì bước khởi tạo này diễn ra sau nhiều lệnh tiêu thụ số ngẫu nhiên
+khác (nạp dữ liệu, khởi tạo teacher và student) trong cùng một luồng sinh
+số ngẫu nhiên toàn cục đã được gán hạt giống theo từng lần chạy, $W_T$ nhiều
+khả năng khác nhau giữa năm hạt giống của thí nghiệm, nhưng đây là hệ quả
+gián tiếp của cách gán hạt giống toàn cục chứ không phải một điều khiển thực
+nghiệm chủ đích, và nghiên cứu này chưa đo trực tiếp mức chênh lệch giữa các
+lần khởi tạo $W_T$ khác nhau. Với tỷ lệ nén $144 \to 4$, chưa có phân tích
+độ nhạy nào của kết quả theo phép chiếu $W_T$ cụ thể, và nghiên cứu không
+viện dẫn một cơ sở lý thuyết nào (ví dụ bổ đề Johnson--Lindenstrauss) để
+bảo đảm một phép chiếu ngẫu nhiên ở tỷ lệ nén này bảo toàn đủ cấu trúc quan
+hệ. Đây là một giới hạn của thiết kế hiện tại, nêu lại ở
+Mục~\ref{sec:ketluan}. Đầu ra của phép chiếu được đưa về
+khoảng góc hợp lệ bằng hàm tiếp tuyến hyperbol:
+
+\begin{equation}
+\label{eq:angles}
+a(x_i) = \pi \, \tanh\!\big( W f(x_i) \big) \in [-\pi, \pi]^{n_q}.
+\end{equation}
+
+Phép chặn này giới hạn góc quay trong một chu kỳ đầy đủ, giảm nguy cơ hai
+giá trị đặc trưng khác nhau ánh xạ vào cùng một trạng thái do tính tuần hoàn
+của phép quay. Với mạch nhiều qubit và nhiều lớp vướng víu, tính đơn ánh của
+toàn bộ ánh xạ không được chứng minh chặt chẽ chỉ từ việc giới hạn miền góc
+này.
+
+\textbf{Chuẩn bị trạng thái.} Vector góc được nạp vào mạch bằng phép mã hóa
+góc quanh trục $Y$, ký hiệu $\Phi(\cdot)$, xen kẽ với $L = 2$ lớp cổng vướng
+víu dạng Strongly Entangling Layers \cite{schuld2020circuitcentric}, ký hiệu
+$U(\theta_l)$ cho lớp thứ $l$. Khác với một mạch mã hóa-rồi-vướng víu một
+lượt, mã hóa được lặp lại xen kẽ giữa các lớp vướng víu theo kiểu
+\emph{data re-uploading} \cite{perezsalinas2020data}:
+
+\begin{equation}
+\label{eq:layer}
+\ket{\varphi_l(x_i)} = U(\theta_l)\,\Phi\!\big(a(x_i)\big)\,\ket{\varphi_{l-1}(x_i)},
+\qquad
+\ket{\varphi_0(x_i)} = \ket{0}^{\otimes n_q},
+\qquad l = 1,\ldots,L,
+\end{equation}
+
+\begin{equation}
+\label{eq:state}
+\ket{\psi(x_i)} = \Phi\!\big(a(x_i)\big)\,\ket{\varphi_L(x_i)}.
+\end{equation}
+
+Với $L=2$, chuỗi cổng đầy đủ là mã hóa--vướng víu--mã hóa--vướng víu--mã hóa:
+dữ liệu được nạp lại ba lần, xen kẽ với hai lớp vướng víu tham số hóa. Các
+tham số $\theta = (\theta_1,\ldots,\theta_L)$ được khởi tạo một lần từ phân
+bố chuẩn $\mathcal{N}(0, 0{,}1)$ và \textbf{là tham số khả huấn}, cập nhật
+qua lan truyền ngược cùng với $W_S$ trong suốt quá trình huấn luyện. Mạch
+$U(\theta_l)$ dùng \textbf{chung một bộ $\theta$} cho cả nhánh teacher và
+nhánh student, không tách $\theta_T$/$\theta_S$ riêng. Hệ quả của lựa chọn
+này với tính "cố định" của teacher được thảo luận ở cuối mục.
+
+\begin{quote}
+\small
+\textbf{Nhận xét (tính không suy biến).} Trong một mạch mã hóa-rồi-vướng
+víu một lượt, $\ket{\psi(x_i)} = U_\theta\,\Phi(a(x_i))\,\ket{0}^{\otimes n_q}$,
+lớp vướng víu $U_\theta$ là toán tử \emph{giống nhau cho mọi mẫu} và nằm
+ngoài cùng của biểu thức. Vì hàm nhân chỉ phụ thuộc tích vô hướng
+$\braket{\psi(x_i)|\psi(x_j)} = \bra{0}\Phi(a(x_i))^\dagger
+U_\theta^\dagger U_\theta \Phi(a(x_j))\ket{0}$ và $U_\theta^\dagger U_\theta = I$
+với mọi $\theta$, lớp vướng víu triệt tiêu hoàn toàn khỏi hàm nhân bất kể
+được huấn luyện thế nào, khiến mạch suy biến về một hàm nhân cổ điển của
+riêng $\Phi$. Với cấu trúc data re-uploading ở
+\eqref{eq:layer}--\eqref{eq:state}, phép mã hóa cuối cùng $\Phi(a(x_i))$
+là toán tử \emph{phụ thuộc mẫu} và nằm ngoài cùng thay cho $U_\theta$, nên
+không còn phép rút gọn tương tự: $U(\theta_l)$ không thể tách khỏi tích vô
+hướng bằng lập luận unita độc lập dữ liệu. Kiểm chứng thực nghiệm trên một
+batch cố định cho sai khác giữa hàm nhân lượng tử và tích cosine tương ứng
+là $0{,}474$, vượt xa ngưỡng $0{,}05$ dùng trong chẩn đoán này. Ngưỡng này là
+một mốc quy ước nhỏ, chỉ nhằm phát hiện suy biến hoàn toàn về kernel cổ điển
+(sai khác gần 0), không phải kết quả của một kiểm định thống kê hình thức.
+\end{quote}
+
+Mạch khi đó không còn là một ánh xạ đặc trưng ngẫu nhiên cố định vào không
+gian Hilbert $2^{n_q}$ chiều như trong một thiết kế mã hóa một lượt, mà là
+một ánh xạ đặc trưng \emph{khả huấn}. Khả năng thích nghi với dữ liệu của
+nhánh lượng tử nằm ở $W_S$ và $\theta$. $W_T$ vẫn cố định như đã nêu ở trên.
+
+\textbf{Hàm nhân và ma trận quan hệ.} Mức tương đồng giữa hai mẫu được đo
+bằng độ trung thực giữa hai trạng thái tương ứng \cite{schuld2019quantum}:
+
+\begin{equation}
+\label{eq:kernel}
+K\!\big(a_i, a_j\big) =
+  \big| \braket{ \psi(x_i) | \psi(x_j) } \big|^{2} \in [0,1].
+\end{equation}
+
+Áp dụng riêng cho từng mô hình thu được hai ma trận quan hệ lượng tử:
+
+\begin{equation}
+\label{eq:relmat}
+R_T^{(Q)}(i,j) = K\!\big(a_T(x_i), a_T(x_j)\big),
+\qquad
+R_S^{(Q)}(i,j) = K\!\big(a_S(x_i), a_S(x_j)\big),
+\end{equation}
+
+trong đó $a_T$ và $a_S$ là vector góc thu được từ \eqref{eq:angles} với phép
+chiếu tương ứng. Hai ma trận được sử dụng trực tiếp, không qua bước chuẩn hóa
+bổ sung, vì hàm nhân đã nhận giá trị trong đoạn $[0,1]$ theo định nghĩa.
+
+\textbf{Hàm mất mát.} Sai lệch giữa hai cấu trúc quan hệ được đo bằng sai số
+bình phương trung bình trên tập cặp chỉ số $\mathcal{I}$:
+
+\begin{equation}
+\label{eq:qrd}
+\mathcal{L}_{\mathrm{QRD}} = \frac{1}{|\mathcal{I}|}
+  \sum_{(i,j) \in \mathcal{I}}
+  \left( R_T^{(Q)}(i,j) - R_S^{(Q)}(i,j) \right)^{2}.
+\end{equation}
+
+Vì gradient được truyền qua mạch lượng tử tới phép chiếu $W_S$ và tiếp tục
+tới mạng student, thành phần này ảnh hưởng tới toàn bộ quá trình học của
+student chứ không chỉ tới lớp chiếu. Phép chiếu $W_T$ tham gia vào tính toán
+$R_T^{(Q)}$ nhưng không nhận gradient, đúng như đã nêu ở trên.
+
+Tuy nhiên $R_T^{(Q)}$ không hoàn toàn tĩnh. Việc tính $R_T^{(Q)}$ không được
+tách khỏi đồ thị tính toán. Không có bước \texttt{detach} hay
+\texttt{no\_grad} nào bao quanh nhánh teacher trong \eqref{eq:qrd}, nên
+gradient của $\mathcal{L}_{\mathrm{QRD}}$ vẫn truyền tới $\theta$ qua cả
+nhánh teacher lẫn nhánh student. Backbone của teacher và phép chiếu $W_T$
+giữ cố định, nhưng ánh xạ từ đặc trưng teacher sang $R_T^{(Q)}$ vẫn thay
+đổi theo $\theta$ trong suốt quá trình huấn luyện, khác với các thiết lập
+chưng cất cổ điển ở Mục~\ref{sec:cocdien}, nơi mục tiêu teacher hoàn toàn
+cố định.
+
+Về nguyên tắc, việc dùng chung $\theta$ mở ra một hướng tối ưu khác cho
+\eqref{eq:qrd}. Quá trình huấn luyện có thể xê dịch $\theta$ để hai ma
+trận dễ khớp nhau hơn, ví dụ làm cả hai kernel phẳng hơn, thay vì chỉ buộc
+student tái tạo đúng cấu trúc quan hệ mà teacher đã học. Đây là dạng suy
+biến khác với suy biến kernel cổ điển đã xét ở nhận xét trên. Tách
+$\theta_T$ cố định riêng khỏi $\theta_S$ khả huấn sẽ tránh được rủi ro
+này, nhưng đổi lại làm hai nhánh không còn được đo bằng cùng một hàm
+nhân, khiến việc so sánh trực tiếp $R_T^{(Q)}$ với $R_S^{(Q)}$ trong
+\eqref{eq:qrd} mất căn cứ. Nghiên cứu này chọn dùng chung $\theta$, và đã
+bổ sung một đối chứng thực nghiệm cho đánh đổi đó bằng cách huấn luyện lại
+biến thể V2 Dense với ba cách xử lý $\theta$: dùng chung như hiện tại
+(\emph{shared}, $81{,}49\pm0{,}78\%$), giữ cố định hoàn toàn
+(\emph{shared\_fixed}, $81{,}73\pm0{,}49\%$), và tách $\theta_T$ cố định
+riêng khỏi $\theta_S$ khả huấn (\emph{split}, $81{,}35\pm0{,}87\%$), mỗi
+cách 5 hạt giống $\times$ 5 fold trên PhysionetMI. Không cặp nào trong ba
+cách xử lý khác biệt có ý nghĩa thống kê ($p=0{,}143$ giữa \emph{shared}
+và \emph{shared\_fixed}, $p=0{,}615$ giữa \emph{shared} và \emph{split},
+$p=0{,}215$ giữa \emph{shared\_fixed} và \emph{split}; $n=5$, $df=4$).
+Kết quả này không chứng minh được rủi ro suy biến nêu trên hoàn toàn không
+xảy ra, nhưng không tìm thấy dấu hiệu ảnh hưởng đo được của nó tới độ
+chính xác ở quy mô đã khảo sát. Đây vẫn là một giới hạn được nêu lại ở
+Mục~\ref{sec:ketluan}, nay có thêm số liệu thực nghiệm hỗ trợ.
+
+Trong hàm mục tiêu tổng \eqref{eq:total}, các cấu hình QRD sử dụng
+$\gamma_f = \gamma_r = 0$, tức là student nhận đồng thời tín hiệu giám sát từ
+nhãn thật, từ logits của teacher, và từ cấu trúc quan hệ lượng tử. Hệ số
+$\beta$ nhỏ hơn hai bậc so với các hệ số còn lại, do $\mathcal{L}_{\mathrm{QRD}}$
+là sai lệch giữa hai đại lượng bị chặn trong $[0,1]$ nên có độ lớn nhỏ hơn
+nhiều so với các thành phần mất mát khác.
+
+Cùng một $\beta = 0{,}02$ được dùng cho cả ba dạng hàm nhân so sánh ở
+Mục~\ref{sec:bienthe} (lượng tử, cosine, RBF). Việc cả ba hàm nhân đều cho
+giá trị trong $[0,1]$ chỉ đảm bảo thang đo của $\mathcal{L}_{\mathrm{QRD}}$
+nằm trong cùng một khoảng, không đảm bảo ba hàm nhân tạo ra cùng độ lớn
+gradient hay cùng mức ảnh hưởng lên student khi nhân với cùng một $\beta$.
+RBF tự chuẩn theo trung vị khoảng cách của mỗi batch, còn kernel lượng tử
+có xu hướng tập trung giá trị gần biên do hình học không gian Hilbert.
+
+Bảng~\ref{tab:betafair} đo trực tiếp điều này bằng một chẩn đoán bổ sung
+(1 fold, 5 epoch đầu, \emph{không phải} kết quả báo cáo chính): giá trị
+$\mathcal{L}_{\mathrm{QRD}}$ thô trước khi nhân $\beta$, và chuẩn $L_2$
+của gradient riêng do $\beta\,\mathcal{L}_{\mathrm{QRD}}$ tạo ra lên tham
+số student, đo độc lập bằng một lượt lan truyền ngược tách biệt ở batch
+đầu mỗi epoch. Cùng một $\beta$ danh nghĩa tạo ra mức giám sát hiệu lực
+chênh nhau tới hai bậc độ lớn giữa kernel lượng tử và cosine. RBF gần với
+thang đo của lượng tử hơn cosine, phù hợp với lập luận định tính ở trên.
+Vì đây là số liệu chẩn đoán trên một fold và năm epoch đầu, không lặp lại
+qua hạt giống, các con số cụ thể không nên được xem là chính xác tới chữ
+số cuối, nhưng độ lớn chênh lệch (hàng chục đến hàng trăm lần) đủ rõ để
+loại trừ khả năng ba hàm nhân đang nhận mức giám sát tương đương khi dùng
+chung $\beta = 0{,}02$. Đây là một giới hạn đã được đo trực tiếp bằng số
+liệu, không còn là một khả năng chưa kiểm chứng, và được nêu lại ở
+Mục~\ref{sec:ketluan}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Chẩn đoán mức giám sát hiệu lực của $\mathcal{L}_{\mathrm{QRD}}$
+theo dạng hàm nhân, cùng $\beta = 0{,}02$ danh nghĩa. Trung bình trên 5
+epoch đầu, 1 fold, PhysionetMI, cấu hình V5 Guided (cosine, RBF) và V2
+Dense (lượng tử, cùng chiến lược \texttt{dense}, khác V5 ở tập chỉ số,
+không ảnh hưởng đến đại lượng đo ở đây). Cột cuối là bội số so với cosine.
+Đây là dữ liệu chẩn đoán, không phải kết quả báo cáo chính.}
+\label{tab:betafair}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Hàm nhân} & $\mathcal{L}_{\mathrm{QRD}}$ \textbf{thô} & $\|\nabla_{\mathrm{student}}\|_2$ & \textbf{Bội số (so cosine)} \\
+\midrule
+Cosine  & $2{,}16 \times 10^{-3}$ & $7{,}54 \times 10^{-5}$ & $1\times$ \\
+RBF     & $3{,}13 \times 10^{-2}$ & $1{,}47 \times 10^{-3}$ & $\approx 20\times$ \\
+Lượng tử & $1{,}41 \times 10^{-1}$ & $1{,}51 \times 10^{-2}$ & $\approx 200\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Toàn bộ nhánh lượng tử chỉ tồn tại trong đồ thị tính toán của giai đoạn huấn
+luyện. Sau khi huấn luyện kết thúc, hai phép chiếu và mạch lượng tử được
+loại bỏ. Mô hình được triển khai chỉ gồm mạng student cổ điển.
+
+\subsection{Các biến thể của khung QRD}
+\label{sec:bienthe}
+
+% GHI CHU BIEN TAP: Hinh 2 hien ghi tap chi so cua V3 va V4 la (i,a) voi
+% a thuoc A. Cai dat thuc te su dung khoi neo-neo (a,a'). Can sua chu trong
+% hai o "Relation index set" cua Hinh 2 cho khop muc nay. Ngoai ra: truc
+% ghi 1..N nen doi thanh 1..q; ky hieu d_q nen doi thanh n_q; bo chu thich
+% "(Frobenius norm)" o o ham mat mat vi cong thuc la MSE.
+
+Năm biến thể được xây dựng trên cùng một hàm nhân lượng tử
+\eqref{eq:kernel} và cùng một hàm mất mát \eqref{eq:qrd}. Chúng khác nhau ở
+hai khía cạnh: cách đưa đặc trưng $d$ chiều xuống $n_q$ chiều trước khi mã
+hóa lượng tử, và tập chỉ số $\mathcal{I}$ xác định những cặp mẫu nào tham gia
+vào ma trận quan hệ. Hình~\ref{fig:bienthe} minh họa năm thiết kế.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{figs/image2.png}
+\caption{Năm biến thể của khung QRD. Tất cả dùng chung hàm nhân lượng tử và
+hàm mất mát quan hệ. Điểm khác biệt nằm ở phép giảm chiều đặc trưng và ở tập
+chỉ số quan hệ $\mathcal{I}$. V1 và V2 sử dụng toàn bộ cặp mẫu và khác nhau ở
+việc có hay không có phép chiếu học được. V3 và V4 giảm mật độ quan hệ thông
+qua tập neo $\mathcal{A}$, trong đó V4 bổ sung các cạnh lân cận gần nhất
+$\mathcal{N}_k(i)$. V5 chọn tập mẫu $\mathcal{S}$ dựa trên tín hiệu từ
+teacher.}
+\label{fig:bienthe}
+\end{figure}
+
+Thiết kế này xuất phát từ nhận xét rằng không phải mọi cặp mẫu đều mang lượng
+thông tin như nhau. Tín hiệu EEG có tỷ lệ tín hiệu trên nhiễu thấp và biến
+thiên mạnh giữa các đối tượng, nên một ma trận quan hệ dày đặc có thể chứa
+nhiều cặp phản ánh nhiễu hơn là cấu trúc lớp. Năm biến thể cho phép khảo sát
+riêng biệt hai yếu tố: khả năng thích nghi của phép giảm chiều, qua cặp V1 và
+V2; và mật độ cùng cách chọn quan hệ, qua dãy V2, V3, V4, V5.
+
+Một điểm chung về cài đặt cần nêu trước, áp dụng cho bốn biến thể V1 đến V4.
+Do chi phí mô phỏng mạch lượng tử tăng theo bình phương số mẫu, ma trận quan
+hệ của bốn biến thể này không được tính trên toàn bộ mini-batch kích thước
+$N$ mà trên một mẫu con \emph{cố định theo vị trí}, gồm $q = \min(16, N)$
+phần tử đầu tiên của mỗi batch. Vì batch đã được xáo trộn ngẫu nhiên, mẫu con
+này tương đương một phép lấy mẫu ngẫu nhiên không phụ thuộc nội dung. Mọi tập
+chỉ số của V1 đến V4 dưới đây được hiểu là xác định trên $q$ mẫu đó.
+
+Quy ước này \textbf{không} áp dụng cho V5. Ở biến thể này, tập mẫu con
+được xác định bằng điểm số tính từ toàn bộ $N$ mẫu của batch, không phải từ
+$q$ phần tử đầu. Sự khác biệt về candidate pool giữa V5 và bốn biến thể còn
+lại được trình bày chi tiết ở cuối mục này.
+
+\textbf{V1: quan hệ dày đặc, giảm chiều tất định.} Biến thể cơ sở không dùng
+phép chiếu tuyến tính học được ở bước giảm chiều. Mạch lượng tử $\theta$ vẫn
+được huấn luyện như mọi biến thể khác (Mục~\ref{sec:qrd}), nên biến thể này
+có 24 tham số bổ sung (chỉ $\theta$), so với 604 tham số của bốn biến thể
+còn lại (580 từ $W_S$ cộng 24 từ $\theta$). Vector đặc trưng $d$ chiều
+được chia đều thành $n_q$ nhóm liên tiếp, mỗi nhóm lấy trung bình:
+
+\begin{equation}
+\label{eq:chunk}
+\big[g(f)\big]_m = \frac{n_q}{d}
+  \sum_{l = (m-1)d/n_q + 1}^{m\,d/n_q} f_l,
+  \qquad m = 1,\ldots,n_q,
+\end{equation}
+
+sau đó $g(f)$ thay cho $W f$ trong \eqref{eq:angles}. Tập chỉ số gồm toàn bộ
+các cặp:
+
+\begin{equation}
+\label{eq:i-v1}
+\mathcal{I}_{\mathrm{V1}} = \{(i,j) \mid 1 \le i,j \le q\}.
+\end{equation}
+
+Tập chỉ số $\mathcal{I}_{\mathrm{V1}}$ bao gồm cả cặp đường chéo $(i,i)$. Các
+phần tử này luôn có $R_T^{(Q)}(i,i) = R_S^{(Q)}(i,i) = 1$ theo định nghĩa của
+độ trung thực nên đóng góp đúng bằng 0 vào $\mathcal{L}_{\mathrm{QRD}}$, không
+mang thông tin và không sinh gradient. Chúng chỉ làm loãng nhẹ giá trị trung
+bình trong \eqref{eq:qrd} do tăng $|\mathcal{I}|$. Biến thể này là mở rộng
+trực tiếp nhất của chưng cất quan hệ cổ điển sang không gian Hilbert, và là
+mốc so sánh cho bốn biến thể còn lại.
+
+\textbf{V2: quan hệ dày đặc, phép chiếu học được.} Biến thể này giữ nguyên
+tập chỉ số của V1 nhưng thay phép giảm chiều tất định bằng hai phép chiếu
+tuyến tính $W_T$ và $W_S$ như mô tả ở Mục~\ref{sec:qrd}, trong đó chỉ $W_S$
+là tham số khả huấn, còn $W_T$ giữ cố định:
+
+\begin{equation}
+\label{eq:i-v2}
+\mathcal{I}_{\mathrm{V2}} = \mathcal{I}_{\mathrm{V1}}.
+\end{equation}
+
+Cặp V1 và V2 tách riêng ảnh hưởng của việc cho phép mô hình học cách
+chiếu đặc trưng vào không gian góc, trong điều kiện mọi yếu tố khác giữ
+nguyên.
+
+\textbf{V3: quan hệ thưa dựa trên tập neo.} Để giảm mật độ quan hệ, biến thể
+này giới hạn tập chỉ số trong một tập neo $\mathcal{A}$ có kích thước
+$M = 8$:
+
+\begin{equation}
+\label{eq:i-v3}
+\mathcal{I}_{\mathrm{V3}} = \{(a,a') \mid a, a' \in \mathcal{A}\},
+\qquad \mathcal{A} \subset \{1,\ldots,q\}, \; |\mathcal{A}| = M.
+\end{equation}
+
+Tập neo được lấy là $M$ phần tử đầu của mẫu con. \texttt{DataLoader} huấn
+luyện đặt \texttt{shuffle=True} và xáo trộn lại thứ tự mẫu ở mỗi epoch, nên
+đây là một phép chọn ngẫu nhiên chứ không dựa trên tiêu chí nào về nội dung
+mẫu. Lựa
+chọn này có chủ ý: tách riêng ảnh hưởng của việc \emph{giảm mật độ} khỏi
+ảnh hưởng của việc \emph{chọn có định hướng}, vốn được khảo sát ở V5. Các mẫu nằm ngoài $\mathcal{A}$ không đóng góp vào thành phần mất mát
+quan hệ, dù vẫn tham gia các thành phần khác của \eqref{eq:total}.
+
+\textbf{V4: kết hợp quan hệ toàn cục và cục bộ.} Biến thể này bổ sung quan hệ
+lân cận vào khối neo:
+
+\begin{equation}
+\label{eq:i-v4}
+\mathcal{I}_{\mathrm{V4}} = \{(a,a') \mid a,a' \in \mathcal{A}\}
+  \cup \{(i,j) \mid j \in \mathcal{N}_k(i)\},
+\end{equation}
+
+trong đó $\mathcal{N}_k(i)$ là tập $k = 4$ lân cận gần nhất của mẫu $x_i$.
+Lân cận được xác định bằng khoảng cách Euclid trên đặc trưng của teacher, tức
+là cấu trúc cục bộ được lấy từ mô hình đã huấn luyện chứ không từ student
+đang học. Quan hệ thu được được đối xứng hóa: nếu $j$ thuộc lân cận của $i$
+thì cả hai cặp $(i,j)$ và $(j,i)$ đều thuộc $\mathcal{I}_{\mathrm{V4}}$. Khác
+với V3, mọi mẫu trong mẫu con đều tham gia thông qua các cạnh lân cận của
+mình. Vì $\mathcal{I}_{\mathrm{V4}}$ được định nghĩa như một tập hợp, một cặp
+$(i,j)$ xuất hiện đồng thời trong khối neo lẫn khối kNN chỉ được tính đúng
+một lần trong \eqref{eq:qrd}, không cộng dồn. Trường hợp \texttt{torch.topk}
+gặp khoảng cách bằng nhau giữa các lân cận, thứ tự trả về phụ thuộc cách cài
+đặt của PyTorch (ổn định nhưng không có ý nghĩa thống kê ưu tiên); với đặc
+trưng liên tục như ở đây, khả năng trùng khoảng cách tuyệt đối gần như không
+xảy ra trên dữ liệu thực.
+
+\textbf{V5: lựa chọn quan hệ có định hướng theo teacher.} Bốn biến thể trên
+chọn mẫu không phụ thuộc nội dung, trên một tập con cố định $q$ phần tử. V5
+thay tập con cố định đó bằng một tập con \emph{chọn theo nội dung}, với
+candidate pool là toàn bộ $N$ mẫu của batch chứ không phải $q$ phần tử đầu.
+Với mỗi mẫu $x_i$ trong toàn bộ batch ($i = 1,\ldots,N$), độ bất định của
+teacher được đo bằng entropy chuẩn hóa của phân bố dự đoán:
+
+\begin{equation}
+\label{eq:entropy}
+u_i = -\frac{1}{\log C}\sum_{c=1}^{C}
+  p_T(c \mid x_i) \log p_T(c \mid x_i),
+\end{equation}
+
+với $C$ là số lớp, nhờ đó $u_i \in [0,1]$. Mức bất đồng thuận giữa teacher và
+student được đo bằng phân kỳ Jensen--Shannon:
+
+\begin{equation}
+\label{eq:js}
+d_i = \tfrac{1}{2}\mathrm{KL}\!\left(p_T \,\|\, m_i\right)
+    + \tfrac{1}{2}\mathrm{KL}\!\left(p_S \,\|\, m_i\right),
+\qquad m_i = \tfrac{1}{2}\left(p_T + p_S\right),
+\end{equation}
+
+trong đó $p_T$ và $p_S$ viết tắt cho $p_T(\cdot \mid x_i)$ và
+$p_S(\cdot \mid x_i)$. So với chuẩn $L_2$, phân kỳ Jensen--Shannon có ưu điểm
+là đối xứng, bị chặn, và phù hợp với việc so sánh hai phân bố xác suất. Điểm
+số tổng hợp là trung bình có trọng số của hai đại lượng, tính cho toàn bộ $N$
+mẫu:
+
+\begin{equation}
+\label{eq:score}
+s_i = w_e\,u_i + w_d\,d_i, \qquad w_e = w_d = 0{,}5,
+\qquad i = 1,\ldots,N.
+\end{equation}
+
+Tập $\mathcal{S}$ gồm $q$ mẫu có điểm số cao nhất trong toàn bộ $N$ mẫu
+được chọn. Ma trận quan hệ được dựng trên các cặp trong tập con kích thước
+$q$ đó:
+
+\begin{equation}
+\label{eq:i-v5}
+\mathcal{I}_{\mathrm{V5}} = \{(i,j) \mid i,j \in \mathcal{S}\},
+\qquad \mathcal{S} = \operatorname*{arg\,top\text{-}q}_{i \in \{1,\ldots,N\}} s_i.
+\end{equation}
+
+Thuật toán~1 tóm tắt trình tự tính toán và làm rõ ranh giới
+gradient.
+
+\begin{quote}
+\ttfamily\small
+\noindent\textbf{Thuật toán 1. Lựa chọn quan hệ theo teacher (V5).}\\[2pt]
+\textbf{Vào:} logits teacher $Z_T \in \mathbb{R}^{N \times C}$, logits
+student $Z_S \in \mathbb{R}^{N \times C}$, đặc trưng teacher/student
+$F_T, F_S \in \mathbb{R}^{N \times d}$, kích thước tập chọn $q$.\\
+\textbf{Ra:} ma trận quan hệ lượng tử $q \times q$ dùng cho
+$\mathcal{L}_{\mathrm{QRD}}$.\\[4pt]
+1: \quad \# Bước 1--3 nằm ngoài đồ thị gradient (torch.no\_grad)\\
+2: \quad \textbf{với} $i = 1,\ldots,N$: tính $u_i$ theo \eqref{eq:entropy} từ
+$Z_T$\\
+3: \quad \textbf{với} $i = 1,\ldots,N$: tính $d_i$ theo \eqref{eq:js} từ
+$Z_T, Z_S$\\
+4: \quad \textbf{với} $i = 1,\ldots,N$: $s_i \leftarrow w_e u_i + w_d d_i$
+(\eqref{eq:score})\\
+5: \quad $\mathcal{S} \leftarrow$ chỉ số của $q$ giá trị $s_i$ lớn nhất trong
+$N$ mẫu (\texttt{torch.topk}, không lan truyền ngược)\\[4pt]
+6: \quad \# Từ đây gradient được nối lại bình thường\\
+7: \quad $F_T[\mathcal{S}],\, F_S[\mathcal{S}] \leftarrow$ trích $q$ hàng của
+$F_T, F_S$ tại chỉ số $\mathcal{S}$\\
+8: \quad Mã hóa $F_T[\mathcal{S}], F_S[\mathcal{S}]$ thành trạng thái lượng
+tử theo \eqref{eq:angles}--\eqref{eq:state}\\
+9: \quad Dựng $R_T^{(Q)}, R_S^{(Q)} \in \mathbb{R}^{q \times q}$ theo
+\eqref{eq:kernel}--\eqref{eq:relmat} trên $q$ mẫu đã chọn\\
+10: \quad Tính $\mathcal{L}_{\mathrm{QRD}}$ theo \eqref{eq:qrd} trên hai ma
+trận $q \times q$ này
+\end{quote}
+
+Hai điểm cần nhấn mạnh để tránh nhầm lẫn với V1--V4. Thứ nhất, candidate pool
+để tính điểm số ở dòng 2--4 là toàn bộ $N$ mẫu của batch, không phải $q$ mẫu
+đã rút gọn. Phép \texttt{top-q} ở dòng 5 do đó là một phép chọn thật sự (loại
+$N - q$ mẫu có điểm thấp), khác với V1--V4 vốn không thực hiện phép chọn nào
+sau khi đã cố định $q$ mẫu đầu theo vị trí. Thứ hai, điểm số $s_i$ được tính
+từ logits và nằm ngoài đồ thị gradient (dòng 1--5), trong khi ma trận quan hệ
+lượng tử vẫn được dựng từ đặc trưng trung gian $F_T[\mathcal{S}], F_S[\mathcal{S}]$
+và tham gia đầy đủ vào lan truyền ngược (dòng 6--10), giữ đúng nguyên tắc đã
+nêu ở Mục~\ref{sec:qrd}: thông tin ở mức đầu ra chỉ định hướng việc chọn
+mẫu, không thay thế đặc trưng dùng để đo quan hệ. Vì entropy, phân kỳ
+Jensen--Shannon và phép \texttt{top-}$q$ đều nằm trong \texttt{torch.no\_grad}
+(dòng 1--5), việc chọn mẫu của V5 là một quy tắc rời rạc, cố định theo công
+thức \eqref{eq:score}, không phải một cơ chế khả vi được tối ưu cùng mạng.
+Chỉ bước dựng ma trận quan hệ trên tập đã chọn (dòng 6--10) mới tham gia lan
+truyền ngược.
+
+Bảng~\ref{tab:bienthe_cauhinh} tóm tắt trạng thái huấn luyện của từng thành
+phần trong cả năm biến thể, để tránh nhầm lẫn giữa việc "không có phép chiếu
+học được" (V1) với việc "không có tham số học được nào" (không đúng cho V1,
+vì mạch $\theta$ vẫn được huấn luyện).
+
+\begin{table}[!htbp]
+\centering
+\caption{Trạng thái huấn luyện của từng thành phần trong năm biến thể QRD.
+$\theta$ là tham số mạch vướng víu, dùng chung cho cả nhánh teacher và
+nhánh student (không tách $\theta_T$/$\theta_S$ riêng). Số tham số bổ sung
+không tính các tham số của teacher/student vốn đã có sẵn ngoài nhánh QRD.}
+\label{tab:bienthe_cauhinh}
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Biến thể} & $W_T$ & $W_S$ & $\theta$ & Tập cặp $\mathcal{I}$ & Tham số bổ sung \\
+\midrule
+V1 Dense (tất định) & không dùng & không dùng & huấn luyện & toàn bộ $q\times q$ & 24 \\
+V2 Dense (chiếu học được) & cố định & huấn luyện & huấn luyện & toàn bộ $q\times q$ & 604 \\
+V3 Anchor & cố định & huấn luyện & huấn luyện & neo $\mathcal{A}$, $M{=}8$ & 604 \\
+V4 Anchor$+$kNN & cố định & huấn luyện & huấn luyện & neo $+$ kNN, $k{=}4$ & 604 \\
+V5 Guided & cố định & huấn luyện & huấn luyện & top-$q$ theo teacher & 604 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Năm biến thể tạo thành hai trục khảo sát giao nhau. Trục thứ nhất, gồm V1 và
+V2, xét khả năng thích nghi của phép giảm chiều. Trục thứ hai, gồm V2 đến V5,
+xét mật độ và cách chọn quan hệ, đi từ không can thiệp, đến giảm mật độ ngẫu
+nhiên, đến bổ sung cấu trúc cục bộ, rồi đến chọn mẫu theo nội dung. Song song
+với hai trục này, việc thay hàm nhân lượng tử bằng hàm nhân cosine hoặc RBF
+trong cùng một chiến lược tách riêng đóng góp của không gian biểu diễn. Ba phép đối chứng được trình bày ở Mục~\ref{sec:ketqua}.
+
+\section{Thiết lập thực nghiệm và kết quả}
+\label{sec:thucnghiem}
+
+\subsection{Dữ liệu và giao thức đánh giá}
+\label{sec:dulieu}
+
+Phương pháp được đánh giá trên bộ dữ liệu PhysioNet EEG Motor
+Movement/Imagery (gọi tắt PhysionetMI, theo tên lớp dữ liệu tương ứng trong
+MOABB) \cite{schalk2004bci2000, goldberger2000physiobank}, gồm
+bản ghi điện não của 109 đối tượng thu bằng hệ thống 64 điện cực theo chuẩn
+10--10 với tần số lấy mẫu 160 Hz. Sáu đối tượng có bản ghi không nhất quán
+về thời lượng hoặc gán nhãn bị loại theo danh sách loại trừ của công trình
+teacher \cite{zoumpourlis2024motor}, còn lại 103 đối tượng được sử dụng.
+Thực nghiệm tập trung vào bài toán hai lớp, phân biệt tưởng tượng nắm tay
+trái và nắm tay phải, tương ứng với hai lệnh điều khiển cơ bản trong các hệ
+thống hỗ trợ vận hành bằng tín hiệu não.
+
+Giao thức đánh giá là kiểm chéo 5-fold chia theo đối tượng, bảo đảm không
+đối tượng nào xuất hiện đồng thời ở tập huấn luyện và tập kiểm tra. Thiết
+lập này phản ánh điều kiện triển khai thực tế, nơi hệ thống phải hoạt động
+với người dùng chưa từng tham gia huấn luyện.
+
+Toàn bộ quy trình được lặp lại với năm hạt giống ngẫu nhiên độc lập. Đơn vị
+thống kê dùng để tính điểm chính xác của mỗi cấu hình là đối tượng, không
+phải trial hay fold, nhằm tránh đánh giá quá lạc quan do các mẫu trong cùng
+một đối tượng có tương quan cao. Mỗi đối tượng vào tập kiểm tra đúng một lần
+trong 5-fold, nên mỗi cấu hình được gộp trên $5 \times 103 = 515$ kết quả
+theo đối tượng. 515 kết quả này không độc lập với nhau, vì các đối tượng
+trong cùng một fold của cùng một hạt giống dùng chung một mô hình student đã
+huấn luyện. Đơn vị suy luận cho các kiểm định giả thuyết ở
+Mục~\ref{sec:ketqua} là hạt giống. Mỗi hạt giống rút gọn 515 kết quả trên
+thành một giá trị trung bình, nên mọi kiểm định $t$ ghép cặp trong bài dùng
+$n = 5$ cặp độc lập, bậc tự do $df = 4$.
+
+\subsection{Tiền xử lý dữ liệu và xây dựng fold}
+\label{sec:tienxuly}
+
+Mục này mô tả đầy đủ quy trình tiền xử lý và cách chia fold, phục vụ khả
+năng tái lập.
+
+Sáu đối tượng bị loại theo danh sách của công trình teacher
+\cite{zoumpourlis2024motor} là 88, 90, 92, 100, 104 và 106. Bài toán giới
+hạn ở hai lớp \emph{left\_hand} và \emph{right\_hand} theo paradigm mặc
+định hai lớp của lớp \texttt{PhysionetMI} trong MOABB. Ba lớp còn lại của
+tập dữ liệu gốc (rest, feet, hands) không được sử dụng. Số trial của mỗi
+đối tượng không cố định, dao động theo số lần ghi thực tế còn giữ lại.
+Không có bước cân bằng lớp bổ sung nào ngoài paradigm gốc.
+
+Tín hiệu thô lấy mẫu ở 160 Hz được xử lý qua bốn bước tuần tự: lọc thông
+dải 4-38 Hz (bộ lọc FIR pha không theo cấu hình mặc định của MNE/braindecode,
+không chỉnh order tường minh); tái tham chiếu trung bình chung (Common
+Average Reference); resample xuống 100 Hz; và cắt cửa sổ. Không có bước lọc
+notch, không có bước loại artifact tường minh (không ICA, không ngưỡng loại
+trial), và không có phép chuẩn hóa nào khác ngoài quy đổi đơn vị volt sang
+microvolt, nên không phát sinh nguy cơ rò rỉ dữ liệu từ việc fit một phép
+chuẩn hóa trên toàn tập. Mỗi epoch bắt đầu đúng tại thời điểm sự kiện, không
+có độ trễ offset đầu hay cuối, và kéo dài 3,0 s, tương ứng 300 mẫu ở tần số
+100 Hz sau resample.
+
+Giao thức 5-fold chia theo đối tượng được xây dựng tất định. 103 đối tượng
+hợp lệ, giữ nguyên thứ tự mã số, được chia thành 5 khối liên tiếp gần bằng
+nhau. Với mỗi chỉ số fold, một khối được chọn làm tập kiểm tra và khối kế
+tiếp theo phép quay vòng làm tập thẩm định, ba khối còn lại làm tập huấn
+luyện, cho tỷ lệ xấp xỉ 62 huấn luyện, 21 thẩm định, 20 kiểm tra. Tập thẩm
+định luôn tách biệt hoàn toàn theo đối tượng khỏi cả hai tập còn lại. Phép
+chia này không phụ thuộc hạt giống ngẫu nhiên: cùng một chỉ số fold luôn
+cho ra cùng một tập hợp đối tượng ở cả năm hạt giống. Hạt giống chỉ chi
+phối tính ngẫu nhiên của quá trình huấn luyện (khởi tạo trọng số, thứ tự
+batch), không chi phối cách chia dữ liệu. Danh sách đầy đủ 515 lượt gán đối tượng
+vào fold được cung cấp cùng mã nguồn công bố, không in trong bài do độ dài.
+
+\subsection{Kiến trúc mạng teacher và student}
+\label{sec:kientruc}
+
+Cặp teacher--student được chọn để tách biệt tối đa giữa năng lực biểu diễn
+và khả năng triển khai.
+
+Teacher là Ensemble-MI \cite{zoumpourlis2024motor}, một hệ thống phân loại
+gồm nhiều nhánh tích chập hoạt động song song, huấn luyện theo cơ chế
+curriculum và collaborative learning. Với khoảng 15,1 nghìn tham số, mô hình này gấp khoảng 6,3 lần student về kích thước và 7,1 lần về thời gian suy luận, do chi phí tính toán tỷ lệ với số nhánh. Teacher được huấn luyện
+riêng cho từng fold, cho ra 5 checkpoint độc lập tương ứng đúng 5 phép chia
+dữ liệu ở Mục~\ref{sec:tienxuly}, mỗi checkpoint huấn luyện 120 epoch với 7
+tập con collaborative learning, theo đúng quy trình gốc của Ensemble-MI.
+
+Student là EEGNet \cite{lawhern2018eegnet}, sử dụng tích chập theo chiều sâu
+và tích chập tách biệt để giảm mạnh số tham số. Với khoảng 2,4 nghìn tham
+số (2.402, khoảng 10,2 triệu MAC mỗi lần suy luận, xem Mục~\ref{sec:ketqua}),
+kiến trúc này có tiềm năng triển khai trên vi điều khiển, cùng lớp quy mô
+tham số với một triển khai EEGNet đã công bố trên phần cứng nhúng
+\cite{wang2024mibminet}, dù chưa được kiểm chứng trực tiếp trên phần cứng
+mục tiêu trong nghiên cứu này. Cả hai mô hình cho vector đặc trưng trung gian
+cùng số chiều $d = 144$, nên các hàm mất mát ở mức đặc trưng và mức quan hệ
+được áp trực tiếp mà không cần lớp chiếu trung gian.
+
+Teacher được huấn luyện trước, giữ cố định và tắt cập nhật gradient trong
+toàn bộ quá trình chưng cất. Trên bộ dữ liệu này, teacher đạt độ chính xác
+$84{,}98\% \pm 2{,}59\%$ (trung bình và độ lệch chuẩn trên 5 fold).
+
+\subsection{Cấu hình thực nghiệm và siêu tham số}
+\label{sec:cauhinh}
+
+Toàn bộ thí nghiệm được triển khai bằng PyTorch kết hợp PennyLane, chạy trên
+một GPU của hệ thống tính toán hiệu năng cao. Bảng~\ref{tab:cauhinh} tóm tắt
+đầy đủ cấu hình.
+
+Mọi cấu hình chưng cất dùng chung teacher, student, bộ dữ liệu, cách chia
+fold, bộ hạt giống và toàn bộ siêu tham số tối ưu. Thành phần duy nhất thay
+đổi giữa các cấu hình là cơ chế truyền tri thức. Nhờ ràng buộc này, khác
+biệt hiệu năng quan sát được không thể quy cho khác biệt về kiến trúc hay
+quy trình huấn luyện.
+
+Riêng hệ số $\alpha$ ở Bảng~\ref{tab:cauhinh} áp dụng cho các cấu hình có
+số hạng chưng cất, nơi nó cân bằng entropy chéo với hàm mất mát chưng cất.
+Một phiên bản thí nghiệm trước đó áp cùng $\alpha = 0{,}5$ cho cả cấu hình
+không chưng cất, dù cấu hình này không có số hạng thứ hai để cân bằng,
+khiến hàm mất mát thực tế chỉ còn một nửa entropy chéo và baseline bị huấn
+luyện dưới mức. Lỗi được phát hiện qua độ lệch chuẩn bất thường giữa các
+hạt giống của cấu hình này (Mục~\ref{sec:xephang}) và được sửa bằng cách
+huấn luyện lại với $\alpha = 1{,}0$ (entropy chéo đầy đủ) cho riêng cấu
+hình không chưng cất. Mọi số liệu "không chưng cất" báo cáo trong bài từ
+đây trở đi dùng kết quả đã sửa; ảnh hưởng của lỗi này tới ước lượng hiệu
+ứng chưng cất được trình bày ở Mục~\ref{sec:ketqua}.
+
+Ba đặc điểm của thành phần lượng tử cần được nêu rõ vì chúng ảnh hưởng tới
+cách diễn giải kết quả. Trước hết, trọng số của mạch tham số hóa $\theta$
+được khởi tạo ngẫu nhiên một lần từ $\mathcal{N}(0, 0{,}1)$ rồi cập nhật qua
+lan truyền ngược trong suốt quá trình huấn luyện, cùng với phép chiếu phía
+student $W_S$. Chỉ phép chiếu phía teacher $W_T$ được giữ cố định
+(Mục~\ref{sec:qrd}). Bên cạnh đó, ma trận quan hệ được tính trên một mẫu con gồm 16 phần tử của mỗi mini-batch kích thước 64, nhằm giới hạn chi phí mô phỏng mạch lượng tử. Cuối cùng, hệ số $\beta = 0{,}02$ nhỏ hơn hai bậc so với các trọng số chưng cất khác, do ma
+trận nhân nhận giá trị trong đoạn $[0,1]$ nên sai lệch bình phương giữa hai
+ma trận nhân có độ lớn nhỏ hơn nhiều so với sai lệch giữa các vector đặc
+trưng chưa chuẩn hóa. Hệ số này dùng chung cho cả ba dạng hàm nhân so sánh
+ở Mục~\ref{sec:bienthe}. Mức độ công bằng của việc dùng chung được thảo
+luận ở Mục~\ref{sec:qrd}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Cấu hình thực nghiệm và siêu tham số. Mọi cấu hình chưng cất dùng
+chung các giá trị này. Thành phần duy nhất thay đổi giữa các phương pháp là
+cơ chế truyền tri thức.}
+\label{tab:cauhinh}
+\small
+\begin{tabular}{@{}ll@{\hspace{2.2em}}ll@{}}
+\toprule
+\multicolumn{2}{@{}l}{\textit{Dữ liệu và giao thức}}
+  & \multicolumn{2}{l@{}}{\textit{Trọng số hàm mất mát}} \\
+\cmidrule(r){1-2}\cmidrule(l){3-4}
+Bộ dữ liệu & PhysionetMI          & $\alpha$ (entropy chéo) & 0,5 \\
+Số đối tượng & 103 trên 109        & $\tau$ (nhiệt độ)      & 4,0 \\
+Kênh, tần số & 64, 160 Hz          & $\gamma_f$ (FeatureKD) & 1,0 \\
+Bài toán & Hai lớp                 & $\gamma_r$ (RelationalKD) & 1,0 \\
+Kiểm chéo & 5-fold theo đối tượng  & $\beta$ (QRD)          & 0,02 \\
+Số hạt giống & 5                   & & \\
+Đơn vị thống kê & Đối tượng        & \multicolumn{2}{l@{}}{\textit{Lượng tử và chọn quan hệ}} \\
+\cmidrule(r){1-2}\cmidrule(l){3-4}
+\multicolumn{2}{@{}l}{\textit{Mô hình}}
+  & Số qubit $n_q$ & 4 \\
+\cmidrule(r){1-2}
+Teacher & Ensemble-MI, $15{,}1$ K  & Số lớp vướng víu $L$ & 2 \\
+Student & EEGNet, $2{,}4$ K        & Trọng số mạch & huấn luyện được \\
+Chiều đặc trưng $d$ & 144          & Cỡ mẫu con $q$ & 16 \\
+ & & Số mẫu neo $M$ & 8 \\
+\multicolumn{2}{@{}l}{\textit{Tối ưu}}
+  & Số lân cận $k$ & 4 \\
+\cmidrule(r){1-2}
+Bộ tối ưu & SGD, momentum 0,9      & $w_e$, $w_d$ & 0,5 và 0,5 \\
+Learning rate & 0,005              & & \\
+Weight decay & 0,01                & & \\
+Batch size & 64                    & & \\
+Số epoch & 30                      & & \\
+Chọn checkpoint & theo val accuracy & & \\
+Thư viện & PyTorch, PennyLane      & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Kết quả và thảo luận}
+\label{sec:ketqua}
+
+\subsubsection{Hiệu ứng của chưng cất và mức phân tách giữa các cơ chế}
+
+\begin{table}[!htbp]
+\centering
+\caption{So sánh các cơ chế chưng cất trên PhysionetMI. Trung bình và độ
+lệch chuẩn tính trên 5 hạt giống độc lập, mỗi seed gồm 5 fold và 103 đối tượng.
+Điểm chính xác của mỗi cấu hình gộp trên 515 kết quả theo đối tượng
+(không độc lập, xem Mục~\ref{sec:dulieu}); đơn vị suy luận thống kê là hạt
+giống. Cột $\Delta$ = accuracy của hàng trừ accuracy của KDBase (hàng tham
+chiếu, $\Delta=0$); giá trị âm nghĩa là cấu hình đó thấp hơn KDBase. Văn bản
+thảo luận cùng chênh lệch này theo chiều ngược lại khi mô tả mức cải thiện
+khi thêm chưng cất (từ student đơn lẻ lên KDBase). Cột $p$ bằng kiểm định
+$t$ ghép cặp trên 5 hạt giống chung ($n=5$, $df=4$).}
+\label{tab:tongthe}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cấu hình} & \textbf{Accuracy (\%)} & $\boldsymbol{\Delta}$ & $\boldsymbol{p}$ \\
+\midrule
+Không chưng cất (student đơn lẻ) & $74.93 \pm 2.30$ & $-6.56$ & $0.002$ \\
+\textbf{Chưng cất logits (KDBase)} & $81.49 \pm 0.59$ & -- & -- \\
+Chưng cất đặc trưng (FeatureKD) & $80.05 \pm 1.02$ & $-1.44$ & $0.016$ \\
+Chưng cất quan hệ Euclid (RelationalKD) & $81.61 \pm 0.84$ & $+0.12$ & $0.754$ \\
+V5 Guided (nhân lượng tử) & $81.12 \pm 0.71$ & $-0.37$ & $0.231$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bảng~\ref{tab:tongthe} trình bày kết quả của các cơ chế chưng cất. Hiệu ứng
+lớn nhất và rõ ràng nhất nằm ở việc có hay không có chưng cất. Student huấn
+luyện độc lập đạt 74,93\%, trong khi mọi cấu hình có chưng cất đều đạt
+khoảng 81\%. Mức cải thiện là 6,56 điểm phần trăm, với khoảng tin cậy 95\%
+từ 4,08 đến 9,04 điểm ($p = 0{,}0018$). Đây là hiệu ứng vượt xa mọi nguồn
+biến thiên khác trong thí nghiệm, dù nhỏ hơn nhiều so với ước lượng 18,43
+điểm ở một phiên bản trước, vốn bị phóng đại do baseline không chưng cất
+huấn luyện dưới mức (Mục~\ref{sec:cauhinh}).
+
+Chưng cất thu hẹp phần lớn nhưng không xóa bỏ khoảng cách tới teacher (vốn
+đạt $84{,}98\%$). Với cấu hình tham chiếu KDBase, khoảng cách còn lại là
+3,49 điểm phần trăm, so với khoảng cách 10,05 điểm phần trăm của student
+không chưng cất, tương đương thu hẹp khoảng 65\% khoảng cách năng lực ban
+đầu giữa hai mô hình.
+
+Cấu hình FeatureKD đạt 80,05\%, thấp hơn KDBase 1,44 điểm với $p = 0{,}016$.
+Kết quả này có hai ý nghĩa. Một mặt, ràng buộc căn chỉnh đặc trưng trực tiếp bằng sai số bình phương tỏ ra quá cứng đối với tín hiệu EEG, buộc
+student tái tạo cả những thành phần biểu diễn không liên quan tới nhiệm vụ
+phân loại. Mặt khác, giao thức đã phát hiện được hiệu ứng 1,44 điểm phần
+trăm này trong phép so sánh cụ thể đó. Một phép so sánh đạt ý nghĩa không tự
+động bảo đảm công suất tương đương cho mọi phép so sánh khác, vì công suất
+phụ thuộc phương sai riêng của từng cặp. Với độ lệch chuẩn chênh lệch ghép
+cặp quan sát được ở phép so sánh này (0,80 điểm phần trăm, $n=5$), hiệu ứng
+tối thiểu phát hiện được ở công suất 80\% là khoảng 1,33 điểm phần trăm, chỉ
+nhỉnh hơn một chút so với 1,44 điểm quan sát được, cho thấy đây là một phép
+phát hiện ở gần biên chứ không phải một khoảng dư công suất lớn.
+
+Trên nền đó, kết quả của các cơ chế dựa trên quan hệ trở nên đáng
+lưu ý. RelationalKD đạt 81,61\% và biến thể V5 đạt 81,12\%, lần lượt cao hơn
+và thấp hơn KDBase với biên độ 0,12 và 0,37 điểm. Không so sánh nào đạt mức
+ý nghĩa thống kê, với $p = 0{,}754$ và $p = 0{,}231$.
+
+\subsubsection{Chiến lược hình thành quan hệ và dạng hàm nhân}
+
+\begin{table}[!htbp]
+\centering
+\caption{So sánh năm chiến lược hình thành quan hệ và hai hàm nhân cổ điển
+đối chứng. Mọi cấu hình dùng chung teacher, student, siêu tham số và bộ
+hạt giống. Thành phần thay đổi là phép giảm chiều, cách xác định tập
+quan hệ, hoặc dạng hàm nhân. Riêng V5 còn khác V2--V4 ở candidate pool dùng
+để chọn quan hệ, không chỉ ở tiêu chí chọn (Mục~\ref{sec:bienthe}). Cột
+$\Delta$ và $p$ so với KDBase bằng kiểm định $t$ ghép cặp trên 5 hạt giống
+($n=5$, $df=4$, xem Mục~\ref{sec:dulieu}).}
+\label{tab:bienthe}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cấu hình} & \textbf{Accuracy (\%)} & $\boldsymbol{\Delta}$ & $\boldsymbol{p}$ \\
+\midrule
+\multicolumn{4}{l}{\textit{Nhân lượng tử, thay đổi phép giảm chiều}} \\
+V1 Dense, giảm chiều tất định & $81.90 \pm 0.71$ & $+0.41$ & $0.158$ \\
+V2 Dense, phép chiếu học được & $81.49 \pm 0.78$ & $+0.00$ & $1.000$ \\
+\midrule
+\multicolumn{4}{l}{\textit{Nhân lượng tử, thay đổi chiến lược quan hệ}} \\
+V3 Anchor & $81.25 \pm 1.00$ & $-0.24$ & $0.351$ \\
+V4 Anchor $+$ kNN & $81.42 \pm 0.75$ & $-0.07$ & $0.775$ \\
+V5 Guided & $81.12 \pm 0.71$ & $-0.37$ & $0.231$ \\
+\midrule
+\multicolumn{4}{l}{\textit{Cố định chiến lược V5, thay đổi hàm nhân}} \\
+Nhân cosine & $81.63 \pm 0.63$ & $+0.14$ & $0.609$ \\
+Nhân RBF & $81.61 \pm 0.58$ & $+0.13$ & $0.511$ \\
+Nhân lượng tử & $81.12 \pm 0.71$ & $-0.37$ & $0.231$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bảng~\ref{tab:bienthe} tách riêng ba câu hỏi thiết kế. Khối thứ nhất cố định
+tập quan hệ và thay đổi phép giảm chiều. Khối thứ hai cố định phép giảm chiều
+và thay đổi cách xác định tập quan hệ. Khối thứ ba cố định chiến lược V5 và
+thay đổi dạng hàm nhân.
+
+Khối đầu tiên tách riêng ảnh hưởng của phép giảm chiều. Biến thể V1 sử dụng
+một phép chiếu tất định không có tham số, còn V2 thay bằng một phép chiếu
+tuyến tính học được phía student ($W_S$, 580 tham số); phép chiếu phía
+teacher $W_T$ giữ cố định ở cả hai biến thể (xem
+Bảng~\ref{tab:bienthe_cauhinh}). V1 đạt $81{,}90\%$, cao hơn V2 $0{,}41$
+điểm phần trăm trong phép so sánh trực tiếp V1 với V2 ($p = 0{,}085$, khác
+với cột $p$ trong Bảng~\ref{tab:bienthe} vốn so mỗi biến thể riêng lẻ với
+KDBase). Chênh lệch này nằm ở vùng ranh giới, không đạt ngưỡng
+$\alpha = 0{,}05$ quy ước, nhưng ngược chiều với kỳ vọng thiết kế: phép
+chiếu tuyến tính học được không cho thấy lợi ích đo được so với một phép
+giảm chiều tất định không tham số, và số liệu hiện có còn gợi ý chiều
+ngược lại. Khả năng thích nghi của phép giảm chiều, trong thiết lập này,
+không đóng góp lợi ích đo được cho chất lượng tín hiệu giám sát quan hệ.
+
+Khối thứ hai thay đổi chiến lược xác định tập quan hệ. Ba biến thể cho kết
+quả từ 81,12\% đến 81,42\%, trải trên một khoảng 0,30 điểm phần trăm. Không
+biến thể nào tách khỏi KDBase, với giá trị $p$ nhỏ nhất là 0,231. Thứ tự
+quan sát được cũng không khớp với dự đoán từ nguyên lý thiết kế. Chiến
+lược V5, vốn được kỳ vọng chọn ra các quan hệ mang nhiều thông tin nhất,
+cho kết quả thấp nhất trong nhóm chứ không phải cao nhất. Cần thận trọng
+khi diễn giải riêng kết quả của V5: như đã nêu ở Mục~\ref{sec:bienthe}, V5
+khác V2--V4 không chỉ ở tiêu chí chọn mà còn ở candidate pool (toàn bộ 64
+mẫu của batch, so với 16 mẫu cố định theo vị trí). Kết quả thấp nhất của V5
+do đó chưa thể quy hoàn toàn cho việc tiêu chí "chọn theo thông tin" kém
+hiệu quả. Một phần khác biệt có thể đến từ candidate pool rộng hơn, một yếu
+tố chưa được cô lập trong thiết kế hiện tại.
+
+Một đối chứng bổ sung kiểm tra trực tiếp khả năng này: giữ nguyên
+candidate pool 64 mẫu như V5, nhưng thay tiêu chí entropy và bất đồng
+bằng chọn ngẫu nhiên (\texttt{torch.randperm}), gọi là
+\emph{random\_pool64}. Nếu kết quả của biến thể này gần với V2 (pool 16
+mẫu) thì khác biệt V2-V5 chủ yếu do kích thước candidate pool; nếu gần
+với V5 thì chủ yếu do tiêu chí chọn. Kết quả đo được là
+$81{,}36\pm0{,}60\%$, nằm giữa V2 ($81{,}49\%$, $p=0{,}723$ so với
+random\_pool64) và V5 ($81{,}12\%$, $p=0{,}122$), không khác biệt có ý
+nghĩa thống kê với bên nào ($n=5$, $df=4$). Đối chứng này không đủ phân
+giải để tách ảnh hưởng của kích thước candidate pool khỏi ảnh hưởng của
+tiêu chí chọn cho V5; cả hai khả năng đều chưa bị loại trừ bởi dữ liệu
+hiện có.
+
+Ở khối thứ ba, ba dạng hàm nhân trải trên một khoảng rộng hơn, 0,51 điểm
+phần trăm: cosine 81,63\%, RBF 81,61\% và lượng tử 81,12\%. Phép so sánh
+chính, đã chốt trước khi xem kết quả, là so sánh trực tiếp giữa hàm nhân
+lượng tử và cosine, cho $p = 0{,}096$; giữa lượng tử và RBF,
+$p = 0{,}060$; cả hai nằm ở vùng ranh giới nhưng không đạt ngưỡng ý nghĩa
+$\alpha = 0{,}05$. Giữa hai hàm nhân cổ điển với nhau, cosine và RBF không
+khác biệt ($p = 0{,}920$).
+
+Khoảng tin cậy 95\% của chênh lệch cosine trừ lượng tử là
+$[-0{,}15, 1{,}15]$ điểm phần trăm, vượt ra ngoài biên tương đương
+$\pm 0{,}5$ điểm đã chốt trước khi xem kết quả. Theo kế hoạch phân tích đã
+cam kết, kết luận đúng đắn là \emph{không đủ dữ liệu để kết luận theo bất
+kỳ chiều nào}, chứ không phải tương đương lẫn không phải khác biệt có ý
+nghĩa. Với thiết lập được khảo sát, cả khả năng hàm nhân lượng tử tương
+đương lẫn khả năng nó kém hơn một chút đều chưa bị loại trừ bởi dữ liệu
+hiện có.
+
+Một đối chứng bổ sung kiểm soát chặt hơn không gian đầu vào của cosine và
+RBF: thay đặc trưng thô 144 chiều bằng đặc trưng đã chiếu qua $W_S$ học
+được và $W_T$ cố định (580 tham số), giống hệt nhánh lượng tử, thay vì so
+sánh trên không gian gốc như ở trên. Kết quả là cosine chiếu
+$81{,}25\pm0{,}70\%$ và RBF chiếu $81{,}36\pm0{,}91\%$, không khác biệt
+có ý nghĩa so với bản gốc 144 chiều (cosine $\Delta=-0{,}38$pp,
+$p=0{,}168$; RBF $\Delta=-0{,}25$pp, $p=0{,}293$) và không khác biệt có ý
+nghĩa so với V5 lượng tử (cosine chiếu $\Delta=+0{,}13$pp, $p=0{,}647$;
+RBF chiếu $\Delta=+0{,}24$pp, $p=0{,}312$; $n=5$, $df=4$ cho mọi phép so
+sánh). Khoảng cách giữa lượng tử và hai hàm nhân cổ điển thu hẹp so với
+bản gốc (còn $0{,}13$-$0{,}24$ điểm so với $0{,}49$-$0{,}51$ điểm ở trên)
+chứ không nới rộng. Kiểm soát chặt hơn số chiều và số tham số học được,
+do đó, không thay đổi kết luận: ba dạng hàm nhân vẫn không phân biệt được
+ở mức ý nghĩa thống kê.
+
+Một cách định lượng mức phân tách giữa các phương pháp là so sánh hai nguồn
+biến thiên. Độ lệch chuẩn của giá trị trung bình giữa mười hai cơ chế chưng
+cất là 0,459 điểm phần trăm. Độ lệch chuẩn trung bình do thay đổi hạt giống
+ngẫu nhiên, trong cùng một cơ chế, là 0,750 điểm phần trăm. Tỷ lệ giữa hai
+đại lượng là 0,61. Khoảng cách giữa các phương pháp nhỏ hơn mức nhiễu mà
+chính quy trình huấn luyện tự sinh ra.
+
+\subsubsection{Độ ổn định của xếp hạng theo số lần lặp}
+\label{sec:xephang}
+
+\begin{table}[!htbp]
+\centering
+\caption{Ảnh hưởng của số lần lặp ngẫu nhiên tới xếp hạng phương pháp. Cột
+bên trái lấy từ một lần chạy đơn gồm 5 fold, hạt giống cố định $20200220$
+(giá trị mặc định của hàm huấn luyện, dùng từ lần chạy đầy đủ đầu tiên của
+dự án, có trước khi thiết kế phân tích 5 hạt giống nên không phải lựa chọn
+sau khi biết kết quả), tương ứng với giao thức báo cáo phổ biến trong y văn.
+Năm cơ chế cổ điển lấy từ lần chạy gốc, bảy biến thể lượng tử lấy từ lần
+chạy lại sau khi sửa mạch (cùng hạt giống $20200220$), vì dữ liệu lượng tử
+gốc đã bị vô hiệu. Cột bên phải lấy từ 5 hạt giống độc lập. Hệ số tương
+quan hạng Spearman giữa hai xếp hạng là $\rho = 0{,}14$ ($p = 0{,}66$). Hạng
+6,5 đánh dấu hai cấu hình đồng hạng.}
+\label{tab:daohang}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{Một hạt giống}} & \multicolumn{2}{c}{\textbf{Năm hạt giống}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textbf{Cấu hình} & Acc (\%) & Hạng & Acc (\%) & Hạng \\
+\midrule
+V2 Dense & 82.37 & \textbf{1} & 81.49 & 5,5 \\
+V5 Guided & 81.86 & 2 & 81.12 & \textbf{11} \\
+Nhân RBF & 81.55 & 3 & 81.61 & 3,5 \\
+Nhân cosine & 81.47 & 4 & 81.63 & 2 \\
+V5 Guided ($\beta = 0{,}01$) & 81.40 & 5 & 81.47 & 7 \\
+V4 Anchor+kNN & 81.32 & 6,5 & 81.42 & 8,5 \\
+RelationalKD & 81.32 & 6,5 & 81.61 & 3,5 \\
+V5 Guided ($\beta = 0{,}05$) & 81.21 & 8 & 81.42 & 8,5 \\
+V3 Anchor & 81.14 & 9 & 81.25 & 10 \\
+KDBase & 81.12 & 10 & 81.49 & 5,5 \\
+V1 Dense & 81.06 & 11 & 81.90 & \textbf{1} \\
+FeatureKD & 80.71 & 12 & 80.05 & \textbf{12} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bảng~\ref{tab:daohang} đối chiếu xếp hạng thu được từ một lần chạy đơn với
+xếp hạng thu được từ năm hạt giống. Cột bên trái tương ứng với giao thức
+báo cáo phổ biến, trong đó một cấu hình được chạy một lần trên nhiều fold.
+
+Hai xếp hạng gần như không tương quan. Hệ số tương quan hạng Spearman là
+$\rho = 0{,}14$ với $p = 0{,}66$. Với chỉ mười hai cấu hình, kết quả này
+không đủ căn cứ để bác bỏ giả thuyết không có liên hệ, và bản thân hệ số
+tương quan cũng quá yếu để cho thấy một liên hệ thực sự. Xếp hạng từ một
+lần chạy đơn gần như không dự báo được xếp hạng từ năm hạt giống.
+Trường hợp đảo hạng kịch tính nhất là V1 Dense: đứng áp chót, hạng 11 trên
+12, trong lần chạy đơn, nhưng vươn lên hạng nhất khi tính trên năm hạt
+giống. V5 Guided đi theo chiều ngược lại, đứng thứ hai theo lần chạy đơn
+nhưng tụt xuống vị trí cuối bảng, thứ mười một trên mười hai, khi tính
+trên năm hạt giống.
+
+Vì các hạt giống là những lần rút độc lập, xếp hạng từ lần chạy đơn có thể
+được xem như một dự báo về kết quả khi lặp lại thí nghiệm. Theo nghĩa đó,
+dự báo này không đáng tin cậy. Tương quan dương nhưng yếu và không có ý
+nghĩa thống kê, còn vị trí của từng cấu hình riêng lẻ có thể xê dịch
+nhiều bậc. Cấu hình duy nhất giữ nguyên gần đúng vị trí cuối bảng là
+FeatureKD. Đó cũng là cấu hình duy nhất có hiệu ứng vượt sàn nhiễu.
+
+Cùng logic áp dụng cho cấu hình không chưng cất, dù ở đây độ nhạy với hạt
+giống còn có một nguyên nhân bổ sung. Bản thân cấu hình này có độ lệch
+chuẩn qua hạt giống 2,30 điểm phần trăm sau khi sửa lỗi $\alpha$ mô tả ở
+Mục~\ref{sec:cauhinh}, cao gấp khoảng bốn lần các cấu hình có chưng cất
+(trước khi sửa, độ lệch chuẩn lên tới 5,03 điểm, gấp khoảng tám lần). Một
+cấu hình có phương sai giữa các hạt giống lớn bất thường so với phần còn
+lại là một dấu hiệu đáng ngờ về mặt phương pháp; trong trường hợp này,
+chính dấu hiệu đó đã dẫn tới việc phát hiện lỗi huấn luyện dưới mức
+(Mục~\ref{sec:ketqua}).
+
+\subsubsection{Chi phí tính toán và hàm ý cho triển khai}
+
+\begin{table}[!htbp]
+\centering
+\caption{Chi phí huấn luyện của các cơ chế chưng cất, đo bằng thời gian
+trung bình mỗi epoch trên cùng một GPU NVIDIA H100. Giá trị "$\approx$" là
+thời gian trung bình một lần chạy, chưa có độ lệch chuẩn giữa nhiều lần lặp
+lại (không có dữ liệu lặp lại phép đo này). Cột cuối là mức tăng độ chính xác
+so với KDBase, kèm giá trị $p$ của kiểm định $t$ ghép cặp trên 5 hạt giống
+($n=5$, $df=4$).}
+\label{tab:chiphi}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cơ chế} & \textbf{Thời gian/epoch (s)} & \textbf{Bội số} & $\boldsymbol{\Delta}$ \textbf{Acc} \\
+\midrule
+KDBase & 1,05 & 1,0$\times$ & -- \\
+RelationalKD & 1,10 & 1,0$\times$ & $+0{,}12$ ($p = 0{,}75$) \\
+Nhân cosine & 1,10 & 1,0$\times$ & $+0{,}14$ ($p = 0{,}61$) \\
+Nhân RBF & 1,09 & 1,0$\times$ & $+0{,}13$ ($p = 0{,}51$) \\
+V5 Guided & $\approx$13,6 & \textbf{$\approx$13}$\boldsymbol{\times}$ & $-0{,}37$ ($p = 0{,}23$) \\
+V2 Dense & $\approx$13,6 & \textbf{$\approx$13}$\boldsymbol{\times}$ & $+0{,}00$ ($p = 1{,}00$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Các đại lượng hướng điều khiển suy ra từ độ chính xác giải mã. Lượng
+thông tin mỗi lệnh tính theo \eqref{eq:itr-bits}, tốc độ truyền thông tin theo
+\eqref{eq:itr-rate} với $T = T_{\mathrm{window}} = 3{,}0$ s (300 mẫu ở tần số
+100 Hz sau resample, xem Mục~\ref{sec:tienxuly}), \textbf{chưa cộng
+$T_{\mathrm{infer}}$ và $T_{\mathrm{command}}$} của \eqref{eq:latency}. Đây là
+ITR ngoại tuyến quy đổi theo độ dài cửa sổ tín hiệu, không phải ITR trực
+tuyến của vòng điều khiển hoàn chỉnh, vì $T_{\mathrm{command}}$ chưa được đo
+trên một thiết bị chấp hành cụ thể nào (xem thảo luận sau bảng). Hệ số
+$\kappa$ được liệt kê để tham chiếu. Với bài toán
+hai lớp cân bằng, $\kappa = 2\,acc - 1$ nên nó là biến đổi tất định của độ
+chính xác chứ không phải một chiều đánh giá độc lập.}
+\label{tab:dieukhien}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Cấu hình} & \textbf{Acc (\%)} & $\boldsymbol{\kappa}$ & $\boldsymbol{B}$ \textbf{(bit/lệnh)} & \textbf{ITR ngoại tuyến (bit/phút)} \\
+\midrule
+Không chưng cất & 74.93 & 0.499 & 0.188 & 3.75 \\
+\midrule
+KDBase & 81.49 & 0.630 & 0.309 & 6.18 \\
+FeatureKD & 80.05 & 0.601 & 0.279 & 5.58 \\
+RelationalKD & 81.61 & 0.632 & 0.311 & 6.23 \\
+\midrule
+V1 Dense, giảm chiều tất định & 81.90 & 0.638 & 0.318 & 6.35 \\
+V2 Dense, phép chiếu học được & 81.49 & 0.630 & 0.309 & 6.18 \\
+V3 Anchor & 81.25 & 0.625 & 0.304 & 6.08 \\
+V4 Anchor $+$ kNN & 81.42 & 0.628 & 0.307 & 6.15 \\
+V5 Guided & 81.12 & 0.622 & 0.301 & 6.02 \\
+\midrule
+Nhân cosine & 81.63 & 0.633 & 0.312 & 6.24 \\
+Nhân RBF & 81.61 & 0.632 & 0.312 & 6.23 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Phân rã ngân sách thời gian của vòng điều khiển kín theo
+\eqref{eq:latency}. Thời gian suy luận đo trên CPU của node tính toán dùng
+chung của cụm HPC (không cấu hình precision hay số luồng đặc biệt, dùng mặc
+định của PyTorch 2.7.1), với batch bằng một, lấy trung vị và phân vị 95 trên
+200 lần chạy sau 20 lần khởi động. Mô hình CPU cụ thể và số luồng thực tế sử
+dụng không được ghi lại trong log đo đạc. Đây là giới hạn của phép đo, không
+phải đặc tả phần cứng nhúng mục tiêu. Ba hàng cuối
+(MAC, activation đỉnh, precision) tính giải tích trực tiếp từ kiến trúc
+EEGNet đang dùng (không đo trên phần cứng nhúng mục tiêu), chỉ báo cáo cho
+student vì đây là mô hình được triển khai.}
+\label{tab:tre}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Thành phần} & \textbf{Student (EEGNet)} & \textbf{Teacher (Ensemble-MI)} \\
+\midrule
+Số tham số & $2{,}402$ & $15{,}1$ K \\
+$T_{\mathrm{window}}$ & 3000 ms & 3000 ms \\
+$T_{\mathrm{infer}}$ (trung vị) & 3,17 ms & 22,38 ms \\
+$T_{\mathrm{infer}}$ (p95) & 3,31 ms & 22,63 ms \\
+\midrule
+Tỷ lệ $T_{\mathrm{infer}}$ trên $T_{\mathrm{window}}$ & 0,11\% & 0,75\% \\
+\midrule
+MAC mỗi lần suy luận (batch=1) & $\approx 10{,}2$ triệu & không tính \\
+Activation đỉnh (fp32, batch=1) & $\approx 600$ KB & không tính \\
+Precision & float32 & float32 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+Bảng~\ref{tab:chiphi} đặt chi phí huấn luyện cạnh mức thay đổi độ chính xác.
+Các cơ chế chưng cất cổ điển, bao gồm cả hàm nhân cosine và RBF, có thời
+gian huấn luyện gần như bằng nhau ở mức khoảng 1,1 giây mỗi epoch. Các biến
+thể sử dụng hàm nhân lượng tử cần khoảng 13,6 giây mỗi epoch, tức gấp
+khoảng 13 lần, do cấu trúc data re-uploading ở
+\eqref{eq:layer}--\eqref{eq:state} yêu cầu mô phỏng mạch nhiều lượt hơn cho
+từng mẫu trong mẫu con so với một mạch mã hóa-rồi-vướng víu một lượt.
+
+Mức tăng chi phí này không đi kèm bất kỳ cải thiện đo được nào về độ chính
+xác. Chi phí này chỉ phát sinh ở giai đoạn huấn luyện. Mô hình triển khai
+vẫn là student cổ điển với cùng số tham số và cùng thời gian suy luận ở
+mọi cấu hình. Dù vậy, với một quy trình phát triển thực tế đòi hỏi nhiều
+lần huấn luyện lại khi bổ sung dữ liệu hoặc điều chỉnh siêu tham số, hệ số
+khoảng 13 là một khoản chi đáng kể.
+
+Xét theo tiêu chí hướng điều khiển đã nêu ở Mục~\ref{sec:rangbuoc},
+Bảng~\ref{tab:dieukhien} quy đổi độ chính xác thành các đại lượng vận hành.
+Đây là ITR ngoại tuyến tính theo $T_{\mathrm{window}}$ trong
+\eqref{eq:latency}, chưa cộng $T_{\mathrm{infer}}$ (đo ở Bảng~\ref{tab:tre},
+dưới 1\% $T_{\mathrm{window}}$ nên ảnh hưởng không đáng kể tới ITR) và
+$T_{\mathrm{command}}$ (chưa đo được vì nghiên cứu không gắn với một thiết bị
+chấp hành cụ thể); ITR trực tuyến của một vòng điều khiển hoàn chỉnh do đó
+thấp hơn các giá trị dưới đây, mức thấp hơn bao nhiêu phụ thuộc
+$T_{\mathrm{command}}$ của hệ thống triển khai cụ thể. Với độ dài cửa sổ tín
+hiệu $T = 3{,}0$ s, student không chưng cất cho tốc độ
+truyền thông tin 3,75 bit/phút, còn mọi cấu hình có chưng cất nằm trong khoảng
+5,58 đến 6,24 bit/phút. Chưng cất nhân băng thông kênh điều khiển lên khoảng 1,6 lần
+so với KDBase. Khoảng cách giữa các cơ chế chưng cất là 0,66 bit/phút, trong
+đó phần lớn đến từ riêng FeatureKD; nếu bỏ cấu hình này, khoảng cách thu hẹp
+còn 0,22 bit/phút, tương đương khoảng 3,5\% băng thông và không có ý nghĩa vận
+hành.
+
+Bảng~\ref{tab:tre} phân rã ngân sách thời gian của vòng kín. Đo trên CPU với
+batch bằng một, student có trung vị 3,17 ms và teacher có trung vị 22,38 ms.
+So với cửa sổ tín hiệu 3000 ms, hai thành phần này chiếm lần lượt 0,11\% và
+0,75\% ngân sách. Cả hai mô hình đều nằm trong ngân sách thời gian của vòng
+kín khi chạy trên máy trạm, nên ràng buộc thời gian thực tự nó không loại trừ
+teacher.
+
+Khoảng cách giữa hai mô hình nằm ở chiều khác. Teacher lớn hơn student 6,3
+lần về số tham số và chậm hơn 7,1 lần về thời gian suy luận. Trên máy trạm,
+tỷ lệ này không quan trọng vì cả hai đều nhanh hơn cửa sổ tín hiệu nhiều bậc.
+Trên phần cứng đi kèm thiết bị thì ràng buộc thắt lại là bộ nhớ và năng
+lượng. Ở đó, khác biệt sáu lần về kích thước mô hình trở nên đáng kể.
+$T_{\mathrm{infer}}$ trong Bảng~\ref{tab:tre} đo trên CPU của hệ thống
+tính toán hiệu năng cao, không phải trên vi điều khiển hay phần cứng nhúng
+mục tiêu. Giá trị 3,17 ms của student cùng bậc độ lớn với mức 2,95 ms mà
+một triển khai EEGNet khác đã báo cáo trên vi điều khiển siêu tiết kiệm
+năng lượng \cite{wang2024mibminet}. Đây là hai kiến trúc, hai bộ dữ liệu
+và hai loại phần cứng khác nhau, nên sự tương đồng về thời gian suy luận
+trên CPU không chứng minh hai mô hình có điều kiện triển khai tương đương.
+Thời gian suy luận trên MCU còn phụ thuộc số MAC, RAM trung gian
+(activation), precision, thư viện kernel và loại MCU cụ thể, không chỉ số
+tham số hay thời gian đo trên CPU. Với student, activation đỉnh ước tính
+giải tích là khoảng 600 KB ở độ chính xác float32 (Bảng~\ref{tab:tre}),
+lớn hơn tổng RAM của nhiều dòng vi điều khiển cấp thấp (thường vài chục
+đến vài trăm KB). Do đó kiến trúc hiện tại có tiềm năng triển khai chứ
+chưa được xác nhận khả thi trên mọi lớp phần cứng nhúng. Kết luận chắc
+chắn đòi hỏi đo đạc trực tiếp trên phần cứng mục tiêu hoặc tối ưu thêm bộ
+nhớ trung gian (ví dụ giảm precision, xử lý theo lô kênh nhỏ hơn).
+
+Hàm ý cho thiết kế hệ thống khá rõ. Việc áp dụng chưng cất tri thức mang lại
+lợi ích lớn và đo được về băng thông kênh điều khiển (đo bằng ITR ngoại
+tuyến, Bảng~\ref{tab:dieukhien}). Trong phạm vi các cấu hình được khảo sát,
+việc lựa chọn cơ chế chưng cất nào không tạo khác biệt về băng thông này,
+nên tiêu chí lựa chọn hợp lý là chi phí huấn luyện và độ phức tạp
+cài đặt. Với triển khai hiện tại, chi phí gấp khoảng 13 lần của nhánh lượng tử
+không đi kèm lợi ích đo được, nên cơ chế chưng cất rẻ hơn là lựa chọn thực
+dụng. Phát biểu này giới hạn ở cấu hình lượng tử được khảo sát, không mở
+rộng cho các cách hiện thực hóa khác.
+
+\subsubsection{Phân tích định tính không gian đặc trưng}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{figs/image3.png}
+\caption{Phân tích định tính không gian đặc trưng bằng trực quan hóa t-SNE
+trên đặc trưng trung gian 144 chiều của student, trích trên tập test tại
+epoch có accuracy thẩm định tốt nhất. Bốn panel dùng cùng fold (fold 0,
+900 mẫu kiểm tra, 20 đối tượng), cùng hạt giống huấn luyện (hạt giống 1),
+cùng siêu tham số t-SNE (perplexity$=30$, random\_state$=42$) và cùng
+thang trục hai chiều. Độ chính xác và điểm silhouette ghi trong tiêu đề
+mỗi panel là của riêng lần chạy này, không phải trung bình 5 hạt giống
+dùng ở các bảng chính; điểm silhouette tính trên không gian đặc trưng gốc
+144 chiều, không bị t-SNE bóp méo.}
+\label{fig:tsne}
+\end{figure}
+
+Hình~\ref{fig:tsne} trực quan hóa đặc trưng trung gian của student bằng
+phép giảm chiều t-SNE cho bốn cấu hình: không chưng cất, KDBase, FeatureKD
+và V5 Guided (nhân lượng tử). Cấu trúc cụm của ba cấu hình có chưng cất
+tách biệt rõ hơn so với student độc lập (silhouette từ 0,052 đến 0,065,
+so với 0,013 của cấu hình không chưng cất), cùng chiều với khoảng cách
+6,56 điểm phần trăm về độ chính xác đo được trên toàn bộ 5 hạt giống ở
+Mục~\ref{sec:ketqua}. Giữa ba cấu hình có chưng cất, điểm silhouette nằm
+gần nhau (0,052-0,065) dù hình dạng cụm quan sát bằng mắt khác nhau, phù
+hợp với kết quả không phát hiện được khác biệt hệ thống ở các mục định
+lượng trên. Vì t-SNE là phép chiếu phi tuyến không bảo toàn khoảng cách
+toàn cục, khác biệt về hình dạng cụm quan sát bằng mắt không được xem là
+bằng chứng về khác biệt cấu trúc thật; chỉ số silhouette trên không gian
+gốc 144 chiều mới là căn cứ định lượng, còn hình chỉ mang tính minh họa.
+
+\subsubsection{Kiểm chứng khám phá trên bộ dữ liệu thứ hai (Cho2017)}
+\label{sec:cho2017}
+
+Mục này báo cáo một khảo sát bổ sung trên bộ dữ liệu tưởng tượng vận động
+thứ hai, nhằm đối chiếu định tính mức độ khái quát của các kết luận ở các
+mục trên. Khảo sát này không được tiền đăng ký theo cùng quy trình đã áp
+dụng cho phép so sánh chính trên PhysionetMI (Mục~\ref{sec:dulieu}), và
+không có bộ giả thuyết hay biên tương đương chốt trước khi chạy. Kết quả
+dưới đây mang tính khám phá, dùng để đối chiếu định tính, không phải một
+phép kiểm định xác nhận độc lập.
+
+Bộ dữ liệu Cho2017 \cite{cho2017eeg}, truy cập qua lớp \texttt{Cho2017} của
+MOABB, gồm 52 đối tượng thực hiện tưởng tượng vận động nắm tay trái và nắm
+tay phải. Ba đối tượng (32, 46, 49) bị loại theo danh sách mặc định dùng
+cho teacher \cite{zoumpourlis2024motor}, còn lại 49 đối tượng được sử
+dụng, cùng bài toán hai lớp như PhysionetMI. Giao thức huấn luyện, kiến
+trúc teacher/student và toàn bộ siêu tham số giữ nguyên như Mục~\ref{sec:cauhinh}.
+Chỉ giao thức chia fold đổi theo số đối tượng, dùng 5 khối gần bằng nhau
+trên 49 đối tượng thay vì 103. Teacher đạt độ chính xác $75{,}07\% \pm
+4{,}16\%$ (trung bình và độ lệch chuẩn trên 5 fold), thấp và biến động hơn
+trên PhysionetMI ($84{,}98\% \pm 2{,}59\%$).
+
+Sáu cấu hình dùng kernel lượng tử trên Cho2017 (V2 Dense, V3 Anchor, V4
+Anchor+kNN, V5 Guided và hai biến thể $\beta$ của V5) được huấn luyện với
+mạch lượng tử đã sửa mô tả ở Mục~\ref{sec:qrd}. Biến thể V1 (giảm chiều
+tất định) không nằm trong đợt huấn luyện này nên không có số liệu trên
+Cho2017, và không xuất hiện trong Bảng~\ref{tab:cho2017}. Sáu cấu hình cổ
+điển không dùng kernel lượng tử (No KD, KDBase, FeatureKD, RelationalKD,
+nhân cosine, nhân RBF) không phụ thuộc vào mạch lượng tử nên giữ nguyên
+số liệu đã có.
+
+\begin{table}[!htbp]
+\centering
+\caption{Kết quả trên Cho2017 (49 đối tượng, 5 hạt giống độc lập). Đơn vị
+thống kê là hạt giống ($n=5$, $df=4$), theo đúng giao thức ở
+Mục~\ref{sec:dulieu}. Cột $\Delta$ và $p$ so với KDBase bằng kiểm định $t$
+ghép cặp. Biến thể V1 không có số liệu hợp lệ trên Cho2017 (xem văn bản).}
+\label{tab:cho2017}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cấu hình} & \textbf{Accuracy (\%)} & $\boldsymbol{\Delta}$ & $\boldsymbol{p}$ \\
+\midrule
+No KD & $67{,}31 \pm 2{,}27$ & $-5{,}24$ & 0,006 \\
+KDBase & $72{,}54 \pm 0{,}21$ & --- & --- \\
+FeatureKD & $71{,}17 \pm 0{,}69$ & $-1{,}38$ & 0,003 \\
+RelationalKD & $72{,}57 \pm 0{,}42$ & $+0{,}03$ & 0,864 \\
+\midrule
+V2 Dense & $72{,}37 \pm 0{,}43$ & $-0{,}18$ & 0,343 \\
+V3 Anchor & $72{,}03 \pm 0{,}63$ & $-0{,}51$ & 0,110 \\
+V4 Anchor $+$ kNN & $72{,}28 \pm 0{,}56$ & $-0{,}26$ & 0,182 \\
+V5 Guided & $72{,}41 \pm 0{,}65$ & $-0{,}13$ & 0,626 \\
+V5 Guided ($\beta = 0{,}01$) & $72{,}17 \pm 0{,}38$ & $-0{,}37$ & 0,018 \\
+V5 Guided ($\beta = 0{,}05$) & $72{,}36 \pm 0{,}27$ & $-0{,}19$ & 0,091 \\
+\midrule
+Nhân cosine & $72{,}13 \pm 0{,}30$ & $-0{,}41$ & 0,030 \\
+Nhân RBF & $72{,}36 \pm 0{,}52$ & $-0{,}18$ & 0,452 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bảng~\ref{tab:sosanh2dataset} đối chiếu song song $\Delta$ so với KDBase
+giữa hai bộ dữ liệu cho từng cấu hình, cùng chiều dấu hay không. Ba phát
+hiện định tính từ các mục trên được diễn giải chi tiết bên dưới bảng.
+
+\begin{table}[!htbp]
+\centering
+\caption{Đối chiếu song song giữa PhysionetMI (kiểm định chính, tiền đăng
+ký) và Cho2017 (khám phá, không tiền đăng ký). Mỗi ô ghi $\Delta$ so với
+KDBase, tính bằng điểm phần trăm, và $p$ tương ứng từ kiểm định $t$ ghép
+cặp ($n=5$, $df=4$). Hàng \emph{No KD} ghi khoảng tin cậy 95\% thay vì $p$,
+theo đúng cách bài báo cáo cáo hiệu ứng này ở Mục~\ref{sec:ketqua}. Cột
+cuối đánh dấu Có nếu chiều dấu của $\Delta$ giống nhau giữa hai bộ dữ
+liệu, không phụ thuộc việc có đạt ý nghĩa thống kê hay không. V1 Dense
+không có số liệu hợp lệ trên Cho2017 (Mục~\ref{sec:cho2017}).}
+\label{tab:sosanh2dataset}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cấu hình} & \textbf{PhysionetMI} & \textbf{Cho2017} & \textbf{Cùng chiều} \\
+\midrule
+No KD & $-18{,}43$ (CI95\% $[12{,}52;24{,}33]$) & $-5{,}24$ ($p=0{,}006$) & Có \\
+FeatureKD & $-1{,}44$ ($p=0{,}016$) & $-1{,}38$ ($p=0{,}003$) & Có \\
+RelationalKD & $+0{,}12$ ($p=0{,}754$) & $+0{,}03$ ($p=0{,}864$) & Có \\
+V1 Dense & $+0{,}41$ ($p=0{,}158$) & --- & --- \\
+V2 Dense & $+0{,}00$ ($p=1{,}000$) & $-0{,}18$ ($p=0{,}343$) & Không \\
+V3 Anchor & $-0{,}24$ ($p=0{,}351$) & $-0{,}51$ ($p=0{,}110$) & Có \\
+V4 Anchor $+$ kNN & $-0{,}07$ ($p=0{,}775$) & $-0{,}26$ ($p=0{,}182$) & Có \\
+V5 Guided & $-0{,}37$ ($p=0{,}231$) & $-0{,}13$ ($p=0{,}626$) & Có \\
+Nhân cosine & $+0{,}14$ ($p=0{,}609$) & $-0{,}41$ ($p=0{,}030$) & Không \\
+Nhân RBF & $+0{,}13$ ($p=0{,}511$) & $-0{,}18$ ($p=0{,}452$) & Không \\
+\midrule
+\multicolumn{4}{l}{\textit{So sánh kernel trực tiếp trong cùng chiến lược V5 (không so KDBase)}} \\
+Lượng tử so cosine & $-0{,}51$ ($p=0{,}096$) & $+0{,}28$ ($p=0{,}389$) & Không \\
+Lượng tử so RBF & $-0{,}49$ ($p=0{,}060$) & $+0{,}05$ ($p=0{,}903$) & Không \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Năm trong mười hai hàng của Bảng~\ref{tab:sosanh2dataset} đổi chiều dấu
+giữa hai bộ dữ liệu: V2 Dense, nhân cosine, nhân RBF, và cả hai phép so
+sánh kernel trực tiếp. Ở cả năm trường hợp, $\Delta$ trên ít nhất một
+trong hai bộ dữ liệu nhỏ hơn $0{,}5$ điểm phần trăm, tức nằm trong vùng
+$\Delta$ gần 0 mà dấu dễ đảo chỉ do nhiễu hạt giống. Riêng hàng nhân
+cosine có $p = 0{,}030$ trên Cho2017, được bàn riêng bên dưới. Bốn trường
+hợp còn lại không đạt ý nghĩa thống kê ở bộ dữ liệu nào.
+
+Thứ nhất, hiệu ứng chưng cất tái lập rõ. No KD đạt $67{,}31\%$ so với
+KDBase $72{,}54\%$, chênh $5{,}24$ điểm phần trăm (khoảng tin cậy 95\%
+$[2{,}46; 8{,}01]$, $p = 0{,}006$). Chiều và mức ý nghĩa của hiệu ứng giữ
+nguyên so với hiệu ứng đã sửa trên PhysionetMI ($6{,}56$ điểm, xem
+Mục~\ref{sec:ketqua}). Tuy vậy, số liệu No KD trên Cho2017 dùng ở đây chưa
+được huấn luyện lại với $\alpha = 1{,}0$ như đã làm cho PhysionetMI (Mục~
+\ref{sec:cauhinh}), nên biên độ $5{,}24$ điểm có thể vẫn còn bị phóng đại
+bởi cùng lỗi huấn luyện dưới mức; kiểm chứng bằng một lần huấn luyện lại
+tương ứng trên Cho2017 chưa được thực hiện và được để lại như một hạn chế.
+
+Thứ hai, khác biệt giữa các cơ chế chưng cất vẫn nhỏ hơn nhiễu do hạt
+giống, dù biên an toàn mỏng hơn. Độ lệch chuẩn giữa mười một cơ chế (không
+tính No KD) là $0{,}39$ điểm phần trăm, độ lệch chuẩn trung bình do hạt
+giống là $0{,}46$ điểm, tỷ lệ giữa hai đại lượng là $0{,}84$. Trên
+PhysionetMI, tỷ lệ tương ứng là $0{,}61$. Kết luận định tính giữ nguyên,
+nhưng khoảng cách giữa hai nguồn biến thiên hẹp hơn.
+
+Thứ ba, hai phát hiện cụ thể tái lập gần như nguyên vẹn. FeatureKD kém hơn
+KDBase $1{,}38$ điểm ($p = 0{,}003$) so với $1{,}44$ điểm ($p = 0{,}016$)
+trên PhysionetMI. RelationalKD cổ điển không khác KDBase, chênh $0{,}03$
+điểm ($p = 0{,}864$) so với $0{,}12$ điểm ($p = 0{,}754$) trên PhysionetMI.
+
+Phép so sánh kernel chính, giữa hàm nhân lượng tử và hàm nhân cosine trong
+cùng chiến lược V5, đổi chiều dấu giữa hai bộ dữ liệu. Trên PhysionetMI,
+hàm nhân lượng tử thấp hơn cosine $0{,}51$ điểm. Trên Cho2017, hàm nhân
+lượng tử cao hơn cosine $0{,}28$ điểm (khoảng tin cậy 95\% $[-0{,}52;
+1{,}08]$, $p = 0{,}389$). Cả hai khoảng tin cậy đều rộng và phủ giá trị 0.
+Việc đổi chiều không mâu thuẫn với kết luận chính đã báo cáo, mà củng cố
+thêm nhận định rằng chưa có bằng chứng nhất quán cho một khác biệt hệ
+thống giữa hai loại hàm nhân.
+
+Hai kết quả trong Bảng~\ref{tab:cho2017} không có phép so sánh trực tiếp
+tương ứng trên PhysionetMI, nên chỉ được báo cáo, không suy diễn xa hơn dữ
+liệu cho phép. Nhân cosine thấp hơn KDBase $0{,}41$ điểm với $p = 0{,}030$
+trên Cho2017. Bảng kết quả chính trên PhysionetMI chỉ so sánh các hàm nhân
+với nhau, không so sánh trực tiếp cosine với KDBase, nên không có cơ sở
+gọi đây là kết quả "không tái lập". Tương tự, V5 Guided ($\beta = 0{,}01$)
+thấp hơn KDBase $0{,}37$ điểm với $p = 0{,}018$ trên Cho2017.
+
+Nhìn tổng thể, khảo sát khám phá trên Cho2017 không phát hiện điều gì mâu
+thuẫn với hai kết luận chính của bài. Chưng cất tri thức mang lại lợi ích
+lớn và ổn định. Khác biệt giữa các cơ chế truyền tri thức cụ thể, kể cả
+lựa chọn hàm nhân, nằm dưới hoặc quanh ngưỡng phát hiện được bởi thiết kế
+5 hạt giống. Đây là kết quả khám phá trên một bộ dữ liệu bổ sung, không
+thay thế phép kiểm định chính đã tiền đăng ký trên PhysionetMI.
+
+\section{Kết luận}
+\label{sec:ketluan}
+
+Bài báo trình bày một khảo sát có kiểm soát về vai trò của cấu trúc quan hệ
+và không gian biểu diễn trong chưng cất tri thức, áp dụng cho bộ giải mã
+tưởng tượng vận động hoạt động dưới ràng buộc của vòng điều khiển, trên bộ
+dữ liệu PhysionetMI và bài toán phân biệt hai lớp (Mục~\ref{sec:dulieu}).
+Khung
+Quantum Relational Distillation được xây dựng sao cho thành phần lượng tử
+chỉ tham gia giai đoạn huấn luyện, nhờ đó mô hình triển khai giữ nguyên chi
+phí suy luận của một mạng cổ điển gọn nhẹ. Trên nền khung đó, năm chiến lược
+hình thành quan hệ và ba dạng hàm nhân được so sánh trong điều kiện đồng
+nhất về teacher, student, dữ liệu, cách chia fold và toàn bộ siêu tham số.
+
+Năm kết quả chính thu được từ 5 hạt giống độc lập trên 103 đối tượng, với
+đơn vị thống kê là đối tượng.
+
+Hiệu ứng của chưng cất tri thức là lớn và ổn định. Student huấn
+luyện độc lập đạt 74,93\%, trong khi mọi cấu hình có chưng cất đạt khoảng
+81\%. Mức cải thiện 6,56 điểm phần trăm, với khoảng tin cậy 95\% từ 4,08
+đến 9,04, tương ứng mức tăng khoảng 1,6 lần về tốc độ truyền thông tin của
+kênh điều khiển. Con số baseline 74,93\% là kết quả sau khi sửa một lỗi
+huấn luyện dưới mức của cấu hình không chưng cất (Mục~\ref{sec:cauhinh});
+ước lượng ban đầu, 63,06\%, phóng đại hiệu ứng chưng cất lên 18,43 điểm.
+
+Ngược lại, khác biệt giữa các cơ chế chưng cất nằm dưới ngưỡng phát hiện. Độ
+lệch chuẩn của giá trị trung bình giữa mười hai cơ chế là 0,459 điểm phần
+trăm, trong khi độ lệch chuẩn do thay đổi hạt giống ngẫu nhiên là 0,750
+điểm. Không cơ chế dựa trên quan hệ nào tách khỏi KDBase
+ở mức ý nghĩa thống kê. Cấu hình FeatureKD, kém hơn 1,44 điểm với
+$p = 0{,}016$, cho thấy giao thức phát hiện được hiệu ứng ở quy mô đó trong
+phép so sánh cụ thể này, nhưng một phép so sánh đạt ý nghĩa không tự động
+bảo đảm công suất cho mọi phép so sánh khác. Với độ lệch chuẩn chênh lệch
+ghép cặp quan sát được, hiệu ứng tối thiểu phát hiện được ở công suất 80\%
+dao động khoảng 0,86 đến 1,33 điểm phần trăm tùy cặp so sánh, tức lớn hơn
+phần lớn chênh lệch 0,12-0,51 điểm phần trăm đang được báo cáo là không đạt
+ý nghĩa. Các kết luận "không tách biệt" trong bài do đó nên được đọc là
+chưa đủ dữ liệu để kết luận, không phải bằng chứng cho việc các cơ chế hoàn
+toàn tương đương.
+
+Hai biến thể V1 và V2 chỉ khác nhau ở chỗ có hay không có phép chiếu
+tuyến tính học được, chênh nhau 0,41 điểm phần trăm theo hướng có lợi cho
+V1 (không học), ở ranh giới ý nghĩa thống kê nhưng chưa đạt ngưỡng quy
+ước ($p = 0{,}085$). Khả năng thích nghi của phép giảm chiều không cho
+thấy lợi ích đo được, và số liệu hiện có còn gợi ý chiều ngược lại.
+
+Ba dạng hàm nhân không phát hiện được khác biệt có ý nghĩa thống kê dưới
+cùng một chiến lược lựa chọn quan hệ. Nhưng phép so sánh chính giữa hàm
+nhân lượng tử và cosine, đã chốt trước khi xem kết quả, có khoảng tin cậy
+vượt ra ngoài biên tương đương $\pm 0{,}5$ điểm phần trăm đã cam kết. Theo
+đúng kế hoạch phân tích đã chốt, kết luận đúng là chưa đủ dữ liệu để khẳng
+định tương đương lẫn khẳng định khác biệt, chứ không phải một kết quả
+tương đương đã được xác nhận. Trong khi đó, chi phí huấn luyện của nhánh
+lượng tử cao hơn khoảng 13 lần do cấu trúc data re-uploading cần mô phỏng
+mạch nhiều lượt hơn cho từng mẫu.
+
+Kết quả cuối cùng liên quan tới cách đánh giá. Xếp hạng thu được từ một
+lần chạy đơn gần như không tương quan với xếp hạng khi lặp lại thí nghiệm
+nhiều hạt giống. Hệ số tương quan hạng Spearman giữa hai xếp hạng là
+$\rho = 0{,}14$ ($p = 0{,}66$), quá yếu để tin cậy dùng kết quả một lần
+chạy đơn thay cho nhiều hạt giống. Các trường hợp đảo hạng riêng lẻ rất
+kịch tính. Cấu hình đứng áp chót theo lần chạy đơn vươn lên hạng nhất khi
+tính trên năm hạt giống, còn cấu hình đứng thứ hai theo lần chạy đơn tụt
+xuống vị trí áp chót, thứ mười một trên mười hai. Vì các hạt giống là
+những lần rút độc lập, đây là một dự báo yếu và không đáng tin cậy chứ
+không đơn thuần là dao động thống kê.
+
+Trong phạm vi bài toán tưởng tượng vận động hai lớp trên PhysionetMI đã
+khảo sát, các kết quả trên dẫn tới hai hệ quả cho việc thiết kế hệ thống
+điều khiển bằng tín hiệu não. Về mặt thực dụng, chưng cất tri thức mang lại
+lợi ích lớn và đo được về băng thông kênh điều khiển (ITR ngoại tuyến). Lựa
+chọn cơ chế chưng cất cụ thể không tạo khác biệt về băng thông này, nên
+tiêu chí hợp lý là chi phí huấn luyện và độ phức tạp cài đặt.
+
+Về mặt nghiên cứu, khoảng tin cậy quan sát được của phép so sánh chính đã
+chốt trước khi xem kết quả vượt ra ngoài biên tương đương đã cam kết, nên
+không xác lập được tương đương lẫn khác biệt có ý nghĩa. Khoảng này vẫn
+cho biết phạm vi lợi ích tối đa mà biểu diễn lượng tử có thể mang lại
+trong cấu hình được khảo sát (một mạch bốn qubit với trọng số khả huấn
+theo cấu trúc data re-uploading), và là mốc đối chiếu định lượng cho các
+cấu hình phức tạp hơn với số qubit lớn hơn hoặc số lớp vướng víu sâu hơn.
+
+Nghiên cứu có một số giới hạn cần nêu rõ. Phép kiểm định chính, đã tiền
+đăng ký với biên tương đương chốt trước khi xem kết quả, chỉ thực hiện
+trên một bộ dữ liệu và một bài toán hai lớp, PhysionetMI. Mọi phát biểu
+trong bài, kể cả các câu tổng kết ở phần Đóng góp và đầu Mục này, cần được
+đọc trong phạm vi đó. Mục~\ref{sec:cho2017} báo cáo một khảo sát khám phá,
+không tiền đăng ký, trên bộ dữ liệu tưởng tượng vận động thứ hai
+(Cho2017); kết quả không phát hiện điều gì mâu thuẫn với các kết luận
+chính, nhưng đây vẫn là một phép đối chiếu định tính, không phải một phép
+kiểm định xác nhận độc lập thay thế được cho PhysionetMI. Với bài
+toán hai lớp cân bằng và marginal dự
+đoán cân bằng, hệ số Cohen's kappa xấp xỉ một biến đổi tuyến tính của độ
+chính xác ($\kappa \approx 2\,\mathrm{acc}-1$) nên không cung cấp nhiều
+thông tin bổ sung trong thiết lập này. Điều này KHÔNG đúng với điểm $F_1$:
+hai mô hình có cùng accuracy vẫn có thể có $F_1$ khác nhau nếu tỷ lệ lỗi
+dương giả/âm giả (FP/FN) khác nhau, kể cả khi dữ liệu cân bằng, vì $F_1$
+nhạy với cách phân bổ lỗi giữa hai loại chứ không chỉ tổng số lỗi. Nghiên
+cứu chưa lưu lại ma trận nhầm lẫn hoặc $F_1$ theo từng đối tượng để định
+lượng khác biệt này. Đây là một hướng bổ sung cần thiết trong các phiên bản
+sau. Thành phần lượng tử được hiện thực hóa dưới
+dạng một mạch bốn qubit với trọng số khả huấn theo cấu trúc data
+re-uploading, chạy trên bộ mô phỏng. Kết luận chỉ áp dụng cho cách hiện
+thực hóa cụ thể này, không áp dụng cho học máy lượng tử nói chung. Ma trận
+quan hệ cũng được tính trên một mẫu con gồm 16 phần tử thay vì toàn bộ
+mini-batch. Mạch $U(\theta_l)$ dùng chung một bộ trọng số $\theta$ cho cả
+nhánh teacher và nhánh student (Mục~\ref{sec:qrd}), nên mục tiêu quan hệ
+$R_T^{(Q)}$ dùng để giám sát student không hoàn toàn tĩnh trong quá trình
+huấn luyện, khác với các thiết lập chưng cất cổ điển. Một đối chứng thực
+nghiệm huấn luyện lại V2 Dense với $\theta$ dùng chung như hiện tại,
+$\theta$ giữ cố định hoàn toàn, và $\theta_T$ cố định tách riêng khỏi
+$\theta_S$ khả huấn (Mục~\ref{sec:qrd}) không tìm thấy khác biệt có ý
+nghĩa thống kê giữa ba cách xử lý ($n=5$, $df=4$, mọi $p \ge 0{,}14$);
+rủi ro suy biến nêu trên do đó chưa bị loại trừ về mặt lý thuyết nhưng
+không có dấu hiệu ảnh hưởng đo được lên độ chính xác ở quy mô đã khảo
+sát. Tương tự, phép chiếu $W_T$ dùng một khởi tạo ngẫu nhiên duy nhất mỗi
+lần chạy, không qua chuẩn hóa, và nghiên cứu chưa đo mức nhạy của kết quả
+với các lần khởi tạo $W_T$ khác nhau ở tỷ lệ nén $144 \to 4$ chiều. Đây là
+một giới hạn khác cần một đối chứng thực nghiệm riêng. Hệ số $\beta$ trong
+\eqref{eq:total} cũng dùng chung một giá trị cho cả ba dạng hàm nhân được
+so sánh (Mục~\ref{sec:bienthe}), dựa trên lập luận rằng cả ba đều cho giá
+trị bị chặn trong $[0,1]$. Một đo đạc chẩn đoán trực tiếp độ lớn gradient
+và giá trị loss thô của từng hàm nhân (Mục~\ref{sec:qrd}) xác nhận lập
+luận này KHÔNG đủ: ba hàm nhân nhận mức giám sát hiệu lực chênh nhau tới
+hai bậc độ lớn dù cùng $\beta$ danh nghĩa, khoảng 200 lần giữa lượng tử
+và cosine trên số liệu chẩn đoán (1 fold, 5 epoch đầu). Bên cạnh đó, biến
+thể V5 khác các biến thể V2--V4 không chỉ ở tiêu chí chọn quan hệ mà còn
+ở candidate pool dùng để chọn (toàn bộ batch so với một mẫu con cố định
+theo vị trí, Mục~\ref{sec:bienthe}); một đối chứng giữ nguyên candidate
+pool 64 mẫu và chỉ đổi tiêu chí chọn thành ngẫu nhiên
+(\emph{random\_pool64}) cho kết quả nằm giữa V2 và V5, không khác biệt có
+ý nghĩa với bên nào ($n=5$), nên kết quả thấp hơn kỳ vọng của V5 vẫn chưa
+thể quy dứt khoát cho tiêu chí "chọn theo thông tin" hay cho candidate
+pool rộng hơn, đối chứng không đủ phân giải để tách hai ảnh hưởng này.
+Cuối cùng, cấu hình không chưng cất trên PhysionetMI ban đầu bị
+huấn luyện dưới mức do một lỗi cấu hình siêu tham số $\alpha$
+(Mục~\ref{sec:cauhinh}) đã được phát hiện và sửa; số liệu tương ứng trên
+Cho2017 (Mục~\ref{sec:cho2017}) chưa được sửa theo cách tương tự, nên biên
+độ hiệu ứng chưng cất báo cáo trên Cho2017 vẫn có thể bị phóng đại ở một
+mức độ chưa xác định được.
+
+Các hướng phát triển tiếp theo bao gồm tiền đăng ký và lặp lại phép kiểm
+định chính trên bộ dữ liệu thứ hai, thay vì dừng ở khảo sát khám phá như
+Mục~\ref{sec:cho2017}, mở rộng sang bài toán nhiều lớp
+nơi dư địa cải thiện tốc độ truyền thông tin lớn hơn, và khảo sát các mạch
+lượng tử với số qubit lớn hơn hoặc số lớp vướng víu sâu hơn. Ở hướng phương
+pháp luận, việc xây dựng một giao thức xác định số lần lặp ngẫu nhiên tối
+thiểu, dựa trên sàn nhiễu đo được, sẽ giúp các so sánh phương pháp trong
+lĩnh vực này trở nên đáng tin cậy hơn.
+
+% \hypertarget{tuxe0i-liux1ec7u-tham-khux1ea3o}{%
