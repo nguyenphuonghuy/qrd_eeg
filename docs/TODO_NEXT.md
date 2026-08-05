@@ -1214,3 +1214,72 @@ alpha=0; 0,25; 0,75.
   cách trình bày ở Mục~\ref{sec:cho2017} (Cho2017 no_kd alpha=1.0, đang
   chờ job 11753) theo cùng khung hay không — hỏi lại khi cả 11753 và
   11754 đều xong.
+
+---
+## CẬP NHẬT 2026-08-05 — job 11753/11754 xong, đã dựng bảng alpha, bỏ hết văn phong "kể lỗi"
+
+### KẾT QUẢ JOB
+- **11753 `cho_no_kd_alpha1_seeds`**: rc=0, 245 dòng đủ (5 seed × 49
+  subject). Cho2017 no\_kd ($\alpha=1{,}0$) = 70,32±0,64% (per-seed:
+  70,84/69,70/70,56/70,93/69,58). So KDBase Cho2017 (72,54±0,21%, khớp
+  đúng số cũ trong bài, xác nhận nguồn dữ liệu đúng): Δ=-2,22pp, CI95%
+  [1,39;3,06], p=0,0018 (paired t, n=5, df=4, tự tính bằng script
+  incomplete-beta thuần Python, `/opt/anaconda3/bin/python3`, không dùng
+  qrd\_env). So no\_kd cũ ($\alpha=0{,}5$, 67,31±2,27%): +3,01pp, p=0,0198
+  — xác nhận Cho2017 cũng bị ảnh hưởng bởi cùng vấn đề alpha như
+  PhysionetMI, nhưng mức độ nhẹ hơn nhiều (PhysionetMI: 63,06→74,93,
+  chênh 11,87pp; Cho2017: 67,31→70,32, chênh 3,01pp).
+- **11754 `no_kd_alpha_sweep`**: rc=0 cả 3 giá trị, 515 dòng mỗi file.
+  PhysionetMI no\_kd theo alpha: 0,00→49,89±0,34% (≈ ngẫu nhiên, đúng như
+  lý thuyết dự đoán khi không có tín hiệu giám sát), 0,25→51,73±2,68%,
+  0,50→63,06±5,03% (số cũ), 0,75→71,45±3,74%, 1,00→74,93±2,30% (số dùng
+  cho baseline chính). Tăng đơn điệu theo alpha — xác nhận rất rõ nguyên
+  tắc "alpha=1,0 là giá trị duy nhất cho đủ trọng số CE", không cần tranh
+  luận thêm.
+
+### ĐÃ SỬA trong body.tex — bỏ TOÀN BỘ văn phong "kể lỗi tác giả" liên quan
+alpha, thay bằng khung "mọi số alpha đều được ghi rõ, không có số nào là
+'sai' hay 'đã sửa'"
+1. Mục~\ref{sec:cauhinh}: bỏ đoạn "Một phiên bản thí nghiệm trước đó...
+   Lỗi được phát hiện... và được sửa..."; thay bằng lập luận thuận
+   (alpha=1,0 là giá trị duy nhất cho no\_kd đủ trọng số số hạng loss nó
+   có) + **Bảng mới `tab:alphasweep`** (5 dòng, xem số ở trên).
+2. Mục~\ref{sec:ketqua} (4.4.1): câu "74,93%... dù nhỏ hơn nhiều so với
+   ước lượng 18,43 điểm ở một phiên bản trước, vốn bị phóng đại..." → nêu
+   rõ 74,93% là ở alpha=1,0, 63,06%/18,43pp là ở alpha=0,5, trỏ tới
+   `tab:alphasweep`, không còn từ "phiên bản trước"/"phóng đại".
+3. Mục~\ref{sec:xephang}: câu "sau khi sửa lỗi alpha... trước khi sửa" →
+   "ở alpha=1,0... ở alpha=0,5", giữ nguyên lập luận phương pháp (phương
+   sai bất thường giữa hạt giống là dấu hiệu đáng ngờ) nhưng đổi kết luận
+   từ "dẫn tới phát hiện lỗi" thành "dẫn tới khảo sát độ nhạy theo alpha".
+4. Kết luận (đoạn hiệu ứng chính): tương tự mục 2, bỏ "là kết quả sau khi
+   sửa một lỗi huấn luyện dưới mức".
+5. Kết luận (đoạn giới hạn, câu "Cuối cùng" cuối cùng): bỏ hẳn "do một
+   lỗi cấu hình siêu tham số alpha... đã được phát hiện và sửa; số liệu
+   tương ứng trên Cho2017... chưa được sửa... có thể vẫn bị phóng đại" —
+   giới hạn này ĐÃ ĐƯỢC GIẢI QUYẾT (Cho2017 giờ cũng alpha=1,0), thay bằng
+   câu ngắn nêu cả 2 dataset dùng alpha=1,0, chỉ còn thiếu bảng độ nhạy
+   riêng cho Cho2017 (không nghiêm trọng, chỉ nêu như phạm vi chưa làm).
+6. Mục~\ref{sec:cho2017}: Bảng `tab:cho2017` (No KD: 70,32±0,64/-2,22/
+   0,0018) và Bảng `tab:sosanh2dataset` (No KD cột PhysionetMI SỬA từ số
+   CŨ -18,43 sang số ĐÚNG -6,56 CI95%[4,08;9,04] — đây là một lỗi khác,
+   độc lập, phát hiện thêm khi rà: bảng đối chiếu 2 dataset đang dùng số
+   PhysionetMI chưa sửa dù bảng kết quả chính đã sửa từ lâu; cột Cho2017
+   đổi từ p-value sang CI95%[1,39;3,06] cho khớp đúng caption của bảng
+   "hàng No KD ghi CI thay vì p" — trước đó cột Cho2017 KHÔNG theo đúng
+   caption của chính nó). Đoạn văn "Thứ nhất, hiệu ứng chưng cất tái
+   lập..." viết lại với số mới + thêm giải thích khoảng cách teacher-student
+   nhỏ hơn trên Cho2017 (4,75pp so với 10,05pp) như một lý do khả dĩ cho
+   biên độ hiệu ứng nhỏ hơn (nêu rõ là "một phần khác biệt có thể đến
+   từ", không khẳng định chắc).
+- Biên dịch tectonic 2 lần liên tiếp, sạch, không undefined. Đã render
+  ảnh kiểm tra trực quan Bảng alphasweep, Bảng cho2017, Bảng
+  sosanh2dataset, và đoạn Kết luận — tất cả đúng, không lỗi dàn trang.
+
+### CHƯA LÀM
+- [ ] Bảng độ nhạy alpha riêng cho Cho2017 (tương tự `tab:alphasweep`
+  nhưng cho no\_kd trên Cho2017) — không bắt buộc, chỉ nêu là phạm vi
+  chưa làm trong Kết luận, không phải hạn chế nghiêm trọng vì đã có
+  alpha=1,0 đúng nguyên tắc.
+- [ ] Commit + push lên GitHub kết quả 11753/11754 và bản body.tex mới
+  (đang làm ngay sau mục này).

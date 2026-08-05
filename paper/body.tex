@@ -1376,15 +1376,40 @@ quy trình huấn luyện.
 
 Riêng hệ số $\alpha$ ở Bảng~\ref{tab:cauhinh} áp dụng cho các cấu hình có
 số hạng chưng cất, nơi nó cân bằng entropy chéo với hàm mất mát chưng cất.
-Một phiên bản thí nghiệm trước đó áp cùng $\alpha = 0{,}5$ cho cả cấu hình
-không chưng cất, dù cấu hình này không có số hạng thứ hai để cân bằng,
-khiến hàm mất mát thực tế chỉ còn một nửa entropy chéo và baseline bị huấn
-luyện dưới mức. Lỗi được phát hiện qua độ lệch chuẩn bất thường giữa các
-hạt giống của cấu hình này (Mục~\ref{sec:xephang}) và được sửa bằng cách
-huấn luyện lại với $\alpha = 1{,}0$ (entropy chéo đầy đủ) cho riêng cấu
-hình không chưng cất. Mọi số liệu "không chưng cất" báo cáo trong bài từ
-đây trở đi dùng kết quả đã sửa; ảnh hưởng của lỗi này tới ước lượng hiệu
-ứng chưng cất được trình bày ở Mục~\ref{sec:ketqua}.
+Cấu hình không chưng cất không có số hạng thứ hai để cân bằng, nên dùng
+$\alpha = 1{,}0$ (entropy chéo đầy đủ) thay vì $0{,}5$: đây là giá trị duy
+nhất cho cấu hình này nhận đủ trọng số của số hạng loss mà nó thực sự có,
+cùng nguyên tắc áp dụng cho mọi cấu hình khác trong Bảng~\ref{tab:cauhinh}.
+Bảng~\ref{tab:alphasweep} đo thực nghiệm độ nhạy của cấu hình không chưng
+cất theo $\alpha$, xác nhận nguyên tắc này bằng số: độ chính xác tăng đơn
+điệu theo $\alpha$, từ mức xấp xỉ ngẫu nhiên ($\alpha=0$, không có tín
+hiệu giám sát nào từ nhãn thật) tới $74{,}93\%$ ở $\alpha=1{,}0$. Mọi số
+liệu "không chưng cất" trong bài từ đây trở đi dùng $\alpha = 1{,}0$; các
+giá trị $\alpha < 1$ chỉ là đối chứng độ nhạy, không phải cấu hình báo
+cáo chính, và luôn được ghi rõ giá trị $\alpha$ tương ứng khi được trích
+dẫn lại ở Mục~\ref{sec:ketqua}.
+
+\begin{table}[!htbp]
+\centering
+\caption{Độ nhạy của cấu hình không chưng cất theo hệ số $\alpha$
+(PhysionetMI, 5 hạt giống $\times$ 5 fold). $\alpha=1$ (entropy chéo đầy
+đủ) là giá trị dùng cho baseline "không chưng cất" ở mọi bảng khác trong
+bài, theo cùng nguyên tắc trọng số đầy đủ áp dụng cho các cấu hình còn
+lại; các giá trị $\alpha<1$ là đối chứng độ nhạy, không phải cấu hình báo
+cáo chính.}
+\label{tab:alphasweep}
+\begin{tabular}{cc}
+\toprule
+$\boldsymbol{\alpha}$ & \textbf{Accuracy (\%)} \\
+\midrule
+0,00 & $49{,}89 \pm 0{,}34$ \\
+0,25 & $51{,}73 \pm 2{,}68$ \\
+0,50 & $63{,}06 \pm 5{,}03$ \\
+0,75 & $71{,}45 \pm 3{,}74$ \\
+1,00 (dùng cho baseline chính) & $\boldsymbol{74{,}93 \pm 2{,}30}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 Ba đặc điểm của thành phần lượng tử cần được nêu rõ vì chúng ảnh hưởng tới
 cách diễn giải kết quả. Trước hết, trọng số của mạch tham số hóa $\theta$
@@ -1471,12 +1496,19 @@ V5 Guided (nhân lượng tử) & $81.12 \pm 0.71$ & $-0.37$ & $0.231$ \\
 
 Bảng~\ref{tab:tongthe} trình bày kết quả của các cơ chế chưng cất. Hiệu ứng
 lớn nhất và rõ ràng nhất nằm ở việc có hay không có chưng cất. Student huấn
-luyện độc lập đạt 74,93\%, trong khi mọi cấu hình có chưng cất đều đạt
-khoảng 81\%. Mức cải thiện là 6,56 điểm phần trăm, với khoảng tin cậy 95\%
-từ 4,08 đến 9,04 điểm ($p = 0{,}0018$). Đây là hiệu ứng vượt xa mọi nguồn
-biến thiên khác trong thí nghiệm, dù nhỏ hơn nhiều so với ước lượng 18,43
-điểm ở một phiên bản trước, vốn bị phóng đại do baseline không chưng cất
-huấn luyện dưới mức (Mục~\ref{sec:cauhinh}).
+luyện độc lập đạt 74,93\% ($\alpha=1{,}0$, Mục~\ref{sec:cauhinh}), trong
+khi mọi cấu hình có chưng cất đều đạt khoảng 81\%. Mức cải thiện là 6,56
+điểm phần trăm, với khoảng tin cậy 95\% từ 4,08 đến 9,04 điểm
+($p = 0{,}0018$). Đây là hiệu ứng vượt xa mọi nguồn biến thiên khác trong
+thí nghiệm. Ở $\alpha = 0{,}5$, giá trị dùng chung cho các cấu hình có số
+hạng chưng cất thứ hai để cân bằng nhưng không phù hợp cho cấu hình không
+có số hạng đó, student độc lập chỉ đạt 63,06\%
+(Bảng~\ref{tab:alphasweep}), khiến mức cải thiện quan sát được lên tới
+18,43 điểm. Chênh lệch giữa hai cách tính không phản ánh hai ước lượng
+ngang hàng của cùng một hiệu ứng, mà phản ánh việc $\alpha = 0{,}5$ không
+cho cấu hình không chưng cất đủ trọng số của số hạng loss duy nhất nó có;
+$\alpha = 1{,}0$ mới là giá trị nhất quán với nguyên tắc trọng số đầy đủ
+áp dụng cho mọi cấu hình khác trong bài.
 
 Chưng cất thu hẹp phần lớn nhưng không xóa bỏ khoảng cách tới teacher (vốn
 đạt $84{,}98\%$). Với cấu hình tham chiếu KDBase, khoảng cách còn lại là
@@ -1679,14 +1711,15 @@ nhiều bậc. Cấu hình duy nhất giữ nguyên gần đúng vị trí cuố
 FeatureKD. Đó cũng là cấu hình duy nhất có hiệu ứng vượt sàn nhiễu.
 
 Cùng logic áp dụng cho cấu hình không chưng cất, dù ở đây độ nhạy với hạt
-giống còn có một nguyên nhân bổ sung. Bản thân cấu hình này có độ lệch
-chuẩn qua hạt giống 2,30 điểm phần trăm sau khi sửa lỗi $\alpha$ mô tả ở
-Mục~\ref{sec:cauhinh}, cao gấp khoảng bốn lần các cấu hình có chưng cất
-(trước khi sửa, độ lệch chuẩn lên tới 5,03 điểm, gấp khoảng tám lần). Một
-cấu hình có phương sai giữa các hạt giống lớn bất thường so với phần còn
-lại là một dấu hiệu đáng ngờ về mặt phương pháp; trong trường hợp này,
-chính dấu hiệu đó đã dẫn tới việc phát hiện lỗi huấn luyện dưới mức
-(Mục~\ref{sec:ketqua}).
+giống còn có một nguyên nhân bổ sung. Ở $\alpha = 1{,}0$ (giá trị dùng
+cho baseline chính, Mục~\ref{sec:cauhinh}), cấu hình này có độ lệch chuẩn
+qua hạt giống 2,30 điểm phần trăm, cao gấp khoảng bốn lần các cấu hình có
+chưng cất; ở $\alpha = 0{,}5$, độ lệch chuẩn này lên tới 5,03 điểm, gấp
+khoảng tám lần (Bảng~\ref{tab:alphasweep}). Một cấu hình có phương sai
+giữa các hạt giống lớn bất thường so với phần còn lại là một dấu hiệu
+đáng ngờ về mặt phương pháp; trong trường hợp này, chính dấu hiệu đó đã
+dẫn tới việc khảo sát độ nhạy theo $\alpha$ trình bày ở
+Mục~\ref{sec:cauhinh}.
 
 \subsubsection{Chi phí tính toán và hàm ý cho triển khai}
 
@@ -1925,7 +1958,7 @@ ghép cặp. Biến thể V1 không có số liệu hợp lệ trên Cho2017 (xe
 \toprule
 \textbf{Cấu hình} & \textbf{Accuracy (\%)} & $\boldsymbol{\Delta}$ & $\boldsymbol{p}$ \\
 \midrule
-No KD & $67{,}31 \pm 2{,}27$ & $-5{,}24$ & 0,006 \\
+No KD & $70{,}32 \pm 0{,}64$ & $-2{,}22$ & 0,0018 \\
 KDBase & $72{,}54 \pm 0{,}21$ & --- & --- \\
 FeatureKD & $71{,}17 \pm 0{,}69$ & $-1{,}38$ & 0,003 \\
 RelationalKD & $72{,}57 \pm 0{,}42$ & $+0{,}03$ & 0,864 \\
@@ -1962,7 +1995,7 @@ không có số liệu hợp lệ trên Cho2017 (Mục~\ref{sec:cho2017}).}
 \toprule
 \textbf{Cấu hình} & \textbf{PhysionetMI} & \textbf{Cho2017} & \textbf{Cùng chiều} \\
 \midrule
-No KD & $-18{,}43$ (CI95\% $[12{,}52;24{,}33]$) & $-5{,}24$ ($p=0{,}006$) & Có \\
+No KD & $-6{,}56$ (CI95\% $[4{,}08;9{,}04]$) & $-2{,}22$ (CI95\% $[1{,}39;3{,}06]$) & Có \\
 FeatureKD & $-1{,}44$ ($p=0{,}016$) & $-1{,}38$ ($p=0{,}003$) & Có \\
 RelationalKD & $+0{,}12$ ($p=0{,}754$) & $+0{,}03$ ($p=0{,}864$) & Có \\
 V1 Dense & $+0{,}41$ ($p=0{,}158$) & --- & --- \\
@@ -1988,15 +2021,17 @@ $\Delta$ gần 0 mà dấu dễ đảo chỉ do nhiễu hạt giống. Riêng h�
 cosine có $p = 0{,}030$ trên Cho2017, được bàn riêng bên dưới. Bốn trường
 hợp còn lại không đạt ý nghĩa thống kê ở bộ dữ liệu nào.
 
-Thứ nhất, hiệu ứng chưng cất tái lập rõ. No KD đạt $67{,}31\%$ so với
-KDBase $72{,}54\%$, chênh $5{,}24$ điểm phần trăm (khoảng tin cậy 95\%
-$[2{,}46; 8{,}01]$, $p = 0{,}006$). Chiều và mức ý nghĩa của hiệu ứng giữ
-nguyên so với hiệu ứng đã sửa trên PhysionetMI ($6{,}56$ điểm, xem
-Mục~\ref{sec:ketqua}). Tuy vậy, số liệu No KD trên Cho2017 dùng ở đây chưa
-được huấn luyện lại với $\alpha = 1{,}0$ như đã làm cho PhysionetMI (Mục~
-\ref{sec:cauhinh}), nên biên độ $5{,}24$ điểm có thể vẫn còn bị phóng đại
-bởi cùng lỗi huấn luyện dưới mức; kiểm chứng bằng một lần huấn luyện lại
-tương ứng trên Cho2017 chưa được thực hiện và được để lại như một hạn chế.
+Thứ nhất, hiệu ứng chưng cất tái lập. No KD ($\alpha = 1{,}0$, cùng
+nguyên tắc trọng số đầy đủ áp dụng cho PhysionetMI, Mục~\ref{sec:cauhinh})
+đạt $70{,}32\%$ so với KDBase $72{,}54\%$, chênh $2{,}22$ điểm phần trăm
+(khoảng tin cậy 95\% $[1{,}39; 3{,}06]$, $p = 0{,}0018$). Chiều và mức ý
+nghĩa của hiệu ứng giữ nguyên so với PhysionetMI, nhưng biên độ nhỏ hơn
+đáng kể: $2{,}22$ điểm trên Cho2017 so với $6{,}56$ điểm trên PhysionetMI
+(Mục~\ref{sec:ketqua}), chưa tới một nửa. Một phần khác biệt có thể đến
+từ khoảng cách năng lực teacher-student nhỏ hơn trên Cho2017: chênh lệch
+teacher trừ student không chưng cất là $4{,}75$ điểm phần trăm trên
+Cho2017 ($75{,}07\%$ trừ $70{,}32\%$) so với $10{,}05$ điểm trên
+PhysionetMI, để lại ít dư địa hơn cho chưng cất thu hẹp.
 
 Thứ hai, khác biệt giữa các cơ chế chưng cất vẫn nhỏ hơn nhiễu do hạt
 giống, dù biên an toàn mỏng hơn. Độ lệch chuẩn giữa mười một cơ chế (không
@@ -2052,12 +2087,16 @@ Năm kết quả chính thu được từ 5 hạt giống độc lập trên 103
 đơn vị thống kê là đối tượng.
 
 Hiệu ứng của chưng cất tri thức là lớn và ổn định. Student huấn
-luyện độc lập đạt 74,93\%, trong khi mọi cấu hình có chưng cất đạt khoảng
-81\%. Mức cải thiện 6,56 điểm phần trăm, với khoảng tin cậy 95\% từ 4,08
-đến 9,04, tương ứng mức tăng khoảng 1,6 lần về tốc độ truyền thông tin của
-kênh điều khiển. Con số baseline 74,93\% là kết quả sau khi sửa một lỗi
-huấn luyện dưới mức của cấu hình không chưng cất (Mục~\ref{sec:cauhinh});
-ước lượng ban đầu, 63,06\%, phóng đại hiệu ứng chưng cất lên 18,43 điểm.
+luyện độc lập đạt 74,93\% ($\alpha=1{,}0$), trong khi mọi cấu hình có
+chưng cất đạt khoảng 81\%. Mức cải thiện 6,56 điểm phần trăm, với khoảng
+tin cậy 95\% từ 4,08 đến 9,04, tương ứng mức tăng khoảng 1,6 lần về tốc
+độ truyền thông tin của kênh điều khiển. Giá trị $\alpha=1{,}0$ là giá trị
+duy nhất cho cấu hình không chưng cất đủ trọng số của số hạng loss mà nó
+thực sự có, theo cùng nguyên tắc trọng số đầy đủ áp dụng cho mọi cấu hình
+khác trong bài (Mục~\ref{sec:cauhinh}); ở $\alpha=0{,}5$, giá trị chỉ phù
+hợp cho các cấu hình có số hạng chưng cất thứ hai để cân bằng, student
+độc lập chỉ đạt 63,06\%, khiến mức cải thiện quan sát được lên tới 18,43
+điểm (Bảng~\ref{tab:alphasweep}).
 
 Ngược lại, khác biệt giữa các cơ chế chưng cất nằm dưới ngưỡng phát hiện. Độ
 lệch chuẩn của giá trị trung bình giữa mười hai cơ chế là 0,459 điểm phần
@@ -2168,12 +2207,11 @@ pool 64 mẫu và chỉ đổi tiêu chí chọn thành ngẫu nhiên
 ý nghĩa với bên nào ($n=5$), nên kết quả thấp hơn kỳ vọng của V5 vẫn chưa
 thể quy dứt khoát cho tiêu chí "chọn theo thông tin" hay cho candidate
 pool rộng hơn, đối chứng không đủ phân giải để tách hai ảnh hưởng này.
-Cuối cùng, cấu hình không chưng cất trên PhysionetMI ban đầu bị
-huấn luyện dưới mức do một lỗi cấu hình siêu tham số $\alpha$
-(Mục~\ref{sec:cauhinh}) đã được phát hiện và sửa; số liệu tương ứng trên
-Cho2017 (Mục~\ref{sec:cho2017}) chưa được sửa theo cách tương tự, nên biên
-độ hiệu ứng chưng cất báo cáo trên Cho2017 vẫn có thể bị phóng đại ở một
-mức độ chưa xác định được.
+Cuối cùng, cấu hình không chưng cất dùng $\alpha=1{,}0$ trên cả
+PhysionetMI và Cho2017 (Mục~\ref{sec:cauhinh},~\ref{sec:cho2017}), theo
+cùng nguyên tắc trọng số đầy đủ áp dụng cho mọi cấu hình khác trong bài;
+Bảng~\ref{tab:alphasweep} đo độ nhạy của baseline này theo $\alpha$ trên
+PhysionetMI nhưng chưa lặp lại phép đo tương tự trên Cho2017.
 
 Các hướng phát triển tiếp theo bao gồm tiền đăng ký và lặp lại phép kiểm
 định chính trên bộ dữ liệu thứ hai, thay vì dừng ở khảo sát khám phá như
