@@ -41,7 +41,8 @@ GLOBAL_SEED = 1312
 
 HP = dict(
     alpha=0.5, temperature=4.0, beta_qrd=0.02, gamma_feat=1.0, gamma_rkd=1.0,
-    n_qubits=4, n_q_layers=2, qrd_batch_size=16, num_anchors=8, knn_k=4,
+    n_qubits=int(os.environ.get("QRD_N_QUBITS", "4")), n_q_layers=2,
+    qrd_batch_size=16, num_anchors=8, knn_k=4,
     entropy_weight=0.5, disagreement_weight=0.5,
 )
 DEFAULT_METHODS = [

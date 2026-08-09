@@ -1,0 +1,42 @@
+#!/bin/bash
+#PBS -N qubit_scaling_smoke
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/qubit_scaling_smoke.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (smoke do chi phi mach luong tu theo n_qubits in {4,8,12,16}, qrd_dense, 1 fold x 3 epoch, KHONG lay accuracy) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+OUT_DIR=$PROJ/results/qubit_scaling_smoke_2026_08_05
+mkdir -p "$OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM"
+    sleep 300
+  done ) &
+HB=$!
+
+for NQ in 4 8 12 16; do
+  export QRD_N_QUBITS=$NQ
+  echo "----- n_qubits=$NQ -----"
+  timeout 1200 $PY $PROJ/scripts/run_all.py \
+      --methods qrd_dense --folds 0 --epochs 3 --skip_teacher \
+      --out $OUT_DIR/qubit_smoke_nq${NQ}.xlsx
+  echo "n_qubits=$NQ rc=$?"
+done
+
+kill $HB 2>/dev/null
+echo "===== END $(date +%T) ====="

@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -N seeds6to10_ext
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=16:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/seeds6to10_extension.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (Major 7 review IJRCS: mo rong hat giong 6-10 cho tap con KDBase/RelationalKD/V1/V5-quantum/cosine, kiem tra hoi tu xep hang qua 10 hat giong) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/seeds6to10_extension_2026_08_09
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="6,7,8,9,10"
+export QRD_RUNS="kdbase_s6to10:kd_base,relationalkd_s6to10:rkd_classical,cosine_s6to10:ck_cosine_tg,v1_s6to10:qrd_dense_noproj,v5_s6to10:qrd_teacher_guided"
+export QRD_SEEDS_OUT="seeds6to10_subset_per_subject.csv"
+
+$PY $PROJ/scripts/run_seeds.py
+echo "rc=$?"
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/seeds6to10_subset_per_subject.csv 2>/dev/null | wc -l) (dich 2575 = 5 method x 5 seed x 103 subject)"
+
+echo "===== END $(date +%T) ====="

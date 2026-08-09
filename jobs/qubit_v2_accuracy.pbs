@@ -1,0 +1,46 @@
+#!/bin/bash
+#PBS -N qubit_v2_acc
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=48:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/qubit_v2_accuracy.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (V2 Dense, do accuracy day du 5 seed x 5 fold x 30 epoch o n_qubits in {8,12}) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/qubit_v2_full_2026_08_05
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+echo "teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM"
+    sleep 300
+  done ) &
+HB=$!
+
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="1,2,3,4,5"
+export QRD_RUNS="v2_dense:qrd_dense"
+
+for NQ in 8 12; do
+  echo "----- n_qubits=$NQ: 5 seed x 5 fold x 30 epoch (mac dinh) -----"
+  export QRD_N_QUBITS=$NQ
+  export QRD_SEEDS_OUT="qubit_v2_nq${NQ}_per_subject.csv"
+  timeout 72000 $PY $PROJ/scripts/run_seeds.py ; echo "n_qubits=$NQ rc=$?"
+  echo "rows nq=$NQ: $(tail -n +2 $QRD_OUT_DIR/qubit_v2_nq${NQ}_per_subject.csv 2>/dev/null | wc -l) (dich 515 = 5 seed x 103 subject)"
+done
+
+kill $HB 2>/dev/null
+echo "===== END $(date +%T) ====="

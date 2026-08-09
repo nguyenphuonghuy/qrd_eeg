@@ -41,9 +41,10 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{cite}
 
-\title{Quantum Relational Knowledge Distillation for Motor Imagery\\
-       Decoding: A Controlled Comparison under Real-Time Control Constraints}
-\author{Nguyen Phuong Huy}
+\title{A Systematic Study of Structured Relational Distillation for Motor
+       Imagery Decoding under Real-Time Control Constraints, with a Quantum
+       Kernel as a Case Study}
+\author{}
 \date{}
 
 \begin{document}
@@ -51,36 +52,28 @@
 
 \begin{abstract}
 \noindent
-Chưng cất tri thức dựa trên quan hệ xuất phát từ một giả định: cấu trúc
-tương đối giữa các mẫu mang thông tin mà biểu diễn của từng mẫu riêng lẻ
-không chứa. Một hướng gần đây đề xuất mô tả cấu trúc đó trong không gian
-Hilbert bằng hàm nhân lượng tử. Nghiên cứu này kiểm định giả thiết đó trên bài toán giải mã
-tưởng tượng vận động hai lớp (bộ dữ liệu PhysionetMI), nơi bộ giải mã là
-một khâu của vòng điều khiển kín.
-Đặc trưng trung gian của mô hình giáo viên và mô hình học sinh được ánh xạ
-vào một mạch bốn qubit. Mức tương đồng đo bằng độ trung thực giữa hai trạng
-thái. Sai lệch giữa hai ma trận quan hệ trở thành tín hiệu giám sát bổ
-sung. Mạch chỉ hoạt động khi huấn luyện nên mô hình triển khai vẫn thuần cổ
-điển. Mười hai cấu hình được so sánh trong điều kiện đồng nhất, gồm năm chiến
-lược hình thành quan hệ và ba dạng hàm nhân, trên 103 đối tượng với năm hạt
-giống độc lập, tổng cộng 6.180 kết quả ở mức đối tượng. Các kết quả này
-không độc lập với nhau, và mọi kiểm định thống kê trong bài thực hiện ở
-mức hạt giống, $n=5$. Chưng cất nâng độ
-chính xác từ 74,93 lên 81,49 phần trăm, tương ứng tốc độ truyền thông tin
-ngoại tuyến tăng từ 3,75 lên 6,18 bit mỗi phút. Trong cùng cơ chế lựa chọn, ba dạng hàm
-nhân không phát hiện được khác biệt có ý nghĩa thống kê. Chênh lệch giữa
-hàm nhân lượng tử và hai hàm nhân cổ điển trải trên 0,51 điểm, trong khi
-chi phí huấn luyện chênh khoảng 13 lần. Độ lệch chuẩn giữa mười hai cấu
-hình là 0,459 điểm, nhỏ hơn nhiễu 0,750 điểm do hạt giống sinh ra. Một đối
-chứng dương phát hiện được hiệu ứng 1,44 điểm. Xếp hạng từ một lần chạy đơn
-gần như không tương quan với xếp hạng trên năm hạt
-giống. Khoảng tin cậy của phép so sánh chính đã chốt trước khi xem kết quả
-vượt ra ngoài biên tương đương đã cam kết, nên không xác lập được tương
-đương lẫn khác biệt có ý nghĩa. Khoảng quan sát được vẫn có thể dùng làm
-mốc đối chiếu định lượng cho các cấu hình lượng tử phức tạp hơn. Một khảo
-sát khám phá bổ sung trên bộ dữ liệu tưởng tượng vận động thứ hai
-(Cho2017, 49 đối tượng, không tiền đăng ký) không phát hiện điều gì mâu
-thuẫn với các kết luận trên.
+Chưng cất tri thức dựa trên quan hệ giữa các mẫu là một hướng hiệu quả
+cho giải mã tưởng tượng vận động, nhưng các công trình trước thường cố
+định chiến lược hình thành quan hệ theo kinh nghiệm. Nghiên cứu này đề
+xuất một khung chưng cất quan hệ có cấu trúc cho bộ giải mã tưởng tượng
+vận động hai lớp, đánh giá ngoại tuyến theo ràng buộc của vòng điều
+khiển kín, trong đó chiến lược hình thành quan hệ và hàm nhân đo tương
+đồng quan hệ là hai tham số thiết kế độc lập. Mười hai cấu hình (năm
+chiến lược quan hệ, ba dạng hàm nhân) được so sánh trên PhysionetMI
+(103 đối tượng, năm hạt giống độc lập, $n=5$). Chưng cất mang lại hiệu
+quả lớn và ổn định, độ chính xác tăng từ 74,93 lên 81,49 phần trăm, tái
+lập trên một bộ dữ liệu độc lập thứ hai (Cho2017, 49 đối tượng). Tuy
+nhiên, khác biệt giữa các cơ chế cụ thể nhỏ hơn nhiễu do hạt giống ngẫu
+nhiên (độ lệch chuẩn 0,459 so với 0,750 điểm phần trăm), và xếp hạng từ
+một lần chạy đơn gần như không tương quan với xếp hạng trên năm hạt
+giống ($\rho = 0{,}14$). Đối chiếu theo tiếp cận điều khiển, hàm nhân
+lượng tử, khảo sát như một trường hợp cụ thể, cho chênh lệch $0{,}51$
+điểm phần trăm so với hai hàm nhân cổ điển, nằm ở ranh giới ý nghĩa
+thống kê qua nhiều phương pháp kiểm định và vượt biên tương đương
+$\pm 0{,}5$ điểm đã xác định, nên chưa đủ dữ liệu để kết luận dứt khoát.
+Chi phí huấn luyện của nhánh lượng tử cao hơn khoảng 13 lần và tăng phi
+tuyến theo số qubit, bất khả thi ở quy mô lớn trên hạ tầng một GPU dùng
+chung.
 \end{abstract}
 
 \noindent\textbf{Từ khóa:} Giao diện não--máy tính; chưng cất tri thức; giải mã tưởng tượng vận động; học máy lượng tử; đánh giá có kiểm soát.

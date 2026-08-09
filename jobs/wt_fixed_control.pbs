@@ -1,0 +1,34 @@
+#!/bin/bash
+#PBS -N wt_fixed_control
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=05:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/wt_fixed_control.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (M4 review IJRCS: co dinh teacher_proj_seed=90001, quet 5 seed huan luyen 1..5, so sanh SD voi qrd_dense goc 0,7795) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/wt_fixed_control_2026_08_05
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="1,2,3,4,5"
+export QRD_RUNS="wt_fixed:qrd_dense_wtfixed"
+export QRD_SEEDS_OUT="wtfixed_per_subject.csv"
+
+timeout 16200 $PY $PROJ/scripts/run_seeds.py
+echo "rc=$?"
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/wtfixed_per_subject.csv 2>/dev/null | wc -l) (dich 515 = 5 seed x 103 subject)"
+
+echo "===== END $(date +%T) ====="

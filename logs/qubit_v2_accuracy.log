@@ -1,0 +1,16 @@
+===== START 23:57:11 2026-08-06 node=ai01 (V2 Dense, do accuracy day du 5 seed x 5 fold x 30 epoch o n_qubits in {8,12}) =====
+teacher ckpt: 5
+----- n_qubits=8: 5 seed x 5 fold x 30 epoch (mac dinh) -----
+[HB 23:57:12] procmem=0.0GB
+[HB 00:02:12] procmem=0.6GB
+[compat] Patched EEGWindowsDataset.raw for legacy pickles.
+ERROR: /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/qubit_v2_full_2026_08_05/qubit_v2_nq8_per_subject.csv DA TON TAI. Dat QRD_SEEDS_OUT khac, hoac QRD_OVERWRITE=1 neu that su muon de.
+n_qubits=8 rc=1
+rows nq=8: 515 (dich 515 = 5 seed x 103 subject)
+----- n_qubits=12: 5 seed x 5 fold x 30 epoch (mac dinh) -----
+[HB 00:07:12] procmem=0.6GB
+[compat] Patched EEGWindowsDataset.raw for legacy pickles.
+ERROR: /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/qubit_v2_full_2026_08_05/qubit_v2_nq12_per_subject.csv DA TON TAI. Dat QRD_SEEDS_OUT khac, hoac QRD_OVERWRITE=1 neu that su muon de.
+n_qubits=12 rc=1
+rows nq=12: 349 (dich 515 = 5 seed x 103 subject)
+===== END 00:09:34 =====

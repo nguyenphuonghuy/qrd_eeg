@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -N relation_cost_v134
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=01:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/relation_cost_v134.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (smoke do chi phi V1/V3/V4, 1 fold x 3 epoch, KHONG lay accuracy) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+OUT_DIR=$PROJ/results/relation_cost_v134_2026_08_05
+mkdir -p "$OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+timeout 1800 $PY $PROJ/scripts/run_all.py \
+    --methods qrd_dense_noproj,qrd_anchor,qrd_global_local \
+    --folds 0 --epochs 3 --skip_teacher \
+    --out $OUT_DIR/relation_cost_v134.xlsx
+echo "rc=$?"
+
+echo "===== END $(date +%T) ====="

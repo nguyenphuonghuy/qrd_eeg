@@ -306,6 +306,15 @@ METHOD_TABLE = {
     "qrd_teacher_guided": dict(kd=True, feat=False, rkd=False, kernel="quantum", sel="teacher_guided"),
     "ck_cosine_tg":     dict(kd=True,  feat=False, rkd=False, kernel="cosine",  sel="teacher_guided"),
     "ck_rbf_tg":        dict(kd=True,  feat=False, rkd=False, kernel="rbf",     sel="teacher_guided"),
+    # Doi chung V2/V3/V4: cosine/RBF voi cung chien luoc chon quan he cua tung
+    # bien the, de kiem tra tinh nhat quan cua so sanh kernel qua nhieu sel
+    # (hien tai chi co du lieu 3-kernel cho V5, xem TODO_NEXT.md).
+    "ck_cosine_dense":       dict(kd=True, feat=False, rkd=False, kernel="cosine", sel="dense"),
+    "ck_rbf_dense":          dict(kd=True, feat=False, rkd=False, kernel="rbf",    sel="dense"),
+    "ck_cosine_anchor":      dict(kd=True, feat=False, rkd=False, kernel="cosine", sel="anchor"),
+    "ck_rbf_anchor":         dict(kd=True, feat=False, rkd=False, kernel="rbf",    sel="anchor"),
+    "ck_cosine_global_local": dict(kd=True, feat=False, rkd=False, kernel="cosine", sel="global_local"),
+    "ck_rbf_global_local":    dict(kd=True, feat=False, rkd=False, kernel="rbf",    sel="global_local"),
     # Bien the "proj": cosine/RBF tinh tren KHONG GIAN 4 CHIEU da chieu qua W_S/W_T,
     # giong het nhanh luong tu, thay vi dac trung 144 chieu tho. Kiem soat cong bang
     # so chieu dau vao + so tham so hoc duoc (580 tu W_S, giong V5) giua 3 dang kernel.
@@ -334,6 +343,13 @@ METHOD_TABLE = {
                            sel="dense", teacher_proj_seed=90004),
     "qrd_dense_wt5": dict(kd=True, feat=False, rkd=False, kernel="quantum",
                            sel="dense", teacher_proj_seed=90005),
+    # Doi chung chieu nguoc lai (M4 - review IJRCS): giong het "qrd_dense" ve
+    # moi mat, CHI khac o teacher_proj_seed CO DINH mot gia tri duy nhat
+    # (90001, trung voi qrd_dense_wt1) trong khi seed HUAN LUYEN van quet du
+    # 1..5 nhu qrd_dense goc. Dung de do rieng phuong sai do seed huan luyen
+    # SAU KHI da loai bo nhieu do W_T thay doi theo seed toan cuc.
+    "qrd_dense_wtfixed": dict(kd=True, feat=False, rkd=False, kernel="quantum",
+                               sel="dense", teacher_proj_seed=90001),
     # Doi chung candidate pool (Van de lon 4 - review IJRCS): giong het V5
     # (qrd_teacher_guided) ve moi mat - candidate pool = toan bo N=64 mau
     # cua batch - CHI khac o tieu chi chon: ngau nhien thay vi

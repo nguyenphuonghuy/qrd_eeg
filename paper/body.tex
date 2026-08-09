@@ -5,21 +5,22 @@ Giao diện não--máy tính (brain--computer interface, BCI) chuyển hoạt đ
 điện não thành tín hiệu điều khiển cho thiết bị bên ngoài, không đi qua
 đường dẫn thần kinh--cơ thông thường \cite{chen2025brain, tonin2021noninvasive,
 ding2026brain}. Đối với người mất chức năng vận động, đây là phương tiện
-khả dĩ để vận hành thiết bị hỗ trợ. Phạm vi ứng dụng đã mở rộng từ phòng
+khả dĩ để vận hành thiết bị hỗ trợ. Phạm vi ứng dụng của BCI đã mở rộng từ phòng
 thí nghiệm sang nhiều hệ thống thực tế \cite{varbu2022present,
 pang2024applications}: xe lăn điện \cite{palumbo2021motorimagery,
 lei2022intention, mai2024hybrid}, tay máy hỗ trợ và chi giả
 \cite{casey2021bci}, thiết bị phục hồi chức năng chi trên
 \cite{baniqued2021brain}, phương tiện di chuyển vận hành bằng ý định
-\cite{lu2020model}. Trong các mô hình tín hiệu khả dụng, tưởng tượng vận
-động (motor imagery, MI) cho phép người dùng phát lệnh chủ động, không phụ
-thuộc kích thích ngoại vi, nên phù hợp với các tác vụ điều khiển liên tục
-kéo dài.
+\cite{lu2020model}. Trong các mô hình tín hiệu khả dụng cho những hệ thống
+này (Mục~\ref{sec:lienquan}), nghiên cứu này tập trung vào tưởng tượng vận
+động (motor imagery, MI), do đặc điểm phát lệnh chủ động phù hợp với các
+tác vụ điều khiển liên tục kéo dài.
 
 Trong mọi hệ thống nêu trên, bộ giải mã EEG không hoạt động độc lập mà là
-một khâu trong vòng điều khiển kín: ý định người dùng chuyển thành lệnh,
-lệnh được cơ cấu chấp hành thực thi, kết quả quay lại người dùng dưới dạng
-phản hồi. Vị trí này áp đặt lên bộ giải mã những yêu cầu mà bài toán phân
+một khâu trong vòng điều khiển kín. Ý định người dùng chuyển thành lệnh.
+Sau đó, lệnh được cơ cấu chấp hành thực thi. Cuối cùng, kết quả quay lại
+người dùng dưới dạng phản hồi. Vị trí này áp đặt lên bộ giải mã những yêu
+cầu mà bài toán phân
 loại thuần túy không xét đến. Thời gian suy luận phải nằm trong ngân sách
 thời gian của vòng kín, vì độ trễ tích lũy làm suy giảm khả năng hiệu chỉnh
 của người dùng \cite{an2024development, tonin2020role}. Tài nguyên tính
@@ -33,28 +34,20 @@ deng2020selfadaptive}. Cộng đồng BCI định lượng băng thông của k�
 khiển bằng tốc độ truyền thông tin, một chỉ số gộp đồng thời độ chính xác
 và thời gian phát lệnh \cite{wolpaw2002brain}.
 
-Các ràng buộc này trở nên gay gắt hơn khi hệ thống chuyển từ thiết bị EEG y
-tế nhiều kênh sang thiết bị phổ thông có số kênh thấp, một xu hướng được
-thúc đẩy bởi chi phí và thời gian chuẩn bị cho người dùng cuối
-\cite{wu2022deepbrain, tarara2025motor}. Bộ giải mã khi đó phải đạt độ
-chính xác cao hơn trên dữ liệu kém hơn, đồng thời vẫn chạy được trên phần
-cứng hạn chế.
+Các ràng buộc này trở nên gay gắt hơn khi hệ thống chuyển sang thiết bị
+phổ thông có số kênh thấp, một xu hướng khảo sát chi tiết ở
+Mục~\ref{sec:lienquan}, buộc bộ giải mã đạt độ chính xác cao hơn trên dữ
+liệu kém hơn trong khi vẫn chạy được trên phần cứng hạn chế.
 
-Các phương pháp học sâu đã cải thiện đáng kể chất lượng giải mã tưởng tượng
-vận động so với quy trình dựa trên đặc trưng thủ công \cite{al-saegh2021deep,
-sadiq2021development}. Dù vậy, y văn hiện nay phân thành hai nhánh đối lập
-về mặt triển khai: một bên là kiến trúc gọn nhẹ thiết kế riêng cho EEG, đủ
-điều kiện chạy trên vi điều khiển \cite{lawhern2018eegnet,
-ingolfsson2020eegtcnet, wang2024mibminet}; bên kia tăng dung lượng mô hình
-bằng mạng tích chập sâu, kiến trúc transformer hoặc tập hợp nhiều mô hình,
-đạt độ chính xác cao hơn nhưng vượt xa ngân sách tính toán của vòng điều
-khiển \cite{schirrmeister2017deep, zhao2024ctnet, ding2025eegdeformer,
-zoumpourlis2024motor}. Các mô hình dung lượng lớn còn phụ thuộc mạnh vào
-lượng dữ liệu huấn luyện, vốn hạn chế đối với EEG \cite{keutayeva2024data}.
-Bài toán tổng quát hóa xuyên đối tượng làm mâu thuẫn này thêm sâu sắc
-\cite{keutayeva2024compact, wei2023intra}. Người thiết kế do đó đứng trước
-lựa chọn giữa một bộ giải mã triển khai được nhưng kém chính xác, và một
-bộ giải mã chính xác nhưng không đưa được vào vòng điều khiển.
+Các phương pháp học sâu đã cải thiện đáng kể chất lượng giải mã tưởng
+tượng vận động so với quy trình dựa trên đặc trưng thủ công. Dù vậy, y
+văn hiện phân thành hai nhánh đối lập về mặt triển khai, trình bày chi
+tiết ở Mục~\ref{sec:lienquan}: kiến trúc gọn nhẹ thiết kế riêng cho EEG,
+đủ điều kiện chạy trên vi điều khiển, hoặc mô hình dung lượng lớn đạt độ
+chính xác cao hơn nhưng vượt xa ngân sách tính toán của vòng điều khiển.
+Người thiết kế do đó đứng trước lựa chọn giữa một bộ giải mã triển khai
+được nhưng kém chính xác, và một bộ giải mã chính xác nhưng không đưa
+được vào vòng điều khiển.
 
 Chưng cất tri thức là chiến lược trực tiếp nhắm vào mâu thuẫn này, cho phép
 chuyển một phần năng lực của mô hình dung lượng lớn sang mô hình gọn nhẹ mà
@@ -83,50 +76,51 @@ sang giai đoạn huấn luyện \cite{liu2025quantum, liu2025quantumtrain}, nh�
 chưa được kiểm chứng trên bài toán giải mã tưởng tượng vận động dưới ràng
 buộc của vòng điều khiển.
 
-Nghiên cứu này đề xuất khung Quantum Relational Distillation (QRD) cho bộ
-giải mã tưởng tượng vận động trong các hệ thống điều khiển bằng tín hiệu
-não. Ý tưởng trung tâm là chuyển việc mô tả quan hệ giữa các mẫu sang một
-không gian biểu diễn khác, nhưng chỉ ở giai đoạn huấn luyện. Cụ thể, biểu
-diễn trung gian của teacher và của student được mã hóa thành trạng thái
-lượng tử qua một mạch tham số hóa. Mức tương đồng giữa hai mẫu bất kỳ được
-đo bằng độ trung thực giữa hai trạng thái tương ứng, tạo thành một ma trận
-quan hệ cho mỗi mô hình. Sai lệch giữa ma trận quan hệ của teacher và của
-student trở thành thành phần mất mát bổ sung, buộc student tái tạo cấu trúc
-quan hệ mà teacher đã học thay vì chỉ khớp từng dự đoán riêng lẻ. Vì mạch
-lượng tử chỉ tham gia vào việc tính hàm mất mát, nó biến mất hoàn toàn sau
-khi huấn luyện kết thúc. Mô hình đưa vào vòng điều khiển vẫn là một mạng
-cổ điển gọn nhẹ.
+Nghiên cứu này đề xuất một khung chưng cất quan hệ có cấu trúc (QRD) cho
+bộ giải mã tưởng tượng vận động trong các hệ thống điều khiển bằng tín
+hiệu não. Ý tưởng trung tâm là tách chiến lược hình thành quan hệ giữa các
+mẫu khỏi không gian biểu diễn dùng để đo tương đồng quan hệ, coi cả hai là
+hai tham số thiết kế độc lập thay vì gắn chặt với nhau như trong các công
+trình trước. Trong nghiên cứu này, không gian biểu diễn được khảo sát bằng
+cách mã hóa biểu diễn trung gian của teacher và của student thành trạng
+thái lượng tử qua một mạch tham số hóa, đối chiếu trực tiếp với hai hàm
+nhân phi tuyến cổ điển. Mức tương đồng giữa hai mẫu bất kỳ được đo bằng độ
+trung thực giữa hai trạng thái tương ứng, tạo thành một ma trận quan hệ
+cho mỗi mô hình. Sai lệch giữa ma trận quan hệ của teacher và của student
+trở thành thành phần mất mát bổ sung, buộc student tái tạo cấu trúc quan
+hệ mà teacher đã học thay vì chỉ khớp từng dự đoán riêng lẻ. Toàn bộ hàm
+nhân quan hệ, cổ điển hay lượng tử, chỉ tham gia vào việc tính hàm mất
+mát, nên biến mất hoàn toàn sau khi huấn luyện kết thúc. Mô hình đưa vào
+vòng điều khiển vẫn là một mạng cổ điển gọn nhẹ.
 
 Điểm phân biệt QRD với các phương pháp chưng cất quan hệ hiện có không chỉ
 nằm ở không gian biểu diễn. Trong các công trình trước, tập các cặp mẫu
 dùng để dựng quan hệ thường được lấy toàn bộ mini-batch theo mặc định. QRD
-coi việc chọn cặp mẫu là một tham số thiết kế độc lập, và khảo sát năm cách
-tổ chức khác nhau trên cùng một hàm mất mát: từ quan hệ dày đặc, đến quan
-hệ thưa dựa trên mẫu đại diện, đến lựa chọn có định hướng theo mức bất định
-của teacher. Nhờ giữ nguyên mọi thành phần còn lại giữa các biến thể, ảnh
+coi việc chọn cặp mẫu là một tham số thiết kế độc lập. Trên cùng một hàm
+mất mát, QRD khảo sát năm cách tổ chức khác nhau, từ quan hệ dày đặc, đến
+quan hệ thưa dựa trên mẫu đại diện, đến lựa chọn có định hướng theo mức
+bất định của teacher. Nhờ giữ nguyên mọi thành phần còn lại giữa các biến
+thể, ảnh
 hưởng của không gian biểu diễn có thể tách khỏi ảnh hưởng của cấu trúc quan
 hệ. Các thiết kế hiện có không cho phép tách hai ảnh hưởng này, vì hai yếu
 tố luôn thay đổi cùng nhau.
 
-Trên cơ sở đó, bài báo đóng góp bốn nội dung sau.
+Trên cơ sở đó, bài báo đóng góp ba nội dung sau.
 
 \begin{itemize}
-\item Một khung chưng cất trong đó thành phần lượng tử chỉ hoạt động ở
-giai đoạn huấn luyện, nhờ đó mô hình triển khai giữ nguyên số tham số và
-thời gian suy luận cần thiết cho vòng điều khiển thời gian thực.
+\item Đề xuất một khung chưng cất quan hệ có cấu trúc tổng quát, với hiệu
+quả và tính ổn định của việc chưng cất được xác nhận trên hai bộ dữ liệu
+độc lập.
 
-\item Một họ năm chiến lược hình thành quan hệ trên cùng một khung chưng
-cất, cho phép tách biệt ảnh hưởng của không gian biểu diễn khỏi ảnh hưởng
-của cấu trúc quan hệ.
+\item Phân tích khách quan hoạt động của năm biến thể chiến lược hình
+thành quan hệ (dùng hàm nhân lượng tử theo mặc định) thông qua các phép đo
+đạc chặt và trung thực trên một không gian thiết kế rộng, từ đó đưa ra
+các kết luận về tầm quan trọng của chiến lược so với nhiễu hạt giống cũng
+như độ tin cậy của xếp hạng đơn lần chạy.
 
-\item Một quy trình đánh giá hướng điều khiển, sử dụng tốc độ truyền thông
-tin, ngân sách thời gian của vòng kín và độ tin cậy lệnh đã hiệu chỉnh ngẫu
-nhiên thay vì chỉ dựa trên độ chính xác phân loại.
-
-\item Một phân tích chi phí--lợi ích tường minh, định lượng cụ thể chênh
-lệch độ chính xác giữa hàm nhân lượng tử và hai hàm nhân phi tuyến cổ điển,
-đối chiếu với chi phí thời gian huấn luyện đo được, để làm cơ sở cho quyết
-định lựa chọn thiết kế.
+\item Đề xuất một quy trình dùng tốc độ truyền thông tin và ngân sách thời
+gian suy luận (chưa gồm thời gian phản hồi của cơ cấu chấp hành) thay vì
+chỉ độ chính xác phân loại để đánh giá các biến thể theo hướng điều khiển.
 \end{itemize}
 
 Phần còn lại của bài báo được tổ chức như sau. Mục~\ref{sec:lienquan} khảo
@@ -150,14 +144,14 @@ như SSVEP hay P300, nên phù hợp với các tác vụ điều khiển liên 
 Điều khiển xe lăn là ứng dụng được khảo sát nhiều nhất trong nhóm thiết bị
 hỗ trợ di chuyển \cite{palumbo2021motorimagery}. Dù vậy, các hệ thống chỉ
 dựa trên MI gặp giới hạn về độ tin cậy khi số lệnh cần phân biệt tăng lên.
-Y văn xử lý theo hai hướng khác nhau: bổ sung mô hình tín hiệu khác để
-tăng số lệnh khả dụng mà không làm giảm độ chính xác của từng lệnh
-\cite{mai2024hybrid}, hoặc giữ nguyên bộ giải mã nhưng chia sẻ quyền điều
-khiển với một hệ thống tự hành, trong đó BCI chỉ phát lệnh ở mức ý định
-còn việc bám quỹ đạo và tránh vật cản do cảm biến đảm nhiệm
-\cite{choi2023asynchronous}. Cả hai hướng đều thừa nhận cùng một thực tế:
-chất lượng của bộ giải mã quyết định trực tiếp mức độ can thiệp cần thiết
-từ các lớp bổ trợ phía sau.
+Y văn xử lý theo hai hướng khác nhau. Một hướng bổ sung mô hình tín hiệu
+khác để tăng số lệnh khả dụng mà không làm giảm độ chính xác của từng
+lệnh \cite{mai2024hybrid}. Hướng còn lại giữ nguyên bộ giải mã nhưng chia
+sẻ quyền điều khiển với một hệ thống tự hành, trong đó BCI chỉ phát lệnh
+ở mức ý định còn việc bám quỹ đạo và tránh vật cản do cảm biến đảm nhiệm
+\cite{choi2023asynchronous}. Cả hai hướng đều thừa nhận cùng một thực tế
+là chất lượng của bộ giải mã quyết định trực tiếp mức độ can thiệp cần
+thiết từ các lớp bổ trợ phía sau.
 
 Ở nhóm thiết bị thao tác và phục hồi chức năng, yêu cầu đặt lên bộ giải mã
 có phần khác. Các hệ thống tay máy hỗ trợ và ngoại cốt bàn tay thường hoạt
@@ -337,7 +331,7 @@ phí tính toán \cite{keutayeva2024compact}.
 
 Y văn hiện nay do đó đặt người thiết kế trước một lựa chọn nhị nguyên. Các
 mô hình gọn nhẹ thỏa mãn ràng buộc triển khai nêu ở Mục~\ref{sec:rangbuoc}
-nhưng chấp nhận mức độ chính xác thấp hơn; các mô hình dung lượng lớn đạt
+nhưng chấp nhận mức độ chính xác thấp hơn. Các mô hình dung lượng lớn đạt
 độ chính xác cao hơn nhưng vượt quá ngân sách thời gian và tài nguyên của
 vòng điều khiển, đồng thời phụ thuộc nhiều hơn vào lượng dữ liệu sẵn có.
 Câu hỏi đặt ra là liệu có thể chuyển phần năng lực của nhóm dung lượng lớn
@@ -506,7 +500,7 @@ như một công cụ hỗ trợ trong giai đoạn huấn luyện thay vì như
 của mô hình triển khai. Quantum Relational Knowledge Distillation
 \cite{liu2025quantum} ánh xạ các biểu diễn trung gian của teacher và
 student vào không gian lượng tử, sau đó mô hình hóa quan hệ giữa các mẫu
-thông qua quantum kernel. Trong thiết lập này, cả teacher và student đều
+thông qua hàm nhân lượng tử. Trong thiết lập này, cả teacher và student đều
 là mô hình cổ điển, còn thành phần lượng tử chỉ tham gia vào việc xây dựng
 hàm mất mát. Theo cùng triết lý đó, Quantum-Train
 \cite{liu2025quantumtrain} sử dụng mạch lượng tử trong quá trình huấn luyện
@@ -746,7 +740,7 @@ trị các hệ số được nêu ở Mục~\ref{sec:cauhinh}.
 Ba cấu hình trên tạo thành một dãy tăng dần về mức trừu tượng của tri thức
 được truyền, từ đầu ra đến đặc trưng riêng lẻ rồi đến quan hệ giữa các mẫu.
 RelationalKD là cấu hình đầu tiên trong dãy biểu diễn tri thức dưới dạng
-quan hệ, và cũng là điểm mà khung QRD mở rộng: thay vì đo quan hệ bằng
+quan hệ, và cũng là điểm mà khung QRD mở rộng. Thay vì đo quan hệ bằng
 khoảng cách Euclid trong không gian đặc trưng, QRD đo chúng bằng hàm nhân
 trong không gian Hilbert.
 
@@ -805,13 +799,14 @@ khác (nạp dữ liệu, khởi tạo teacher và student) trong cùng một lu
 số ngẫu nhiên toàn cục đã được gán hạt giống theo từng lần chạy, $W_T$ nhiều
 khả năng khác nhau giữa năm hạt giống của thí nghiệm, nhưng đây là hệ quả
 gián tiếp của cách gán hạt giống toàn cục chứ không phải một điều khiển thực
-nghiệm chủ đích, và nghiên cứu này chưa đo trực tiếp mức chênh lệch giữa các
-lần khởi tạo $W_T$ khác nhau. Với tỷ lệ nén $144 \to 4$, chưa có phân tích
-độ nhạy nào của kết quả theo phép chiếu $W_T$ cụ thể, và nghiên cứu không
-viện dẫn một cơ sở lý thuyết nào (ví dụ bổ đề Johnson--Lindenstrauss) để
-bảo đảm một phép chiếu ngẫu nhiên ở tỷ lệ nén này bảo toàn đủ cấu trúc quan
-hệ. Đây là một giới hạn của thiết kế hiện tại, nêu lại ở
-Mục~\ref{sec:ketluan}. Đầu ra của phép chiếu được đưa về
+nghiệm chủ đích. Nghiên cứu đã bổ sung một đối chứng thực nghiệm cố định
+$W_T$ ở một giá trị duy nhất trong khi vẫn quét đủ năm hạt giống huấn
+luyện. Kết quả đối chứng này được trình bày cùng các phân tích chuyên sâu
+khác về biến thể ở Mục~\ref{sec:ketqua}. Với tỷ lệ nén $144 \to 4$,
+nghiên cứu không viện dẫn một cơ sở lý thuyết nào (ví dụ bổ đề
+Johnson--Lindenstrauss) để bảo đảm một phép chiếu ngẫu nhiên ở tỷ lệ nén
+này bảo toàn đủ cấu trúc quan hệ. Đây là một giới hạn của thiết kế hiện
+tại, nêu lại ở Mục~\ref{sec:ketluan}. Đầu ra của phép chiếu được đưa về
 khoảng góc hợp lệ bằng hàm tiếp tuyến hyperbol:
 
 \begin{equation}
@@ -871,7 +866,7 @@ không còn phép rút gọn tương tự: $U(\theta_l)$ không thể tách kh�
 hướng bằng lập luận unita độc lập dữ liệu. Kiểm chứng thực nghiệm trên một
 batch cố định cho sai khác giữa hàm nhân lượng tử và tích cosine tương ứng
 là $0{,}474$, vượt xa ngưỡng $0{,}05$ dùng trong chẩn đoán này. Ngưỡng này là
-một mốc quy ước nhỏ, chỉ nhằm phát hiện suy biến hoàn toàn về kernel cổ điển
+một mốc quy ước nhỏ, chỉ nhằm phát hiện suy biến hoàn toàn về hàm nhân cổ điển
 (sai khác gần 0), không phải kết quả của một kiểm định thống kê hình thức.
 \end{quote}
 
@@ -929,26 +924,17 @@ cố định.
 
 Về nguyên tắc, việc dùng chung $\theta$ mở ra một hướng tối ưu khác cho
 \eqref{eq:qrd}. Quá trình huấn luyện có thể xê dịch $\theta$ để hai ma
-trận dễ khớp nhau hơn, ví dụ làm cả hai kernel phẳng hơn, thay vì chỉ buộc
+trận dễ khớp nhau hơn, ví dụ làm cả hai hàm nhân phẳng hơn, thay vì chỉ buộc
 student tái tạo đúng cấu trúc quan hệ mà teacher đã học. Đây là dạng suy
-biến khác với suy biến kernel cổ điển đã xét ở nhận xét trên. Tách
+biến khác với suy biến hàm nhân cổ điển đã xét ở nhận xét trên. Tách
 $\theta_T$ cố định riêng khỏi $\theta_S$ khả huấn sẽ tránh được rủi ro
 này, nhưng đổi lại làm hai nhánh không còn được đo bằng cùng một hàm
 nhân, khiến việc so sánh trực tiếp $R_T^{(Q)}$ với $R_S^{(Q)}$ trong
 \eqref{eq:qrd} mất căn cứ. Nghiên cứu này chọn dùng chung $\theta$, và đã
 bổ sung một đối chứng thực nghiệm cho đánh đổi đó bằng cách huấn luyện lại
-biến thể V2 Dense với ba cách xử lý $\theta$: dùng chung như hiện tại
-(\emph{shared}, $81{,}49\pm0{,}78\%$), giữ cố định hoàn toàn
-(\emph{shared\_fixed}, $81{,}73\pm0{,}49\%$), và tách $\theta_T$ cố định
-riêng khỏi $\theta_S$ khả huấn (\emph{split}, $81{,}35\pm0{,}87\%$), mỗi
-cách 5 hạt giống $\times$ 5 fold trên PhysionetMI. Không cặp nào trong ba
-cách xử lý khác biệt có ý nghĩa thống kê ($p=0{,}143$ giữa \emph{shared}
-và \emph{shared\_fixed}, $p=0{,}615$ giữa \emph{shared} và \emph{split},
-$p=0{,}215$ giữa \emph{shared\_fixed} và \emph{split}; $n=5$, $df=4$).
-Kết quả này không chứng minh được rủi ro suy biến nêu trên hoàn toàn không
-xảy ra, nhưng không tìm thấy dấu hiệu ảnh hưởng đo được của nó tới độ
-chính xác ở quy mô đã khảo sát. Đây vẫn là một giới hạn được nêu lại ở
-Mục~\ref{sec:ketluan}, nay có thêm số liệu thực nghiệm hỗ trợ.
+biến thể V2 Dense với ba cách xử lý $\theta$ khác nhau. Kết quả đối chứng
+này được trình bày cùng các phân tích chuyên sâu khác về biến thể ở
+Mục~\ref{sec:ketqua}.
 
 Trong hàm mục tiêu tổng \eqref{eq:total}, các cấu hình QRD sử dụng
 $\gamma_f = \gamma_r = 0$, tức là student nhận đồng thời tín hiệu giám sát từ
@@ -962,44 +948,15 @@ Mục~\ref{sec:bienthe} (lượng tử, cosine, RBF). Việc cả ba hàm nhân 
 giá trị trong $[0,1]$ chỉ đảm bảo thang đo của $\mathcal{L}_{\mathrm{QRD}}$
 nằm trong cùng một khoảng, không đảm bảo ba hàm nhân tạo ra cùng độ lớn
 gradient hay cùng mức ảnh hưởng lên student khi nhân với cùng một $\beta$.
-RBF tự chuẩn theo trung vị khoảng cách của mỗi batch, còn kernel lượng tử
+RBF tự chuẩn theo trung vị khoảng cách của mỗi batch, còn hàm nhân lượng tử
 có xu hướng tập trung giá trị gần biên do hình học không gian Hilbert.
 
-Bảng~\ref{tab:betafair} đo trực tiếp điều này bằng một chẩn đoán bổ sung
-(1 fold, 5 epoch đầu, \emph{không phải} kết quả báo cáo chính): giá trị
-$\mathcal{L}_{\mathrm{QRD}}$ thô trước khi nhân $\beta$, và chuẩn $L_2$
-của gradient riêng do $\beta\,\mathcal{L}_{\mathrm{QRD}}$ tạo ra lên tham
-số student, đo độc lập bằng một lượt lan truyền ngược tách biệt ở batch
-đầu mỗi epoch. Cùng một $\beta$ danh nghĩa tạo ra mức giám sát hiệu lực
-chênh nhau tới hai bậc độ lớn giữa kernel lượng tử và cosine. RBF gần với
-thang đo của lượng tử hơn cosine, phù hợp với lập luận định tính ở trên.
-Vì đây là số liệu chẩn đoán trên một fold và năm epoch đầu, không lặp lại
-qua hạt giống, các con số cụ thể không nên được xem là chính xác tới chữ
-số cuối, nhưng độ lớn chênh lệch (hàng chục đến hàng trăm lần) đủ rõ để
-loại trừ khả năng ba hàm nhân đang nhận mức giám sát tương đương khi dùng
-chung $\beta = 0{,}02$. Đây là một giới hạn đã được đo trực tiếp bằng số
-liệu, không còn là một khả năng chưa kiểm chứng, và được nêu lại ở
-Mục~\ref{sec:ketluan}.
-
-\begin{table}[!htbp]
-\centering
-\caption{Chẩn đoán mức giám sát hiệu lực của $\mathcal{L}_{\mathrm{QRD}}$
-theo dạng hàm nhân, cùng $\beta = 0{,}02$ danh nghĩa. Trung bình trên 5
-epoch đầu, 1 fold, PhysionetMI, cấu hình V5 Guided (cosine, RBF) và V2
-Dense (lượng tử, cùng chiến lược \texttt{dense}, khác V5 ở tập chỉ số,
-không ảnh hưởng đến đại lượng đo ở đây). Cột cuối là bội số so với cosine.
-Đây là dữ liệu chẩn đoán, không phải kết quả báo cáo chính.}
-\label{tab:betafair}
-\begin{tabular}{lccc}
-\toprule
-\textbf{Hàm nhân} & $\mathcal{L}_{\mathrm{QRD}}$ \textbf{thô} & $\|\nabla_{\mathrm{student}}\|_2$ & \textbf{Bội số (so cosine)} \\
-\midrule
-Cosine  & $2{,}16 \times 10^{-3}$ & $7{,}54 \times 10^{-5}$ & $1\times$ \\
-RBF     & $3{,}13 \times 10^{-2}$ & $1{,}47 \times 10^{-3}$ & $\approx 20\times$ \\
-Lượng tử & $1{,}41 \times 10^{-1}$ & $1{,}51 \times 10^{-2}$ & $\approx 200\times$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+Một chẩn đoán bổ sung đo trực tiếp điều này (1 fold, 5 epoch đầu,
+\emph{không phải} kết quả báo cáo chính): giá trị $\mathcal{L}_{\mathrm{QRD}}$
+thô trước khi nhân $\beta$, và chuẩn $L_2$ của gradient riêng do
+$\beta\,\mathcal{L}_{\mathrm{QRD}}$ tạo ra lên tham số student. Kết quả
+chẩn đoán này được trình bày cùng các phân tích chuyên sâu khác về biến
+thể ở Mục~\ref{sec:ketqua}.
 
 Toàn bộ nhánh lượng tử chỉ tồn tại trong đồ thị tính toán của giai đoạn huấn
 luyện. Sau khi huấn luyện kết thúc, hai phép chiếu và mạch lượng tử được
@@ -1127,14 +1084,14 @@ lân cận vào khối neo:
 trong đó $\mathcal{N}_k(i)$ là tập $k = 4$ lân cận gần nhất của mẫu $x_i$.
 Lân cận được xác định bằng khoảng cách Euclid trên đặc trưng của teacher, tức
 là cấu trúc cục bộ được lấy từ mô hình đã huấn luyện chứ không từ student
-đang học. Quan hệ thu được được đối xứng hóa: nếu $j$ thuộc lân cận của $i$
+đang học. Quan hệ thu được được đối xứng hóa. Nếu $j$ thuộc lân cận của $i$
 thì cả hai cặp $(i,j)$ và $(j,i)$ đều thuộc $\mathcal{I}_{\mathrm{V4}}$. Khác
 với V3, mọi mẫu trong mẫu con đều tham gia thông qua các cạnh lân cận của
 mình. Vì $\mathcal{I}_{\mathrm{V4}}$ được định nghĩa như một tập hợp, một cặp
 $(i,j)$ xuất hiện đồng thời trong khối neo lẫn khối kNN chỉ được tính đúng
 một lần trong \eqref{eq:qrd}, không cộng dồn. Trường hợp \texttt{torch.topk}
 gặp khoảng cách bằng nhau giữa các lân cận, thứ tự trả về phụ thuộc cách cài
-đặt của PyTorch (ổn định nhưng không có ý nghĩa thống kê ưu tiên); với đặc
+đặt của PyTorch (ổn định nhưng không có ý nghĩa thống kê ưu tiên). Với đặc
 trưng liên tục như ở đây, khả năng trùng khoảng cách tuyệt đối gần như không
 xảy ra trên dữ liệu thực.
 
@@ -1297,6 +1254,19 @@ Mục~\ref{sec:ketqua} là hạt giống. Mỗi hạt giống rút gọn 515 k�
 thành một giá trị trung bình, nên mọi kiểm định $t$ ghép cặp trong bài dùng
 $n = 5$ cặp độc lập, bậc tự do $df = 4$.
 
+Lựa chọn này giới hạn phạm vi suy luận của các kiểm định. Chọn hạt giống
+làm đơn vị trả lời câu hỏi kết luận có vững trước ngẫu nhiên hóa của quá
+trình huấn luyện hay không, với cùng một tập 103 đối tượng cố định ở mọi
+vế so sánh. Nó không trả lời câu hỏi kết luận có generalize sang một
+quần thể đối tượng khác hay không, vì cả năm hạt giống đều đánh giá trên
+đúng một tập đối tượng như nhau. Câu hỏi thứ hai được trả lời riêng, một
+cách khám phá chứ không xác nhận, bằng tái lập trên Cho2017
+(Mục~\ref{sec:cho2017}), một bộ dữ liệu với tập đối tượng hoàn toàn khác.
+Riêng với so sánh hàm nhân, cấu trúc lồng ghép giữa đối tượng và hạt
+giống trong cùng bộ dữ liệu PhysionetMI được xử lý trực tiếp bằng một
+phân tích bổ sung ở Mục~\ref{sec:chuyensau}, thay vì chỉ dựa vào kiểm
+định trên hạt giống.
+
 \subsection{Tiền xử lý dữ liệu và xây dựng fold}
 \label{sec:tienxuly}
 
@@ -1328,7 +1298,7 @@ nhau. Với mỗi chỉ số fold, một khối được chọn làm tập kiể
 tiếp theo phép quay vòng làm tập thẩm định, ba khối còn lại làm tập huấn
 luyện, cho tỷ lệ xấp xỉ 62 huấn luyện, 21 thẩm định, 20 kiểm tra. Tập thẩm
 định luôn tách biệt hoàn toàn theo đối tượng khỏi cả hai tập còn lại. Phép
-chia này không phụ thuộc hạt giống ngẫu nhiên: cùng một chỉ số fold luôn
+chia này không phụ thuộc hạt giống ngẫu nhiên. Cùng một chỉ số fold luôn
 cho ra cùng một tập hợp đối tượng ở cả năm hạt giống. Hạt giống chỉ chi
 phối tính ngẫu nhiên của quá trình huấn luyện (khởi tạo trọng số, thứ tự
 batch), không chi phối cách chia dữ liệu. Danh sách đầy đủ 515 lượt gán đối tượng
@@ -1377,25 +1347,25 @@ quy trình huấn luyện.
 Riêng hệ số $\alpha$ ở Bảng~\ref{tab:cauhinh} áp dụng cho các cấu hình có
 số hạng chưng cất, nơi nó cân bằng entropy chéo với hàm mất mát chưng cất.
 Cấu hình không chưng cất không có số hạng thứ hai để cân bằng, nên dùng
-$\alpha = 1{,}0$ (entropy chéo đầy đủ) thay vì $0{,}5$: đây là giá trị duy
+$\alpha = 1{,}0$ (entropy chéo đầy đủ) thay vì $0{,}5$. Đây là giá trị duy
 nhất cho cấu hình này nhận đủ trọng số của số hạng loss mà nó thực sự có,
 cùng nguyên tắc áp dụng cho mọi cấu hình khác trong Bảng~\ref{tab:cauhinh}.
 Bảng~\ref{tab:alphasweep} đo thực nghiệm độ nhạy của cấu hình không chưng
-cất theo $\alpha$, xác nhận nguyên tắc này bằng số: độ chính xác tăng đơn
+cất theo $\alpha$, xác nhận nguyên tắc này bằng số. Độ chính xác tăng đơn
 điệu theo $\alpha$, từ mức xấp xỉ ngẫu nhiên ($\alpha=0$, không có tín
 hiệu giám sát nào từ nhãn thật) tới $74{,}93\%$ ở $\alpha=1{,}0$. Mọi số
-liệu "không chưng cất" trong bài từ đây trở đi dùng $\alpha = 1{,}0$; các
+liệu "không chưng cất" trong bài từ đây trở đi dùng $\alpha = 1{,}0$. Các
 giá trị $\alpha < 1$ chỉ là đối chứng độ nhạy, không phải cấu hình báo
 cáo chính, và luôn được ghi rõ giá trị $\alpha$ tương ứng khi được trích
 dẫn lại ở Mục~\ref{sec:ketqua}.
 
 \begin{table}[!htbp]
 \centering
-\caption{Độ nhạy của cấu hình không chưng cất theo hệ số $\alpha$
+\caption{\textbf{[Đối chứng độ nhạy]} Độ nhạy của cấu hình không chưng cất theo hệ số $\alpha$
 (PhysionetMI, 5 hạt giống $\times$ 5 fold). $\alpha=1$ (entropy chéo đầy
 đủ) là giá trị dùng cho baseline "không chưng cất" ở mọi bảng khác trong
 bài, theo cùng nguyên tắc trọng số đầy đủ áp dụng cho các cấu hình còn
-lại; các giá trị $\alpha<1$ là đối chứng độ nhạy, không phải cấu hình báo
+lại. Các giá trị $\alpha<1$ là đối chứng độ nhạy, không phải cấu hình báo
 cáo chính.}
 \label{tab:alphasweep}
 \begin{tabular}{cc}
@@ -1458,7 +1428,7 @@ Learning rate & 0,005              & & \\
 Weight decay & 0,01                & & \\
 Batch size & 64                    & & \\
 Số epoch & 30                      & & \\
-Chọn checkpoint & theo val accuracy & & \\
+Chọn checkpoint & theo độ chính xác thẩm định & & \\
 Thư viện & PyTorch, PennyLane      & & \\
 \bottomrule
 \end{tabular}
@@ -1467,19 +1437,42 @@ Thư viện & PyTorch, PennyLane      & & \\
 \subsection{Kết quả và thảo luận}
 \label{sec:ketqua}
 
+Mục này trình bày kết quả thực nghiệm theo ba nhóm, khớp với ba đóng góp
+đã nêu ở Mục~\ref{sec:gioithieu}. Mục~\ref{sec:hieuqua} xác nhận hiệu quả
+và tính ổn định của việc chưng cất tri thức, trên cả PhysionetMI và một
+bộ dữ liệu độc lập thứ hai. Mục~\ref{sec:chuyensau} phân tích chuyên sâu
+hoạt động của các biến thể chiến lược hình thành quan hệ và dạng hàm
+nhân, cùng các đối chứng kiểm tra giả định thiết kế. Mục~\ref{sec:danhgiadk}
+đánh giá các biến thể theo tiếp cận điều khiển, dùng tốc độ truyền thông
+tin và ngân sách thời gian suy luận thay vì chỉ độ chính xác phân loại.
+Với lượng bảng lớn trong mục này, mỗi chú thích bảng mở đầu bằng một nhãn
+phân loại: \textbf{[Phân tích chính]} cho các bảng trực tiếp hậu thuẫn ba
+đóng góp đã tiền đăng ký, \textbf{[Đối chứng độ nhạy]}/\textbf{[Chẩn đoán
+phụ]}/\textbf{[Phân tích phụ]} cho các bảng kiểm tra giả định thiết kế
+hoặc đo đạc bổ trợ không phải kết quả chính, và \textbf{[Khám phá]} cho
+các bảng không thuộc kế hoạch phân tích tiền đăng ký.
+
 \subsubsection{Hiệu ứng của chưng cất và mức phân tách giữa các cơ chế}
+\label{sec:hieuqua}
+
+Mục này trình bày bằng chứng cho tính hiệu quả và ổn định của việc chưng
+cất tri thức, trước tiên trên PhysionetMI, sau đó đối chiếu với một bộ dữ
+liệu tưởng tượng vận động độc lập thứ hai.
 
 \begin{table}[!htbp]
 \centering
-\caption{So sánh các cơ chế chưng cất trên PhysionetMI. Trung bình và độ
-lệch chuẩn tính trên 5 hạt giống độc lập, mỗi seed gồm 5 fold và 103 đối tượng.
+\caption{\textbf{[Phân tích chính]} So sánh các cơ chế chưng cất trên PhysionetMI. Trung bình và độ
+lệch chuẩn tính trên 5 hạt giống độc lập, mỗi hạt giống gồm 5 fold và 103 đối tượng.
 Điểm chính xác của mỗi cấu hình gộp trên 515 kết quả theo đối tượng
-(không độc lập, xem Mục~\ref{sec:dulieu}); đơn vị suy luận thống kê là hạt
-giống. Cột $\Delta$ = accuracy của hàng trừ accuracy của KDBase (hàng tham
-chiếu, $\Delta=0$); giá trị âm nghĩa là cấu hình đó thấp hơn KDBase. Văn bản
+(không độc lập, xem Mục~\ref{sec:dulieu}). Đơn vị suy luận thống kê là hạt
+giống. Cột $\Delta$ = độ chính xác của hàng trừ độ chính xác của KDBase (hàng tham
+chiếu, $\Delta=0$). Giá trị âm nghĩa là cấu hình đó thấp hơn KDBase. Văn bản
 thảo luận cùng chênh lệch này theo chiều ngược lại khi mô tả mức cải thiện
 khi thêm chưng cất (từ student đơn lẻ lên KDBase). Cột $p$ bằng kiểm định
-$t$ ghép cặp trên 5 hạt giống chung ($n=5$, $df=4$).}
+$t$ ghép cặp trên 5 hạt giống chung ($n=5$, $df=4$). V1--V5 là năm biến thể
+của khung QRD, tất cả đều dùng hàm nhân lượng tử theo mặc định
+(Mục~\ref{sec:bienthe}). Bảng~\ref{tab:bienthe} phân tích chi tiết từng
+trục thiết kế tạo ra khác biệt giữa chúng.}
 \label{tab:tongthe}
 \begin{tabular}{lccc}
 \toprule
@@ -1489,7 +1482,11 @@ Không chưng cất (student đơn lẻ) & $74.93 \pm 2.30$ & $-6.56$ & $0.002$ 
 \textbf{Chưng cất logits (KDBase)} & $81.49 \pm 0.59$ & -- & -- \\
 Chưng cất đặc trưng (FeatureKD) & $80.05 \pm 1.02$ & $-1.44$ & $0.016$ \\
 Chưng cất quan hệ Euclid (RelationalKD) & $81.61 \pm 0.84$ & $+0.12$ & $0.754$ \\
-V5 Guided (nhân lượng tử) & $81.12 \pm 0.71$ & $-0.37$ & $0.231$ \\
+V1 Dense & $81.90 \pm 0.71$ & $+0.41$ & $0.158$ \\
+V2 Dense & $81.49 \pm 0.78$ & $+0.00$ & $1.000$ \\
+V3 Anchor & $81.25 \pm 1.00$ & $-0.24$ & $0.351$ \\
+V4 Anchor $+$ kNN & $81.42 \pm 0.75$ & $-0.07$ & $0.775$ \\
+V5 Guided & $81.12 \pm 0.71$ & $-0.37$ & $0.231$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1506,7 +1503,7 @@ có số hạng đó, student độc lập chỉ đạt 63,06\%
 (Bảng~\ref{tab:alphasweep}), khiến mức cải thiện quan sát được lên tới
 18,43 điểm. Chênh lệch giữa hai cách tính không phản ánh hai ước lượng
 ngang hàng của cùng một hiệu ứng, mà phản ánh việc $\alpha = 0{,}5$ không
-cho cấu hình không chưng cất đủ trọng số của số hạng loss duy nhất nó có;
+cho cấu hình không chưng cất đủ trọng số của số hạng loss duy nhất nó có.
 $\alpha = 1{,}0$ mới là giá trị nhất quán với nguyên tắc trọng số đầy đủ
 áp dụng cho mọi cấu hình khác trong bài.
 
@@ -1529,15 +1526,191 @@ nhỉnh hơn một chút so với 1,44 điểm quan sát được, cho thấy đ
 phát hiện ở gần biên chứ không phải một khoảng dư công suất lớn.
 
 Trên nền đó, kết quả của các cơ chế dựa trên quan hệ trở nên đáng
-lưu ý. RelationalKD đạt 81,61\% và biến thể V5 đạt 81,12\%, lần lượt cao hơn
-và thấp hơn KDBase với biên độ 0,12 và 0,37 điểm. Không so sánh nào đạt mức
-ý nghĩa thống kê, với $p = 0{,}754$ và $p = 0{,}231$.
+lưu ý. RelationalKD (Euclid, cổ điển) đạt 81,61\%, cao hơn KDBase 0,12 điểm
+($p = 0{,}754$). Năm biến thể QRD (hàm nhân lượng tử, V1--V5) trải từ
+81,12\% (V5 Guided) đến 81,90\% (V1 Dense). Không biến thể nào tách khỏi
+KDBase ở mức ý nghĩa thống kê, $p$ nhỏ nhất là $0{,}158$ (V1 Dense). Đặt
+cạnh nhau, hai con số này cho thấy rõ trọng tâm đóng góp của bài nằm ở
+đâu: chưng cất tri thức nói chung mang lại 6,56 điểm phần trăm
+(74,93\%~$\to$~81,49\%), còn toàn bộ năm biến thể QRD cùng RelationalKD
+chỉ trải trên một khoảng 0,78 điểm phần trăm (81,12\%~$\to$~81,90\%)
+quanh mốc đó. Phần
+còn lại của mục này kiểm tra xem hiệu ứng chưng cất và các kết luận khác
+có tái lập trên một bộ dữ liệu độc lập khác không. Mục~\ref{sec:xephang}
+phân tích chi tiết từng trục thiết kế tạo ra khoảng dao động quan sát
+được ở trên.
 
-\subsubsection{Chiến lược hình thành quan hệ và dạng hàm nhân}
+\paragraph{Tái lập trên bộ dữ liệu độc lập thứ hai (Cho2017)}
+\label{sec:cho2017}
+
+Mục này báo cáo một khảo sát bổ sung trên bộ dữ liệu tưởng tượng vận động
+thứ hai, nhằm đối chiếu định tính mức độ khái quát của các kết luận ở các
+mục trên. Khảo sát này mang tính khám phá. Không có giả thuyết hay biên
+tương đương được xác định trước khi chạy, và khảo sát không nhằm kiểm
+định giả thuyết một cách độc lập. Kết quả dưới đây chỉ dùng để đối chiếu
+định tính
+với các kết luận trên PhysionetMI, không thay thế cho so sánh chính ở
+mục đó.
+
+Bộ dữ liệu Cho2017 \cite{cho2017eeg}, truy cập qua lớp \texttt{Cho2017} của
+MOABB, gồm 52 đối tượng thực hiện tưởng tượng vận động nắm tay trái và nắm
+tay phải. Ba đối tượng (32, 46, 49) bị loại theo danh sách mặc định dùng
+cho teacher \cite{zoumpourlis2024motor}, còn lại 49 đối tượng được sử
+dụng, cùng bài toán hai lớp như PhysionetMI. Giao thức huấn luyện, kiến
+trúc teacher/student và toàn bộ siêu tham số giữ nguyên như Mục~\ref{sec:cauhinh}.
+Chỉ giao thức chia fold đổi theo số đối tượng, dùng 5 khối gần bằng nhau
+trên 49 đối tượng thay vì 103. Teacher đạt độ chính xác $75{,}07\% \pm
+4{,}16\%$ (trung bình và độ lệch chuẩn trên 5 fold), thấp và biến động hơn
+trên PhysionetMI ($84{,}98\% \pm 2{,}59\%$).
+
+Sáu cấu hình dùng hàm nhân lượng tử trên Cho2017 (V2 Dense, V3 Anchor, V4
+Anchor+kNN, V5 Guided và hai biến thể $\beta$ của V5) được huấn luyện với
+mạch lượng tử mô tả ở Mục~\ref{sec:qrd}. Biến thể V1 (giảm chiều
+tất định) không nằm trong đợt huấn luyện này nên không có số liệu trên
+Cho2017, và không xuất hiện trong Bảng~\ref{tab:cho2017}. Sáu cấu hình cổ
+điển không dùng hàm nhân lượng tử (No KD, KDBase, FeatureKD, RelationalKD,
+nhân cosine, nhân RBF) không phụ thuộc vào mạch lượng tử nên giữ nguyên
+số liệu đã có.
 
 \begin{table}[!htbp]
 \centering
-\caption{So sánh năm chiến lược hình thành quan hệ và hai hàm nhân cổ điển
+\caption{\textbf{[Khám phá, không xác nhận]} Kết quả trên Cho2017 (49 đối tượng, 5 hạt giống độc lập). Đơn vị
+thống kê là hạt giống ($n=5$, $df=4$), theo đúng giao thức ở
+Mục~\ref{sec:dulieu}. Cột $\Delta$ và $p$ so với KDBase bằng kiểm định $t$
+ghép cặp. Biến thể V1 không có số liệu hợp lệ trên Cho2017 (xem văn bản).}
+\label{tab:cho2017}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cấu hình} & \textbf{Accuracy (\%)} & $\boldsymbol{\Delta}$ & $\boldsymbol{p}$ \\
+\midrule
+No KD & $70{,}32 \pm 0{,}64$ & $-2{,}22$ & 0,0018 \\
+KDBase & $72{,}54 \pm 0{,}21$ & --- & --- \\
+FeatureKD & $71{,}17 \pm 0{,}69$ & $-1{,}38$ & 0,003 \\
+RelationalKD & $72{,}57 \pm 0{,}42$ & $+0{,}03$ & 0,864 \\
+\midrule
+V2 Dense & $72{,}37 \pm 0{,}43$ & $-0{,}18$ & 0,343 \\
+V3 Anchor & $72{,}03 \pm 0{,}63$ & $-0{,}51$ & 0,110 \\
+V4 Anchor $+$ kNN & $72{,}28 \pm 0{,}56$ & $-0{,}26$ & 0,182 \\
+V5 Guided & $72{,}41 \pm 0{,}65$ & $-0{,}13$ & 0,626 \\
+V5 Guided ($\beta = 0{,}01$) & $72{,}17 \pm 0{,}38$ & $-0{,}37$ & 0,018 \\
+V5 Guided ($\beta = 0{,}05$) & $72{,}36 \pm 0{,}27$ & $-0{,}19$ & 0,091 \\
+\midrule
+Nhân cosine & $72{,}13 \pm 0{,}30$ & $-0{,}41$ & 0,030 \\
+Nhân RBF & $72{,}36 \pm 0{,}52$ & $-0{,}18$ & 0,452 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Bảng~\ref{tab:sosanh2dataset} đối chiếu song song $\Delta$ so với KDBase
+giữa hai bộ dữ liệu cho từng cấu hình, cùng chiều dấu hay không. Ba phát
+hiện định tính từ các mục trên được diễn giải chi tiết bên dưới bảng.
+
+\begin{table}[!htbp]
+\centering
+\caption{\textbf{[Chính + khám phá, đối chiếu song song]} Đối chiếu song song giữa PhysionetMI (so sánh chính, theo kế
+hoạch phân tích cố định) và Cho2017 (khảo sát khám phá bổ sung). Mỗi ô
+ghi $\Delta$ so với
+KDBase, tính bằng điểm phần trăm, và $p$ tương ứng từ kiểm định $t$ ghép
+cặp ($n=5$, $df=4$). Hàng \emph{No KD} ghi khoảng tin cậy 95\% thay vì $p$,
+theo đúng cách bài báo cáo cáo hiệu ứng này ở trên trong mục này. Cột
+cuối đánh dấu Có nếu chiều dấu của $\Delta$ giống nhau giữa hai bộ dữ
+liệu, không phụ thuộc việc có đạt ý nghĩa thống kê hay không. V1 Dense
+không có số liệu hợp lệ trên Cho2017 (xem văn bản ở trên).}
+\label{tab:sosanh2dataset}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cấu hình} & \textbf{PhysionetMI} & \textbf{Cho2017} & \textbf{Cùng chiều} \\
+\midrule
+No KD & $-6{,}56$ (CI95\% $[4{,}08;9{,}04]$) & $-2{,}22$ (CI95\% $[1{,}39;3{,}06]$) & Có \\
+FeatureKD & $-1{,}44$ ($p=0{,}016$) & $-1{,}38$ ($p=0{,}003$) & Có \\
+RelationalKD & $+0{,}12$ ($p=0{,}754$) & $+0{,}03$ ($p=0{,}864$) & Có \\
+V1 Dense & $+0{,}41$ ($p=0{,}158$) & --- & --- \\
+V2 Dense & $+0{,}00$ ($p=1{,}000$) & $-0{,}18$ ($p=0{,}343$) & Không \\
+V3 Anchor & $-0{,}24$ ($p=0{,}351$) & $-0{,}51$ ($p=0{,}110$) & Có \\
+V4 Anchor $+$ kNN & $-0{,}07$ ($p=0{,}775$) & $-0{,}26$ ($p=0{,}182$) & Có \\
+V5 Guided & $-0{,}37$ ($p=0{,}231$) & $-0{,}13$ ($p=0{,}626$) & Có \\
+Nhân cosine & $+0{,}14$ ($p=0{,}609$) & $-0{,}41$ ($p=0{,}030$) & Không \\
+Nhân RBF & $+0{,}13$ ($p=0{,}511$) & $-0{,}18$ ($p=0{,}452$) & Không \\
+\midrule
+\multicolumn{4}{l}{\textit{So sánh hàm nhân trực tiếp trong cùng chiến lược V5 (không so KDBase)}} \\
+Lượng tử so cosine & $-0{,}51$ ($p=0{,}096$) & $+0{,}28$ ($p=0{,}389$) & Không \\
+Lượng tử so RBF & $-0{,}49$ ($p=0{,}060$) & $+0{,}05$ ($p=0{,}903$) & Không \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Năm trong mười hai hàng của Bảng~\ref{tab:sosanh2dataset} đổi chiều dấu
+giữa hai bộ dữ liệu: V2 Dense, nhân cosine, nhân RBF, và cả hai phép so
+sánh hàm nhân trực tiếp. Ở cả năm trường hợp, $\Delta$ trên ít nhất một
+trong hai bộ dữ liệu nhỏ hơn $0{,}5$ điểm phần trăm, tức nằm trong vùng
+$\Delta$ gần 0 mà dấu dễ đảo chỉ do nhiễu hạt giống. Riêng hàng nhân
+cosine có $p = 0{,}030$ trên Cho2017, được bàn riêng bên dưới. Bốn trường
+hợp còn lại không đạt ý nghĩa thống kê ở bộ dữ liệu nào.
+
+Thứ nhất, hiệu ứng chưng cất tái lập. No KD ($\alpha = 1{,}0$, cùng
+nguyên tắc trọng số đầy đủ áp dụng cho PhysionetMI, Mục~\ref{sec:cauhinh})
+đạt $70{,}32\%$ so với KDBase $72{,}54\%$, chênh $2{,}22$ điểm phần trăm
+(khoảng tin cậy 95\% $[1{,}39; 3{,}06]$, $p = 0{,}0018$). Chiều và mức ý
+nghĩa của hiệu ứng giữ nguyên so với PhysionetMI, nhưng biên độ nhỏ hơn
+đáng kể: $2{,}22$ điểm trên Cho2017 so với $6{,}56$ điểm trên PhysionetMI
+đã nêu ở trên, chưa tới một nửa. Một phần khác biệt có thể đến
+từ khoảng cách năng lực teacher-student nhỏ hơn trên Cho2017. Chênh lệch
+teacher trừ student không chưng cất là $4{,}75$ điểm phần trăm trên
+Cho2017 ($75{,}07\%$ trừ $70{,}32\%$) so với $10{,}05$ điểm trên
+PhysionetMI, để lại ít dư địa hơn cho chưng cất thu hẹp.
+
+Thứ hai, khác biệt giữa các cơ chế chưng cất vẫn nhỏ hơn nhiễu do hạt
+giống, dù biên an toàn mỏng hơn. Độ lệch chuẩn giữa mười một cơ chế (không
+tính No KD) là $0{,}39$ điểm phần trăm, độ lệch chuẩn trung bình do hạt
+giống là $0{,}46$ điểm, tỷ lệ giữa hai đại lượng là $0{,}84$. Trên
+PhysionetMI, tỷ lệ tương ứng là $0{,}61$. Kết luận định tính giữ nguyên,
+nhưng khoảng cách giữa hai nguồn biến thiên hẹp hơn.
+
+Thứ ba, hai phát hiện cụ thể tái lập gần như nguyên vẹn. FeatureKD kém hơn
+KDBase $1{,}38$ điểm ($p = 0{,}003$) so với $1{,}44$ điểm ($p = 0{,}016$)
+trên PhysionetMI. RelationalKD cổ điển không khác KDBase, chênh $0{,}03$
+điểm ($p = 0{,}864$) so với $0{,}12$ điểm ($p = 0{,}754$) trên PhysionetMI.
+
+Phép so sánh hàm nhân chính, giữa hàm nhân lượng tử và hàm nhân cosine trong
+cùng chiến lược V5, đổi chiều dấu giữa hai bộ dữ liệu. Trên PhysionetMI,
+hàm nhân lượng tử thấp hơn cosine $0{,}51$ điểm. Trên Cho2017, hàm nhân
+lượng tử cao hơn cosine $0{,}28$ điểm (khoảng tin cậy 95\% $[-0{,}52;
+1{,}08]$, $p = 0{,}389$). Cả hai khoảng tin cậy đều rộng và phủ giá trị 0.
+Việc đổi chiều không mâu thuẫn với kết luận chính đã báo cáo, mà củng cố
+thêm nhận định rằng chưa có bằng chứng nhất quán cho một khác biệt hệ
+thống giữa hai loại hàm nhân.
+
+Hai kết quả trong Bảng~\ref{tab:cho2017} không có phép so sánh trực tiếp
+tương ứng trên PhysionetMI, nên chỉ được báo cáo, không suy diễn xa hơn dữ
+liệu cho phép. Nhân cosine thấp hơn KDBase $0{,}41$ điểm với $p = 0{,}030$
+trên Cho2017. Bảng kết quả chính trên PhysionetMI chỉ so sánh các hàm nhân
+với nhau, không so sánh trực tiếp cosine với KDBase, nên không có cơ sở
+gọi đây là kết quả "không tái lập". Tương tự, V5 Guided ($\beta = 0{,}01$)
+thấp hơn KDBase $0{,}37$ điểm với $p = 0{,}018$ trên Cho2017.
+
+Nhìn tổng thể, khảo sát khám phá trên Cho2017 không phát hiện điều gì mâu
+thuẫn với hai kết luận chính của bài. Chưng cất tri thức mang lại lợi ích
+lớn và ổn định. Khác biệt giữa các cơ chế truyền tri thức cụ thể, kể cả
+lựa chọn hàm nhân, nằm dưới hoặc quanh ngưỡng phát hiện được bởi thiết kế
+5 hạt giống. Đây là kết quả khám phá trên một bộ dữ liệu bổ sung, không
+thay thế so sánh chính trên PhysionetMI.
+
+\subsubsection{Phân tích chuyên sâu hoạt động của các biến thể}
+\label{sec:chuyensau}
+
+Mục này phân tích chuyên sâu hoạt động của mười hai cơ chế chưng cất trên
+cùng một không gian thiết kế: chiến lược hình thành quan hệ, dạng hàm
+nhân, độ ổn định của xếp hạng qua nhiều lần lặp, ba đối chứng kiểm tra
+giả định thiết kế đã nêu ở Mục~\ref{sec:qrd} (đồng thích ứng tham số mạch
+dùng chung, đóng góp của $W_T$ vào nhiễu hạt giống, và mức giám sát hiệu
+lực không đồng nhất giữa các hàm nhân), và một minh họa định tính bằng
+t-SNE.
+
+\paragraph{Chiến lược hình thành quan hệ và dạng hàm nhân}
+
+\begin{table}[!htbp]
+\centering
+\caption{\textbf{[Phân tích chính]} So sánh năm chiến lược hình thành quan hệ và hai hàm nhân cổ điển
 đối chứng. Mọi cấu hình dùng chung teacher, student, siêu tham số và bộ
 hạt giống. Thành phần thay đổi là phép giảm chiều, cách xác định tập
 quan hệ, hoặc dạng hàm nhân. Riêng V5 còn khác V2--V4 ở candidate pool dùng
@@ -1573,13 +1746,13 @@ thay đổi dạng hàm nhân.
 
 Khối đầu tiên tách riêng ảnh hưởng của phép giảm chiều. Biến thể V1 sử dụng
 một phép chiếu tất định không có tham số, còn V2 thay bằng một phép chiếu
-tuyến tính học được phía student ($W_S$, 580 tham số); phép chiếu phía
+tuyến tính học được phía student ($W_S$, 580 tham số). Phép chiếu phía
 teacher $W_T$ giữ cố định ở cả hai biến thể (xem
 Bảng~\ref{tab:bienthe_cauhinh}). V1 đạt $81{,}90\%$, cao hơn V2 $0{,}41$
 điểm phần trăm trong phép so sánh trực tiếp V1 với V2 ($p = 0{,}085$, khác
 với cột $p$ trong Bảng~\ref{tab:bienthe} vốn so mỗi biến thể riêng lẻ với
 KDBase). Chênh lệch này nằm ở vùng ranh giới, không đạt ngưỡng
-$\alpha = 0{,}05$ quy ước, nhưng ngược chiều với kỳ vọng thiết kế: phép
+$\alpha = 0{,}05$ quy ước, nhưng ngược chiều với kỳ vọng thiết kế. Phép
 chiếu tuyến tính học được không cho thấy lợi ích đo được so với một phép
 giảm chiều tất định không tham số, và số liệu hiện có còn gợi ý chiều
 ngược lại. Khả năng thích nghi của phép giảm chiều, trong thiết lập này,
@@ -1608,25 +1781,48 @@ $81{,}36\pm0{,}60\%$, nằm giữa V2 ($81{,}49\%$, $p=0{,}723$ so với
 random\_pool64) và V5 ($81{,}12\%$, $p=0{,}122$), không khác biệt có ý
 nghĩa thống kê với bên nào ($n=5$, $df=4$). Đối chứng này không đủ phân
 giải để tách ảnh hưởng của kích thước candidate pool khỏi ảnh hưởng của
-tiêu chí chọn cho V5; cả hai khả năng đều chưa bị loại trừ bởi dữ liệu
+tiêu chí chọn cho V5. Cả hai khả năng đều chưa bị loại trừ bởi dữ liệu
 hiện có.
 
 Ở khối thứ ba, ba dạng hàm nhân trải trên một khoảng rộng hơn, 0,51 điểm
-phần trăm: cosine 81,63\%, RBF 81,61\% và lượng tử 81,12\%. Phép so sánh
-chính, đã chốt trước khi xem kết quả, là so sánh trực tiếp giữa hàm nhân
-lượng tử và cosine, cho $p = 0{,}096$; giữa lượng tử và RBF,
-$p = 0{,}060$; cả hai nằm ở vùng ranh giới nhưng không đạt ngưỡng ý nghĩa
-$\alpha = 0{,}05$. Giữa hai hàm nhân cổ điển với nhau, cosine và RBF không
-khác biệt ($p = 0{,}920$).
+phần trăm: cosine 81,63\%, RBF 81,61\% và lượng tử 81,12\%. So sánh giữa
+các hàm nhân được thực hiện trong cùng chiến lược V5, vì V5 giữ nguyên cơ
+chế lựa chọn quan hệ (teacher-guided) và mọi siêu tham số khác, cho phép
+cách li ảnh hưởng của riêng hàm nhân khỏi ảnh hưởng của chiến lược chọn
+quan hệ.
 
-Khoảng tin cậy 95\% của chênh lệch cosine trừ lượng tử là
-$[-0{,}15, 1{,}15]$ điểm phần trăm, vượt ra ngoài biên tương đương
-$\pm 0{,}5$ điểm đã chốt trước khi xem kết quả. Theo kế hoạch phân tích đã
-cam kết, kết luận đúng đắn là \emph{không đủ dữ liệu để kết luận theo bất
-kỳ chiều nào}, chứ không phải tương đương lẫn không phải khác biệt có ý
-nghĩa. Với thiết lập được khảo sát, cả khả năng hàm nhân lượng tử tương
-đương lẫn khả năng nó kém hơn một chút đều chưa bị loại trừ bởi dữ liệu
-hiện có.
+Mục~\ref{sec:dulieu} đã nêu hạn chế của việc dùng hạt giống làm đơn vị
+suy luận duy nhất: 103 đối tượng trong mỗi hạt giống dùng chung một mô
+hình đã huấn luyện, còn năm hạt giống lại đánh giá trên đúng một tập đối
+tượng như nhau, nên cả hai chiều phụ thuộc cần được xử lý đồng thời. Với
+riêng so sánh hàm nhân này, một phân tích bổ sung xử lý trực tiếp cấu
+trúc đó bằng mô hình hồi quy hỗn hợp với hiệu ứng ngẫu nhiên chéo cho cả
+đối tượng và hạt giống (ước lượng hợp lý cực đại), đối chiếu bằng
+bootstrap phân nhóm theo đối tượng (10.000 lần lặp) để không phụ thuộc
+giả định phân phối. Cả hai cách cho cùng vùng kết quả. Chênh lệch cosine
+trừ lượng tử là $0{,}50$ điểm phần trăm (khoảng tin cậy 95\%
+$[0{,}00, 1{,}01]$, $p \approx 0{,}05$). Chênh lệch RBF trừ lượng tử là
+$0{,}49$ điểm phần trăm (khoảng tin cậy 95\% $[-0{,}01, 0{,}99]$,
+$p \approx 0{,}05$-$0{,}06$). Phép kiểm định $t$ ghép cặp trên năm hạt
+giống theo đúng quy trình đã chốt trước khi chạy cho $p = 0{,}096$
+(cosine) và $p = 0{,}060$ (RBF), không đạt ngưỡng ý nghĩa. Quy trình tiền
+đăng ký này được báo cáo song song để minh bạch, không bị thay thế.
+
+Hai điểm khiến kết quả trên chưa đủ để đảo ngược kết luận. Đây là hai
+phép so sánh trong cùng một họ so sánh, cosine và RBF đều so với lượng
+tử. Hiệu chỉnh Bonferroni tối thiểu cho hai phép so sánh đưa ngưỡng ý
+nghĩa về $0{,}025$, mà không giá trị $p$ nào ở trên đạt tới. Độ lớn hiệu
+ứng quan sát được, khoảng $0{,}49$-$0{,}50$ điểm phần trăm, gần như
+trùng khít với biên tương đương $\pm 0{,}5$ điểm phần trăm đã xác định
+trước, ngưỡng mà bài tự đặt ra là mức chênh lệch nhỏ nhất còn có ý nghĩa
+thực tiễn cho băng thông kênh điều khiển. Dù được đo với công suất cao
+hơn, hiệu ứng nếu có cũng nằm đúng ở ranh giới của sự không quan trọng
+thực tiễn, không phải một hiệu ứng lớn bị bỏ sót vì thiếu công suất. Kết
+luận đúng đắn, dùng cả hai phân tích, vẫn là \emph{chưa đủ dữ liệu để kết
+luận dứt khoát theo bất kỳ chiều nào}, chứ không phải tương đương lẫn
+không phải khác biệt có ý nghĩa. Giữa hai hàm nhân cổ điển với nhau,
+cosine và RBF không khác biệt ($p = 0{,}920$, kiểm định gốc trên hạt
+giống).
 
 Một đối chứng bổ sung kiểm soát chặt hơn không gian đầu vào của cosine và
 RBF: thay đặc trưng thô 144 chiều bằng đặc trưng đã chiếu qua $W_S$ học
@@ -1640,29 +1836,34 @@ RBF chiếu $\Delta=+0{,}24$pp, $p=0{,}312$; $n=5$, $df=4$ cho mọi phép so
 sánh). Khoảng cách giữa lượng tử và hai hàm nhân cổ điển thu hẹp so với
 bản gốc (còn $0{,}13$-$0{,}24$ điểm so với $0{,}49$-$0{,}51$ điểm ở trên)
 chứ không nới rộng. Kiểm soát chặt hơn số chiều và số tham số học được,
-do đó, không thay đổi kết luận: ba dạng hàm nhân vẫn không phân biệt được
+do đó, không thay đổi kết luận. Ba dạng hàm nhân vẫn không phân biệt được
 ở mức ý nghĩa thống kê.
 
 Một cách định lượng mức phân tách giữa các phương pháp là so sánh hai nguồn
 biến thiên. Độ lệch chuẩn của giá trị trung bình giữa mười hai cơ chế chưng
 cất là 0,459 điểm phần trăm. Độ lệch chuẩn trung bình do thay đổi hạt giống
 ngẫu nhiên, trong cùng một cơ chế, là 0,750 điểm phần trăm. Tỷ lệ giữa hai
-đại lượng là 0,61. Khoảng cách giữa các phương pháp nhỏ hơn mức nhiễu mà
-chính quy trình huấn luyện tự sinh ra.
+đại lượng là 0,61. Trong mười hai cơ chế, FeatureKD là trường hợp duy nhất
+có hiệu ứng đạt ý nghĩa thống kê so với KDBase (Mục~\ref{sec:hieuqua}), nên
+riêng cơ chế này đóng góp 75\% tổng bình phương độ lệch giữa mười hai giá
+trị trung bình. Loại FeatureKD, độ lệch chuẩn giữa mười một cơ chế còn lại
+giảm xuống 0,205 điểm phần trăm, độ lệch chuẩn hạt giống của cùng nhóm là
+0,726 điểm phần trăm, tỷ lệ giảm xuống 0,28. Khoảng cách giữa các phương
+pháp nhỏ hơn mức nhiễu mà chính quy trình huấn luyện tự sinh ra, và mức
+phân tách này càng rõ khi tách riêng cơ chế duy nhất đã biết có hiệu ứng
+thật khỏi phần còn lại.
 
-\subsubsection{Độ ổn định của xếp hạng theo số lần lặp}
+\paragraph{Độ ổn định của xếp hạng theo số lần lặp}
 \label{sec:xephang}
 
 \begin{table}[!htbp]
 \centering
-\caption{Ảnh hưởng của số lần lặp ngẫu nhiên tới xếp hạng phương pháp. Cột
+\caption{\textbf{[Phân tích chính]} Ảnh hưởng của số lần lặp ngẫu nhiên tới xếp hạng phương pháp. Cột
 bên trái lấy từ một lần chạy đơn gồm 5 fold, hạt giống cố định $20200220$
 (giá trị mặc định của hàm huấn luyện, dùng từ lần chạy đầy đủ đầu tiên của
 dự án, có trước khi thiết kế phân tích 5 hạt giống nên không phải lựa chọn
 sau khi biết kết quả), tương ứng với giao thức báo cáo phổ biến trong y văn.
-Năm cơ chế cổ điển lấy từ lần chạy gốc, bảy biến thể lượng tử lấy từ lần
-chạy lại sau khi sửa mạch (cùng hạt giống $20200220$), vì dữ liệu lượng tử
-gốc đã bị vô hiệu. Cột bên phải lấy từ 5 hạt giống độc lập. Hệ số tương
+Cột bên phải lấy từ 5 hạt giống độc lập. Hệ số tương
 quan hạng Spearman giữa hai xếp hạng là $\rho = 0{,}14$ ($p = 0{,}66$). Hạng
 6,5 đánh dấu hai cấu hình đồng hạng.}
 \label{tab:daohang}
@@ -1703,6 +1904,58 @@ giống. V5 Guided đi theo chiều ngược lại, đứng thứ hai theo lần
 nhưng tụt xuống vị trí cuối bảng, thứ mười một trên mười hai, khi tính
 trên năm hạt giống.
 
+Nếu một hạt giống không đáng tin cậy, câu hỏi tiếp theo là năm hạt giống
+đã đủ để xếp hạng hội tụ hay chưa. Bảng~\ref{tab:hoitu} kiểm tra trực
+tiếp điều này bằng xếp hạng tích lũy theo $k$ hạt giống đầu tiên trong
+đúng năm hạt giống dùng cho so sánh chính, không cần chạy thêm dữ liệu.
+Khác với cột "Một hạt giống" ở Bảng~\ref{tab:daohang} (dùng hạt giống
+mặc định cố định $20200220$), $k=1$ ở đây dùng hạt giống thứ nhất trong
+năm hạt giống 1--5, một điểm dữ liệu độc lập khác minh họa cùng hiện
+tượng bất ổn định.
+
+\begin{table}[!htbp]
+\centering
+\caption{\textbf{[Phân tích chính]} Tương quan hạng Spearman giữa xếp hạng tích lũy theo $k$ hạt
+giống đầu tiên (trong năm hạt giống của so sánh chính) và xếp hạng cuối
+cùng ($k=5$), cũng như giữa hai bước liên tiếp $k-1$ và $k$.}
+\label{tab:hoitu}
+\begin{tabular}{cccc}
+\toprule
+$k$ & $\rho$ so với $k=5$ & $p$ & $\rho$ so với $k-1$ \\
+\midrule
+1 & 0,615 & 0,033 & --- \\
+2 & 0,692 & 0,013 & 0,930 \\
+3 & 0,853 & $<0{,}001$ & 0,895 \\
+4 & 0,916 & $<0{,}001$ & 0,958 \\
+5 & 1,000 & $<0{,}001$ & 0,916 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Tương quan với xếp hạng cuối cùng tăng đơn điệu theo $k$, từ $\rho=0{,}615$
+ở $k=1$ lên $\rho=0{,}916$ ở $k=4$, cho thấy xu hướng hội tụ rõ ràng. Tuy
+nhiên, tương quan giữa bước áp cuối và bước cuối, $k=4$ so với $k=5$, chỉ
+thêm đúng một hạt giống, vẫn chỉ đạt $\rho=0{,}916$, không phải $1{,}0$.
+Năm hạt giống, do đó, chưa chắc là điểm hội tụ tuyệt đối. Kết quả này
+không làm suy yếu luận điểm chính của mục này, mà bổ sung bằng chứng cho
+nó: nhiễu hạt giống đủ lớn để ngay cả xếp hạng trên bốn hạt giống cũng
+chưa hoàn toàn dự báo được xếp hạng trên năm.
+
+Để kiểm tra xa hơn mức $k=5$, nghiên cứu chạy thêm năm hạt giống mới
+(6--10) cho một tập con năm cơ chế: KDBase, RelationalKD, cosine (V5),
+V1 Dense, và hàm nhân lượng tử (V5). Với chỉ năm cơ chế, hệ số tương
+quan Spearman có độ phân giải thô, chỉ nhận một số giá trị rời rạc, nên
+kết quả cần đọc cùng thứ tự xếp hạng cụ thể, không chỉ riêng con số
+$\rho$. Tương quan giữa xếp hạng ở $k=5$ và $k=10$ là $\rho=0{,}70$
+($p=0{,}19$), không tăng đơn điệu theo $k$ như ở Bảng~\ref{tab:hoitu}.
+Cụ thể, ba cơ chế đứng đầu ở $k=5$, V1, cosine và RelationalKD, đổi thứ
+tự lẫn nhau khi tính đến $k=10$, với RelationalKD vươn lên hạng nhất và
+V1 xuống hạng hai. Hai cơ chế cuối bảng, KDBase và hàm nhân lượng tử,
+giữ nguyên vị trí hạng tư và hạng năm suốt từ $k=1$ đến $k=10$. Sự bất
+ổn định của xếp hạng, do đó, không dừng lại ở năm hạt giống đối với các
+cơ chế có kết quả gần nhau, dù xếp hạng của cơ chế mạnh nhất và yếu nhất
+trong nhóm này tương đối bền theo thời gian.
+
 Vì các hạt giống là những lần rút độc lập, xếp hạng từ lần chạy đơn có thể
 được xem như một dự báo về kết quả khi lặp lại thí nghiệm. Theo nghĩa đó,
 dự báo này không đáng tin cậy. Tương quan dương nhưng yếu và không có ý
@@ -1717,15 +1970,135 @@ qua hạt giống 2,30 điểm phần trăm, cao gấp khoảng bốn lần các
 chưng cất; ở $\alpha = 0{,}5$, độ lệch chuẩn này lên tới 5,03 điểm, gấp
 khoảng tám lần (Bảng~\ref{tab:alphasweep}). Một cấu hình có phương sai
 giữa các hạt giống lớn bất thường so với phần còn lại là một dấu hiệu
-đáng ngờ về mặt phương pháp; trong trường hợp này, chính dấu hiệu đó đã
+đáng ngờ về mặt phương pháp. Trong trường hợp này, chính dấu hiệu đó đã
 dẫn tới việc khảo sát độ nhạy theo $\alpha$ trình bày ở
 Mục~\ref{sec:cauhinh}.
 
-\subsubsection{Chi phí tính toán và hàm ý cho triển khai}
+\paragraph{Đồng thích ứng tham số mạch dùng chung (đối chứng theta-mode)}
+
+Mục~\ref{sec:qrd} đã nêu rủi ro lý thuyết: vì $\theta$ dùng chung cho cả
+nhánh teacher và nhánh student, quá trình huấn luyện có thể xê dịch
+$\theta$ để hai ma trận quan hệ dễ khớp nhau hơn (ví dụ làm cả hai hàm
+nhân phẳng hơn), thay vì chỉ buộc student tái tạo đúng cấu trúc quan hệ mà
+teacher đã học. Đối chứng thực nghiệm cho rủi ro này huấn luyện lại biến
+thể V2 Dense với ba cách xử lý $\theta$: dùng chung như hiện tại
+(\emph{shared}, $81{,}49\pm0{,}78\%$), giữ cố định hoàn toàn
+(\emph{shared\_fixed}, $81{,}73\pm0{,}49\%$), và tách $\theta_T$ cố định
+riêng khỏi $\theta_S$ khả huấn (\emph{split}, $81{,}35\pm0{,}87\%$), mỗi
+cách 5 hạt giống $\times$ 5 fold trên PhysionetMI. Không cặp nào trong ba
+cách xử lý khác biệt có ý nghĩa thống kê ($p=0{,}143$ giữa \emph{shared}
+và \emph{shared\_fixed}, $p=0{,}615$ giữa \emph{shared} và \emph{split},
+$p=0{,}215$ giữa \emph{shared\_fixed} và \emph{split}; $n=5$, $df=4$).
+Kết quả này không chứng minh được rủi ro suy biến nêu trên hoàn toàn không
+xảy ra, nhưng không tìm thấy dấu hiệu ảnh hưởng đo được của nó tới độ
+chính xác ở quy mô đã khảo sát. Đây vẫn là một giới hạn được nêu lại ở
+Mục~\ref{sec:ketluan}, nay có thêm số liệu thực nghiệm hỗ trợ.
+
+\paragraph{Đóng góp của $W_T$ vào nhiễu hạt giống (đối chứng cố định $W_T$)}
+
+Mục~\ref{sec:qrd} đã nêu một hệ quả gián tiếp: vì $W_T$ khởi tạo bằng
+phân bố mặc định của PyTorch sau nhiều lệnh tiêu thụ số ngẫu nhiên khác
+trong cùng một luồng sinh số ngẫu nhiên toàn cục, $W_T$ nhiều khả năng
+khác nhau giữa các hạt giống của thí nghiệm, dù đây không phải một điều
+khiển thực nghiệm chủ đích. Đối chứng thực nghiệm cho hệ quả này huấn
+luyện lại V2 Dense với $W_T$ cố định ở một giá trị duy nhất, trong khi
+vẫn quét đủ năm hạt giống huấn luyện như cấu hình gốc. Độ lệch chuẩn
+giữa năm hạt giống giảm từ $0{,}78$ xuống $0{,}51$ điểm phần trăm, còn độ
+chính xác trung bình không khác biệt có ý nghĩa thống kê so với V2 Dense
+gốc ($81{,}20\%$ so với $81{,}49\%$, $p = 0{,}22$, $n=5$, $df=4$). Một
+phần đáng kể, nhưng không phải toàn bộ, nhiễu hạt giống quan sát được ở
+nhánh lượng tử do đó đến từ việc $W_T$ thay đổi theo hạt giống toàn cục,
+không chỉ từ ngẫu nhiên hóa trong huấn luyện. Đối chứng này không đo mức
+chênh lệch giữa nhiều lần khởi tạo $W_T$ khác nhau ở cùng một hạt giống
+huấn luyện, nên chưa phải một phân tích độ nhạy đầy đủ theo phép chiếu
+$W_T$ cụ thể.
+
+\paragraph{Mức giám sát hiệu lực không đồng nhất giữa các hàm nhân (chẩn đoán gradNormS)}
+
+Mục~\ref{sec:qrd} đã lập luận định tính rằng dùng chung một $\beta = 0{,}02$
+cho cả ba dạng hàm nhân so sánh ở trên chỉ đảm bảo thang đo của
+$\mathcal{L}_{\mathrm{QRD}}$ nằm trong cùng $[0,1]$, không đảm bảo ba hàm
+nhân tạo ra cùng độ lớn gradient hay cùng mức ảnh hưởng lên student.
+Bảng~\ref{tab:betafair} đo trực tiếp điều này bằng một chẩn đoán bổ sung
+(1 fold, 5 epoch đầu, \emph{không phải} kết quả báo cáo chính): giá trị
+$\mathcal{L}_{\mathrm{QRD}}$ thô trước khi nhân $\beta$, và chuẩn $L_2$
+của gradient riêng do $\beta\,\mathcal{L}_{\mathrm{QRD}}$ tạo ra lên tham
+số student, đo độc lập bằng một lượt lan truyền ngược tách biệt ở batch
+đầu mỗi epoch. Cùng một $\beta$ danh nghĩa tạo ra mức giám sát hiệu lực
+chênh nhau tới hai bậc độ lớn giữa hàm nhân lượng tử và cosine. RBF gần với
+thang đo của lượng tử hơn cosine, phù hợp với cách hai hàm nhân này tự
+chuẩn hóa (RBF theo trung vị khoảng cách mỗi batch, còn hàm nhân lượng tử
+có xu hướng tập trung giá trị gần biên do hình học không gian Hilbert).
 
 \begin{table}[!htbp]
 \centering
-\caption{Chi phí huấn luyện của các cơ chế chưng cất, đo bằng thời gian
+\caption{\textbf{[Chẩn đoán phụ, không phải kết quả báo cáo chính]} Chẩn đoán mức giám sát hiệu lực của $\mathcal{L}_{\mathrm{QRD}}$
+theo dạng hàm nhân, cùng $\beta = 0{,}02$ danh nghĩa. Trung bình trên 5
+epoch đầu, 1 fold, PhysionetMI, cấu hình V5 Guided (cosine, RBF) và V2
+Dense (lượng tử, cùng chiến lược \texttt{dense}, khác V5 ở tập chỉ số,
+không ảnh hưởng đến đại lượng đo ở đây). Cột cuối là bội số so với cosine.
+Đây là dữ liệu chẩn đoán, không phải kết quả báo cáo chính.}
+\label{tab:betafair}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Hàm nhân} & $\mathcal{L}_{\mathrm{QRD}}$ \textbf{thô} & $\|\nabla_{\mathrm{student}}\|_2$ & \textbf{Bội số (so cosine)} \\
+\midrule
+Cosine  & $2{,}16 \times 10^{-3}$ & $7{,}54 \times 10^{-5}$ & $1\times$ \\
+RBF     & $3{,}13 \times 10^{-2}$ & $1{,}47 \times 10^{-3}$ & $\approx 20\times$ \\
+Lượng tử & $1{,}41 \times 10^{-1}$ & $1{,}51 \times 10^{-2}$ & $\approx 200\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Vì đây là số liệu chẩn đoán trên một fold và năm epoch đầu, không lặp lại
+qua hạt giống, các con số cụ thể không nên được xem là chính xác tới chữ
+số cuối, nhưng độ lớn chênh lệch (hàng chục đến hàng trăm lần) đủ rõ để
+loại trừ khả năng ba hàm nhân đang nhận mức giám sát tương đương khi dùng
+chung $\beta = 0{,}02$. Đây là một giới hạn đã được đo trực tiếp bằng số
+liệu, không còn là một khả năng chưa kiểm chứng, và được nêu lại ở
+Mục~\ref{sec:ketluan}.
+
+\paragraph{Phân tích định tính không gian đặc trưng (t-SNE)}
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{figs/image3.png}
+\caption{Phân tích định tính không gian đặc trưng bằng trực quan hóa t-SNE
+trên đặc trưng trung gian 144 chiều của student, trích trên tập test tại
+epoch có độ chính xác thẩm định tốt nhất. Bốn panel dùng cùng fold (fold 0,
+900 mẫu kiểm tra, 20 đối tượng), cùng hạt giống huấn luyện (hạt giống 1),
+cùng siêu tham số t-SNE (perplexity$=30$, random\_state$=42$) và cùng
+thang trục hai chiều. Độ chính xác và điểm silhouette ghi trong tiêu đề
+mỗi panel là của riêng lần chạy này, không phải trung bình 5 hạt giống
+dùng ở các bảng chính. Điểm silhouette tính trên không gian đặc trưng gốc
+144 chiều, không bị t-SNE bóp méo.}
+\label{fig:tsne}
+\end{figure}
+
+Hình~\ref{fig:tsne} trực quan hóa đặc trưng trung gian của student bằng
+phép giảm chiều t-SNE cho bốn cấu hình: không chưng cất, KDBase, FeatureKD
+và V5 Guided (nhân lượng tử). Cấu trúc cụm của ba cấu hình có chưng cất
+tách biệt rõ hơn so với student độc lập (silhouette từ 0,052 đến 0,065,
+so với 0,013 của cấu hình không chưng cất), cùng chiều với khoảng cách
+6,56 điểm phần trăm về độ chính xác đo được trên toàn bộ 5 hạt giống ở
+Mục~\ref{sec:ketqua}. Giữa ba cấu hình có chưng cất, điểm silhouette nằm
+gần nhau (0,052-0,065) dù hình dạng cụm quan sát bằng mắt khác nhau, phù
+hợp với kết quả không phát hiện được khác biệt hệ thống ở các mục định
+lượng trên. Vì t-SNE là phép chiếu phi tuyến không bảo toàn khoảng cách
+toàn cục, khác biệt về hình dạng cụm quan sát bằng mắt không được xem là
+bằng chứng về khác biệt cấu trúc thật. Chỉ số silhouette trên không gian
+gốc 144 chiều mới là căn cứ định lượng, còn hình chỉ mang tính minh họa.
+
+\subsubsection{Đánh giá các biến thể theo tiếp cận điều khiển}
+\label{sec:danhgiadk}
+
+Mục này đánh giá các biến thể theo tiếp cận điều khiển, dùng tốc độ
+truyền thông tin và ngân sách thời gian suy luận thay vì chỉ độ chính xác
+phân loại, để đưa ra phán quyết cụ thể cho hàm nhân lượng tử.
+
+\begin{table}[!htbp]
+\centering
+\caption{\textbf{[Phân tích phụ]} Chi phí huấn luyện của các cơ chế chưng cất, đo bằng thời gian
 trung bình mỗi epoch trên cùng một GPU NVIDIA H100. Giá trị "$\approx$" là
 thời gian trung bình một lần chạy, chưa có độ lệch chuẩn giữa nhiều lần lặp
 lại (không có dữ liệu lặp lại phép đo này). Cột cuối là mức tăng độ chính xác
@@ -1748,7 +2121,7 @@ V2 Dense & $\approx$13,6 & \textbf{$\approx$13}$\boldsymbol{\times}$ & $+0{,}00$
 
 \begin{table}[!htbp]
 \centering
-\caption{Các đại lượng hướng điều khiển suy ra từ độ chính xác giải mã. Lượng
+\caption{\textbf{[Phân tích chính]} Các đại lượng hướng điều khiển suy ra từ độ chính xác giải mã. Lượng
 thông tin mỗi lệnh tính theo \eqref{eq:itr-bits}, tốc độ truyền thông tin theo
 \eqref{eq:itr-rate} với $T = T_{\mathrm{window}} = 3{,}0$ s (300 mẫu ở tần số
 100 Hz sau resample, xem Mục~\ref{sec:tienxuly}), \textbf{chưa cộng
@@ -1756,41 +2129,49 @@ $T_{\mathrm{infer}}$ và $T_{\mathrm{command}}$} của \eqref{eq:latency}. Đây
 ITR ngoại tuyến quy đổi theo độ dài cửa sổ tín hiệu, không phải ITR trực
 tuyến của vòng điều khiển hoàn chỉnh, vì $T_{\mathrm{command}}$ chưa được đo
 trên một thiết bị chấp hành cụ thể nào (xem thảo luận sau bảng). Hệ số
-$\kappa$ được liệt kê để tham chiếu. Với bài toán
-hai lớp cân bằng, $\kappa = 2\,acc - 1$ nên nó là biến đổi tất định của độ
-chính xác chứ không phải một chiều đánh giá độc lập.}
+$\kappa$ không được liệt kê trong bảng này vì, với bài toán hai lớp cân
+bằng, $\kappa = 2\,acc - 1$ là biến đổi tuyến tính tất định của độ chính
+xác, không mang thêm thông tin và có thể suy ra trực tiếp từ cột Acc.}
 \label{tab:dieukhien}
-\begin{tabular}{lcccc}
+\begin{tabular}{lccc}
 \toprule
-\textbf{Cấu hình} & \textbf{Acc (\%)} & $\boldsymbol{\kappa}$ & $\boldsymbol{B}$ \textbf{(bit/lệnh)} & \textbf{ITR ngoại tuyến (bit/phút)} \\
+\textbf{Cấu hình} & \textbf{Acc (\%)} & $\boldsymbol{B}$ \textbf{(bit/lệnh)} & \textbf{ITR ngoại tuyến (bit/phút)} \\
 \midrule
-Không chưng cất & 74.93 & 0.499 & 0.188 & 3.75 \\
+Không chưng cất & 74.93 & 0.188 & 3.75 \\
 \midrule
-KDBase & 81.49 & 0.630 & 0.309 & 6.18 \\
-FeatureKD & 80.05 & 0.601 & 0.279 & 5.58 \\
-RelationalKD & 81.61 & 0.632 & 0.311 & 6.23 \\
+KDBase & 81.49 & 0.309 & 6.18 \\
+FeatureKD & 80.05 & 0.279 & 5.58 \\
+RelationalKD & 81.61 & 0.311 & 6.23 \\
 \midrule
-V1 Dense, giảm chiều tất định & 81.90 & 0.638 & 0.318 & 6.35 \\
-V2 Dense, phép chiếu học được & 81.49 & 0.630 & 0.309 & 6.18 \\
-V3 Anchor & 81.25 & 0.625 & 0.304 & 6.08 \\
-V4 Anchor $+$ kNN & 81.42 & 0.628 & 0.307 & 6.15 \\
-V5 Guided & 81.12 & 0.622 & 0.301 & 6.02 \\
+V1 Dense, giảm chiều tất định & 81.90 & 0.318 & 6.35 \\
+V2 Dense, phép chiếu học được & 81.49 & 0.309 & 6.18 \\
+V3 Anchor & 81.25 & 0.304 & 6.08 \\
+V4 Anchor $+$ kNN & 81.42 & 0.307 & 6.15 \\
+V5 Guided & 81.12 & 0.301 & 6.02 \\
 \midrule
-Nhân cosine & 81.63 & 0.633 & 0.312 & 6.24 \\
-Nhân RBF & 81.61 & 0.632 & 0.312 & 6.23 \\
+Nhân cosine & 81.63 & 0.312 & 6.24 \\
+Nhân RBF & 81.61 & 0.312 & 6.23 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{table}[!htbp]
 \centering
-\caption{Phân rã ngân sách thời gian của vòng điều khiển kín theo
+\caption{\textbf{[Phân tích chính]} Phân rã ngân sách thời gian của vòng điều khiển kín theo
 \eqref{eq:latency}. Thời gian suy luận đo trên CPU của node tính toán dùng
-chung của cụm HPC (không cấu hình precision hay số luồng đặc biệt, dùng mặc
-định của PyTorch 2.7.1), với batch bằng một, lấy trung vị và phân vị 95 trên
-200 lần chạy sau 20 lần khởi động. Mô hình CPU cụ thể và số luồng thực tế sử
-dụng không được ghi lại trong log đo đạc. Đây là giới hạn của phép đo, không
-phải đặc tả phần cứng nhúng mục tiêu. Ba hàng cuối
+chung của cụm HPC, với batch bằng một, lấy trung vị và phân vị 95 trên
+200 lần chạy sau 20 lần khởi động. Mô hình CPU và số luồng không được
+ghi lại trong log đo đạc ban đầu, nên đã được truy hồi lại sau đó bằng
+cách dò lại cùng node tính toán và cùng môi trường Python: CPU AMD EPYC
+9224 (24 lõi mỗi socket, 2 socket, xung nhịp tối đa $\approx 3{,}7$ GHz),
+8 luồng (gán tự động theo số CPU cấp cho job, giống mọi job khác trong
+dự án), PyTorch $2{,}7{,}1$, nền BLAS Intel oneAPI MKL (mặc định của
+PyTorch, không tối ưu riêng cho kiến trúc AMD), độ chính xác float32,
+hệ điều hành Linux nhân 5.14 (Enterprise Linux 9). Việc dò lại diễn ra
+sau thời điểm đo ban đầu nên không loại trừ khả năng bản vá nhân hệ điều
+hành đã thay đổi đôi chút, dù phần cứng CPU là cùng một máy vật lý. Đây
+vẫn là giới hạn của phép đo ban đầu, không phải đặc tả phần cứng nhúng
+mục tiêu. Ba hàng cuối
 (MAC, activation đỉnh, precision) tính giải tích trực tiếp từ kiến trúc
 EEGNet đang dùng (không đo trên phần cứng nhúng mục tiêu), chỉ báo cáo cho
 student vì đây là mô hình được triển khai.}
@@ -1822,8 +2203,45 @@ khoảng 13 lần, do cấu trúc data re-uploading ở
 \eqref{eq:layer}--\eqref{eq:state} yêu cầu mô phỏng mạch nhiều lượt hơn cho
 từng mẫu trong mẫu con so với một mạch mã hóa-rồi-vướng víu một lượt.
 
+Một khảo sát sơ bộ đo chi phí huấn luyện theo số qubit
+($n_{\text{qubits}} \in \{4, 8, 12, 16\}$, giữ cố định mọi siêu tham số
+khác, 1 fold, 3 epoch, chỉ đo thời gian, không đo độ chính xác) dùng cấu
+hình V2 Dense. Việc chọn V2 thay vì V5 Guided không làm giảm tính tổng
+quát của kết luận về chi phí. Bảng~\ref{tab:chiphi} cho thấy hai cấu hình
+này có chi phí đo được giống nhau ($\approx 13\times$), vì cả hai chọn ra
+cùng số lượng cặp mẫu cho hàm nhân (Bảng~\ref{tab:bienthe_cauhinh}, cột
+Tập cặp $\mathcal{I}$: "toàn bộ $q\times q$" ở V2, "top-$q$ theo teacher" ở
+V5), chỉ khác tiêu chí chọn cặp, không khác số cặp. Vì số qubit chỉ ảnh
+hưởng đến chi phí của mỗi lần tính hàm nhân (kích thước statevector
+$2^{n_{\text{qubits}}}$), một đại lượng không phụ thuộc tiêu chí chọn cặp,
+xu hướng đo trên V2 có cơ sở để suy rộng sang V5 và các biến thể khác. Kết
+luận này chỉ áp dụng cho chi phí, không áp dụng cho độ chính xác của so
+sánh chính ở V5, vốn chưa được đo lại ở các mức qubit này.
+
+Chi phí tăng phi tuyến rõ rệt theo số qubit: khoảng 13,6 giây/epoch ở
+$n_{\text{qubits}}=4$, 36--40 giây ở $n_{\text{qubits}}=8$ (gấp
+$\approx 2{,}8$ lần), 67--71 giây ở $n_{\text{qubits}}=12$ (gấp
+$\approx 1{,}8$ lần so với 8), và 308--315 giây ở $n_{\text{qubits}}=16$
+(gấp $\approx 4{,}5$ lần so với 12) -- phù hợp với chi phí mô phỏng
+statevector tăng theo $2^{n_{\text{qubits}}}$. Ở $n_{\text{qubits}}=16$,
+phép đo không hoàn tất 3 epoch trong ngân sách 20 phút dành cho khảo sát
+sơ bộ, cho thấy một lượt huấn luyện đầy đủ (5 hạt giống, 5 fold, 30 epoch)
+ở mức này sẽ tốn khoảng 65 giờ cho một cấu hình, vượt xa khả năng của hạ
+tầng một GPU dùng chung hiện có. Khảo sát đầy đủ ở
+$n_{\text{qubits}} \in \{8, 12\}$ vẫn khả thi về chi phí (ước tính khoảng
+8 và 14 giờ tương ứng cho một cấu hình) và đã được thực hiện đầy đủ (5
+hạt giống $\times$ 5 fold $\times$ 30 epoch) cho V2 Dense. Độ chính xác
+đạt $81{,}36\pm0{,}38\%$ ở $n_{\text{qubits}}=8$ và $81{,}16\pm0{,}75\%$
+ở $n_{\text{qubits}}=12$, so với $81{,}49\pm0{,}78\%$ ở
+$n_{\text{qubits}}=4$ dùng trong so sánh chính. Không cặp nào trong ba
+mức qubit khác biệt có ý nghĩa thống kê ($p=0{,}691$ giữa 4 và 8,
+$p=0{,}332$ giữa 4 và 12, $p=0{,}491$ giữa 8 và 12; kiểm định $t$ ghép
+cặp trên 5 hạt giống, $n=5$, $df=4$). Với $n=5$, các kiểm định này có
+công suất thấp, nên đây là chưa phát hiện được xu hướng tăng theo số
+qubit, không phải bằng chứng đã xác nhận không tồn tại xu hướng đó.
+
 Mức tăng chi phí này không đi kèm bất kỳ cải thiện đo được nào về độ chính
-xác. Chi phí này chỉ phát sinh ở giai đoạn huấn luyện. Mô hình triển khai
+xác, ít nhất đối với V2. Chi phí này chỉ phát sinh ở giai đoạn huấn luyện. Mô hình triển khai
 vẫn là student cổ điển với cùng số tham số và cùng thời gian suy luận ở
 mọi cấu hình. Dù vậy, với một quy trình phát triển thực tế đòi hỏi nhiều
 lần huấn luyện lại khi bổ sung dữ liệu hoặc điều chỉnh siêu tham số, hệ số
@@ -1831,18 +2249,26 @@ khoảng 13 là một khoản chi đáng kể.
 
 Xét theo tiêu chí hướng điều khiển đã nêu ở Mục~\ref{sec:rangbuoc},
 Bảng~\ref{tab:dieukhien} quy đổi độ chính xác thành các đại lượng vận hành.
-Đây là ITR ngoại tuyến tính theo $T_{\mathrm{window}}$ trong
+ITR là một phép biến đổi đơn điệu của độ chính xác ở độ dài cửa sổ cố
+định (\eqref{eq:itr-bits}--\eqref{eq:itr-rate}), không phải một phép đo
+độc lập của hệ thống điều khiển. Mức tăng ITR dưới đây, do đó, phản ánh
+đúng và duy nhất mức tăng độ chính xác đã báo cáo ở
+Mục~\ref{sec:hieuqua}, không phải một bằng chứng thực nghiệm bổ sung,
+dù đơn vị bit/phút hữu ích hơn phần trăm chính xác cho việc đối chiếu với
+ngân sách của vòng điều khiển. Đây là ITR ngoại tuyến tính theo
+$T_{\mathrm{window}}$ trong
 \eqref{eq:latency}, chưa cộng $T_{\mathrm{infer}}$ (đo ở Bảng~\ref{tab:tre},
 dưới 1\% $T_{\mathrm{window}}$ nên ảnh hưởng không đáng kể tới ITR) và
 $T_{\mathrm{command}}$ (chưa đo được vì nghiên cứu không gắn với một thiết bị
-chấp hành cụ thể); ITR trực tuyến của một vòng điều khiển hoàn chỉnh do đó
+chấp hành cụ thể). ITR trực tuyến của một vòng điều khiển hoàn chỉnh do đó
 thấp hơn các giá trị dưới đây, mức thấp hơn bao nhiêu phụ thuộc
 $T_{\mathrm{command}}$ của hệ thống triển khai cụ thể. Với độ dài cửa sổ tín
 hiệu $T = 3{,}0$ s, student không chưng cất cho tốc độ
 truyền thông tin 3,75 bit/phút, còn mọi cấu hình có chưng cất nằm trong khoảng
-5,58 đến 6,24 bit/phút. Chưng cất nhân băng thông kênh điều khiển lên khoảng 1,6 lần
-so với KDBase. Khoảng cách giữa các cơ chế chưng cất là 0,66 bit/phút, trong
-đó phần lớn đến từ riêng FeatureKD; nếu bỏ cấu hình này, khoảng cách thu hẹp
+5,58 đến 6,24 bit/phút. Tương ứng với mức tăng độ chính xác đã báo cáo,
+băng thông kênh điều khiển tăng khoảng 1,6 lần so với KDBase. Khoảng cách
+giữa các cơ chế chưng cất là 0,66 bit/phút, trong
+đó phần lớn đến từ riêng FeatureKD. Nếu bỏ cấu hình này, khoảng cách thu hẹp
 còn 0,22 bit/phút, tương đương khoảng 3,5\% băng thông và không có ý nghĩa vận
 hành.
 
@@ -1875,351 +2301,116 @@ chưa được xác nhận khả thi trên mọi lớp phần cứng nhúng. K�
 chắn đòi hỏi đo đạc trực tiếp trên phần cứng mục tiêu hoặc tối ưu thêm bộ
 nhớ trung gian (ví dụ giảm precision, xử lý theo lô kênh nhỏ hơn).
 
+Một đo đạc bổ sung trên phần cứng nhúng thật thu hẹp một phần khoảng
+trống này. Trên Raspberry Pi 4 (ARM Cortex-A72, 64-bit, không có GPU),
+cùng kiến trúc student được xuất bằng TorchScript và đo theo đúng giao
+thức ở Bảng~\ref{tab:tre} (200 lần suy luận sau 20 lần khởi động, batch
+bằng một, không cấu hình số luồng đặc biệt), lặp lại 5 lần chạy độc lập
+theo đúng quy ước 5 lần của bài. Trung vị $T_{\mathrm{infer}}$ là
+$26{,}68 \pm 3{,}24$ ms và phân vị 95 là $50{,}38 \pm 2{,}59$ ms (trung
+bình và độ lệch chuẩn qua 5 lần chạy). Giá trị này cao hơn khoảng $8{,}4$
+lần so với CPU máy chủ HPC, nhưng vẫn chỉ chiếm khoảng $0{,}9\%$ đến
+$1{,}7\%$ ngân sách 3000 ms của cửa sổ tín hiệu. Độ trễ trên Pi4 dao động
+rộng hơn nhiều so với CPU máy chủ, từ khoảng $7{,}7$ đến $61{,}8$ ms qua
+toàn bộ các lần đo, phản ánh đặc điểm thật của phần cứng nhúng giá rẻ
+như tần số CPU tự điều chỉnh và không có tản nhiệt chủ động. Đáng chú ý,
+lần chạy đầu tiên (trung vị $38{,}35$ ms) cao hơn cả năm lần chạy độc
+lập dùng để tính trung bình ở trên, một minh họa cụ thể ngay trong phép
+đo này cho luận điểm của bài về độ tin cậy thấp của một lần đo đơn lẻ.
+Đo đạc này dùng trọng số khởi tạo ngẫu nhiên thay vì trọng số đã huấn
+luyện, vì thời gian suy luận chỉ phụ thuộc kiến trúc và kích thước
+tensor, không phụ thuộc giá trị trọng số. Raspberry Pi 4 không thuộc lớp
+vi điều khiển siêu tiết kiệm năng lượng như trong
+\cite{wang2024mibminet}, nên kết quả này chưa xác nhận khả thi trên lớp
+phần cứng thấp nhất, nhưng là bằng chứng đo trực tiếp đầu tiên trên phần
+cứng nhúng thật trong bài, thay vì chỉ suy luận từ CPU máy trạm.
+
 Hàm ý cho thiết kế hệ thống khá rõ. Việc áp dụng chưng cất tri thức mang lại
 lợi ích lớn và đo được về băng thông kênh điều khiển (đo bằng ITR ngoại
 tuyến, Bảng~\ref{tab:dieukhien}). Trong phạm vi các cấu hình được khảo sát,
-việc lựa chọn cơ chế chưng cất nào không tạo khác biệt về băng thông này,
-nên tiêu chí lựa chọn hợp lý là chi phí huấn luyện và độ phức tạp
-cài đặt. Với triển khai hiện tại, chi phí gấp khoảng 13 lần của nhánh lượng tử
+khác biệt giữa các cơ chế chưng cất về băng thông này nhỏ (0,66 bit/phút,
+phần lớn do riêng FeatureKD, còn 0,22 bit/phút nếu loại cấu hình này) và
+không đủ lớn để có ý nghĩa vận hành, nên tiêu chí lựa chọn hợp lý là chi
+phí huấn luyện và độ phức tạp cài đặt. Với triển khai hiện tại, chi phí gấp khoảng 13 lần của nhánh lượng tử
 không đi kèm lợi ích đo được, nên cơ chế chưng cất rẻ hơn là lựa chọn thực
 dụng. Phát biểu này giới hạn ở cấu hình lượng tử được khảo sát, không mở
 rộng cho các cách hiện thực hóa khác.
-
-\subsubsection{Phân tích định tính không gian đặc trưng}
-
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\linewidth]{figs/image3.png}
-\caption{Phân tích định tính không gian đặc trưng bằng trực quan hóa t-SNE
-trên đặc trưng trung gian 144 chiều của student, trích trên tập test tại
-epoch có accuracy thẩm định tốt nhất. Bốn panel dùng cùng fold (fold 0,
-900 mẫu kiểm tra, 20 đối tượng), cùng hạt giống huấn luyện (hạt giống 1),
-cùng siêu tham số t-SNE (perplexity$=30$, random\_state$=42$) và cùng
-thang trục hai chiều. Độ chính xác và điểm silhouette ghi trong tiêu đề
-mỗi panel là của riêng lần chạy này, không phải trung bình 5 hạt giống
-dùng ở các bảng chính; điểm silhouette tính trên không gian đặc trưng gốc
-144 chiều, không bị t-SNE bóp méo.}
-\label{fig:tsne}
-\end{figure}
-
-Hình~\ref{fig:tsne} trực quan hóa đặc trưng trung gian của student bằng
-phép giảm chiều t-SNE cho bốn cấu hình: không chưng cất, KDBase, FeatureKD
-và V5 Guided (nhân lượng tử). Cấu trúc cụm của ba cấu hình có chưng cất
-tách biệt rõ hơn so với student độc lập (silhouette từ 0,052 đến 0,065,
-so với 0,013 của cấu hình không chưng cất), cùng chiều với khoảng cách
-6,56 điểm phần trăm về độ chính xác đo được trên toàn bộ 5 hạt giống ở
-Mục~\ref{sec:ketqua}. Giữa ba cấu hình có chưng cất, điểm silhouette nằm
-gần nhau (0,052-0,065) dù hình dạng cụm quan sát bằng mắt khác nhau, phù
-hợp với kết quả không phát hiện được khác biệt hệ thống ở các mục định
-lượng trên. Vì t-SNE là phép chiếu phi tuyến không bảo toàn khoảng cách
-toàn cục, khác biệt về hình dạng cụm quan sát bằng mắt không được xem là
-bằng chứng về khác biệt cấu trúc thật; chỉ số silhouette trên không gian
-gốc 144 chiều mới là căn cứ định lượng, còn hình chỉ mang tính minh họa.
-
-\subsubsection{Kiểm chứng khám phá trên bộ dữ liệu thứ hai (Cho2017)}
-\label{sec:cho2017}
-
-Mục này báo cáo một khảo sát bổ sung trên bộ dữ liệu tưởng tượng vận động
-thứ hai, nhằm đối chiếu định tính mức độ khái quát của các kết luận ở các
-mục trên. Khảo sát này không được tiền đăng ký theo cùng quy trình đã áp
-dụng cho phép so sánh chính trên PhysionetMI (Mục~\ref{sec:dulieu}), và
-không có bộ giả thuyết hay biên tương đương chốt trước khi chạy. Kết quả
-dưới đây mang tính khám phá, dùng để đối chiếu định tính, không phải một
-phép kiểm định xác nhận độc lập.
-
-Bộ dữ liệu Cho2017 \cite{cho2017eeg}, truy cập qua lớp \texttt{Cho2017} của
-MOABB, gồm 52 đối tượng thực hiện tưởng tượng vận động nắm tay trái và nắm
-tay phải. Ba đối tượng (32, 46, 49) bị loại theo danh sách mặc định dùng
-cho teacher \cite{zoumpourlis2024motor}, còn lại 49 đối tượng được sử
-dụng, cùng bài toán hai lớp như PhysionetMI. Giao thức huấn luyện, kiến
-trúc teacher/student và toàn bộ siêu tham số giữ nguyên như Mục~\ref{sec:cauhinh}.
-Chỉ giao thức chia fold đổi theo số đối tượng, dùng 5 khối gần bằng nhau
-trên 49 đối tượng thay vì 103. Teacher đạt độ chính xác $75{,}07\% \pm
-4{,}16\%$ (trung bình và độ lệch chuẩn trên 5 fold), thấp và biến động hơn
-trên PhysionetMI ($84{,}98\% \pm 2{,}59\%$).
-
-Sáu cấu hình dùng kernel lượng tử trên Cho2017 (V2 Dense, V3 Anchor, V4
-Anchor+kNN, V5 Guided và hai biến thể $\beta$ của V5) được huấn luyện với
-mạch lượng tử đã sửa mô tả ở Mục~\ref{sec:qrd}. Biến thể V1 (giảm chiều
-tất định) không nằm trong đợt huấn luyện này nên không có số liệu trên
-Cho2017, và không xuất hiện trong Bảng~\ref{tab:cho2017}. Sáu cấu hình cổ
-điển không dùng kernel lượng tử (No KD, KDBase, FeatureKD, RelationalKD,
-nhân cosine, nhân RBF) không phụ thuộc vào mạch lượng tử nên giữ nguyên
-số liệu đã có.
-
-\begin{table}[!htbp]
-\centering
-\caption{Kết quả trên Cho2017 (49 đối tượng, 5 hạt giống độc lập). Đơn vị
-thống kê là hạt giống ($n=5$, $df=4$), theo đúng giao thức ở
-Mục~\ref{sec:dulieu}. Cột $\Delta$ và $p$ so với KDBase bằng kiểm định $t$
-ghép cặp. Biến thể V1 không có số liệu hợp lệ trên Cho2017 (xem văn bản).}
-\label{tab:cho2017}
-\begin{tabular}{lccc}
-\toprule
-\textbf{Cấu hình} & \textbf{Accuracy (\%)} & $\boldsymbol{\Delta}$ & $\boldsymbol{p}$ \\
-\midrule
-No KD & $70{,}32 \pm 0{,}64$ & $-2{,}22$ & 0,0018 \\
-KDBase & $72{,}54 \pm 0{,}21$ & --- & --- \\
-FeatureKD & $71{,}17 \pm 0{,}69$ & $-1{,}38$ & 0,003 \\
-RelationalKD & $72{,}57 \pm 0{,}42$ & $+0{,}03$ & 0,864 \\
-\midrule
-V2 Dense & $72{,}37 \pm 0{,}43$ & $-0{,}18$ & 0,343 \\
-V3 Anchor & $72{,}03 \pm 0{,}63$ & $-0{,}51$ & 0,110 \\
-V4 Anchor $+$ kNN & $72{,}28 \pm 0{,}56$ & $-0{,}26$ & 0,182 \\
-V5 Guided & $72{,}41 \pm 0{,}65$ & $-0{,}13$ & 0,626 \\
-V5 Guided ($\beta = 0{,}01$) & $72{,}17 \pm 0{,}38$ & $-0{,}37$ & 0,018 \\
-V5 Guided ($\beta = 0{,}05$) & $72{,}36 \pm 0{,}27$ & $-0{,}19$ & 0,091 \\
-\midrule
-Nhân cosine & $72{,}13 \pm 0{,}30$ & $-0{,}41$ & 0,030 \\
-Nhân RBF & $72{,}36 \pm 0{,}52$ & $-0{,}18$ & 0,452 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Bảng~\ref{tab:sosanh2dataset} đối chiếu song song $\Delta$ so với KDBase
-giữa hai bộ dữ liệu cho từng cấu hình, cùng chiều dấu hay không. Ba phát
-hiện định tính từ các mục trên được diễn giải chi tiết bên dưới bảng.
-
-\begin{table}[!htbp]
-\centering
-\caption{Đối chiếu song song giữa PhysionetMI (kiểm định chính, tiền đăng
-ký) và Cho2017 (khám phá, không tiền đăng ký). Mỗi ô ghi $\Delta$ so với
-KDBase, tính bằng điểm phần trăm, và $p$ tương ứng từ kiểm định $t$ ghép
-cặp ($n=5$, $df=4$). Hàng \emph{No KD} ghi khoảng tin cậy 95\% thay vì $p$,
-theo đúng cách bài báo cáo cáo hiệu ứng này ở Mục~\ref{sec:ketqua}. Cột
-cuối đánh dấu Có nếu chiều dấu của $\Delta$ giống nhau giữa hai bộ dữ
-liệu, không phụ thuộc việc có đạt ý nghĩa thống kê hay không. V1 Dense
-không có số liệu hợp lệ trên Cho2017 (Mục~\ref{sec:cho2017}).}
-\label{tab:sosanh2dataset}
-\begin{tabular}{lccc}
-\toprule
-\textbf{Cấu hình} & \textbf{PhysionetMI} & \textbf{Cho2017} & \textbf{Cùng chiều} \\
-\midrule
-No KD & $-6{,}56$ (CI95\% $[4{,}08;9{,}04]$) & $-2{,}22$ (CI95\% $[1{,}39;3{,}06]$) & Có \\
-FeatureKD & $-1{,}44$ ($p=0{,}016$) & $-1{,}38$ ($p=0{,}003$) & Có \\
-RelationalKD & $+0{,}12$ ($p=0{,}754$) & $+0{,}03$ ($p=0{,}864$) & Có \\
-V1 Dense & $+0{,}41$ ($p=0{,}158$) & --- & --- \\
-V2 Dense & $+0{,}00$ ($p=1{,}000$) & $-0{,}18$ ($p=0{,}343$) & Không \\
-V3 Anchor & $-0{,}24$ ($p=0{,}351$) & $-0{,}51$ ($p=0{,}110$) & Có \\
-V4 Anchor $+$ kNN & $-0{,}07$ ($p=0{,}775$) & $-0{,}26$ ($p=0{,}182$) & Có \\
-V5 Guided & $-0{,}37$ ($p=0{,}231$) & $-0{,}13$ ($p=0{,}626$) & Có \\
-Nhân cosine & $+0{,}14$ ($p=0{,}609$) & $-0{,}41$ ($p=0{,}030$) & Không \\
-Nhân RBF & $+0{,}13$ ($p=0{,}511$) & $-0{,}18$ ($p=0{,}452$) & Không \\
-\midrule
-\multicolumn{4}{l}{\textit{So sánh kernel trực tiếp trong cùng chiến lược V5 (không so KDBase)}} \\
-Lượng tử so cosine & $-0{,}51$ ($p=0{,}096$) & $+0{,}28$ ($p=0{,}389$) & Không \\
-Lượng tử so RBF & $-0{,}49$ ($p=0{,}060$) & $+0{,}05$ ($p=0{,}903$) & Không \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Năm trong mười hai hàng của Bảng~\ref{tab:sosanh2dataset} đổi chiều dấu
-giữa hai bộ dữ liệu: V2 Dense, nhân cosine, nhân RBF, và cả hai phép so
-sánh kernel trực tiếp. Ở cả năm trường hợp, $\Delta$ trên ít nhất một
-trong hai bộ dữ liệu nhỏ hơn $0{,}5$ điểm phần trăm, tức nằm trong vùng
-$\Delta$ gần 0 mà dấu dễ đảo chỉ do nhiễu hạt giống. Riêng hàng nhân
-cosine có $p = 0{,}030$ trên Cho2017, được bàn riêng bên dưới. Bốn trường
-hợp còn lại không đạt ý nghĩa thống kê ở bộ dữ liệu nào.
-
-Thứ nhất, hiệu ứng chưng cất tái lập. No KD ($\alpha = 1{,}0$, cùng
-nguyên tắc trọng số đầy đủ áp dụng cho PhysionetMI, Mục~\ref{sec:cauhinh})
-đạt $70{,}32\%$ so với KDBase $72{,}54\%$, chênh $2{,}22$ điểm phần trăm
-(khoảng tin cậy 95\% $[1{,}39; 3{,}06]$, $p = 0{,}0018$). Chiều và mức ý
-nghĩa của hiệu ứng giữ nguyên so với PhysionetMI, nhưng biên độ nhỏ hơn
-đáng kể: $2{,}22$ điểm trên Cho2017 so với $6{,}56$ điểm trên PhysionetMI
-(Mục~\ref{sec:ketqua}), chưa tới một nửa. Một phần khác biệt có thể đến
-từ khoảng cách năng lực teacher-student nhỏ hơn trên Cho2017: chênh lệch
-teacher trừ student không chưng cất là $4{,}75$ điểm phần trăm trên
-Cho2017 ($75{,}07\%$ trừ $70{,}32\%$) so với $10{,}05$ điểm trên
-PhysionetMI, để lại ít dư địa hơn cho chưng cất thu hẹp.
-
-Thứ hai, khác biệt giữa các cơ chế chưng cất vẫn nhỏ hơn nhiễu do hạt
-giống, dù biên an toàn mỏng hơn. Độ lệch chuẩn giữa mười một cơ chế (không
-tính No KD) là $0{,}39$ điểm phần trăm, độ lệch chuẩn trung bình do hạt
-giống là $0{,}46$ điểm, tỷ lệ giữa hai đại lượng là $0{,}84$. Trên
-PhysionetMI, tỷ lệ tương ứng là $0{,}61$. Kết luận định tính giữ nguyên,
-nhưng khoảng cách giữa hai nguồn biến thiên hẹp hơn.
-
-Thứ ba, hai phát hiện cụ thể tái lập gần như nguyên vẹn. FeatureKD kém hơn
-KDBase $1{,}38$ điểm ($p = 0{,}003$) so với $1{,}44$ điểm ($p = 0{,}016$)
-trên PhysionetMI. RelationalKD cổ điển không khác KDBase, chênh $0{,}03$
-điểm ($p = 0{,}864$) so với $0{,}12$ điểm ($p = 0{,}754$) trên PhysionetMI.
-
-Phép so sánh kernel chính, giữa hàm nhân lượng tử và hàm nhân cosine trong
-cùng chiến lược V5, đổi chiều dấu giữa hai bộ dữ liệu. Trên PhysionetMI,
-hàm nhân lượng tử thấp hơn cosine $0{,}51$ điểm. Trên Cho2017, hàm nhân
-lượng tử cao hơn cosine $0{,}28$ điểm (khoảng tin cậy 95\% $[-0{,}52;
-1{,}08]$, $p = 0{,}389$). Cả hai khoảng tin cậy đều rộng và phủ giá trị 0.
-Việc đổi chiều không mâu thuẫn với kết luận chính đã báo cáo, mà củng cố
-thêm nhận định rằng chưa có bằng chứng nhất quán cho một khác biệt hệ
-thống giữa hai loại hàm nhân.
-
-Hai kết quả trong Bảng~\ref{tab:cho2017} không có phép so sánh trực tiếp
-tương ứng trên PhysionetMI, nên chỉ được báo cáo, không suy diễn xa hơn dữ
-liệu cho phép. Nhân cosine thấp hơn KDBase $0{,}41$ điểm với $p = 0{,}030$
-trên Cho2017. Bảng kết quả chính trên PhysionetMI chỉ so sánh các hàm nhân
-với nhau, không so sánh trực tiếp cosine với KDBase, nên không có cơ sở
-gọi đây là kết quả "không tái lập". Tương tự, V5 Guided ($\beta = 0{,}01$)
-thấp hơn KDBase $0{,}37$ điểm với $p = 0{,}018$ trên Cho2017.
-
-Nhìn tổng thể, khảo sát khám phá trên Cho2017 không phát hiện điều gì mâu
-thuẫn với hai kết luận chính của bài. Chưng cất tri thức mang lại lợi ích
-lớn và ổn định. Khác biệt giữa các cơ chế truyền tri thức cụ thể, kể cả
-lựa chọn hàm nhân, nằm dưới hoặc quanh ngưỡng phát hiện được bởi thiết kế
-5 hạt giống. Đây là kết quả khám phá trên một bộ dữ liệu bổ sung, không
-thay thế phép kiểm định chính đã tiền đăng ký trên PhysionetMI.
 
 \section{Kết luận}
 \label{sec:ketluan}
 
 Bài báo trình bày một khảo sát có kiểm soát về vai trò của cấu trúc quan hệ
 và không gian biểu diễn trong chưng cất tri thức, áp dụng cho bộ giải mã
-tưởng tượng vận động hoạt động dưới ràng buộc của vòng điều khiển, trên bộ
-dữ liệu PhysionetMI và bài toán phân biệt hai lớp (Mục~\ref{sec:dulieu}).
-Khung
-Quantum Relational Distillation được xây dựng sao cho thành phần lượng tử
-chỉ tham gia giai đoạn huấn luyện, nhờ đó mô hình triển khai giữ nguyên chi
-phí suy luận của một mạng cổ điển gọn nhẹ. Trên nền khung đó, năm chiến lược
-hình thành quan hệ và ba dạng hàm nhân được so sánh trong điều kiện đồng
-nhất về teacher, student, dữ liệu, cách chia fold và toàn bộ siêu tham số.
+tưởng tượng vận động, đánh giá ngoại tuyến theo ràng buộc của vòng điều
+khiển, trên PhysionetMI và bài toán phân biệt hai lớp
+(Mục~\ref{sec:dulieu}). Khung này giữ hàm nhân quan hệ, cổ điển hay lượng
+tử, chỉ tham gia giai đoạn huấn luyện, nên mô hình triển khai giữ nguyên
+chi phí suy luận của một mạng cổ điển gọn nhẹ. Năm chiến lược hình thành
+quan hệ và ba dạng hàm nhân được so sánh trong điều kiện đồng nhất, đơn
+vị thống kê là hạt giống trên 5 hạt giống độc lập (Mục~\ref{sec:ketqua}).
 
-Năm kết quả chính thu được từ 5 hạt giống độc lập trên 103 đối tượng, với
-đơn vị thống kê là đối tượng.
+Chưng cất tri thức mang lại hiệu quả lớn và ổn định, tái lập trên hai bộ
+dữ liệu độc lập, PhysionetMI và Cho2017 (Mục~\ref{sec:hieuqua}). Ngược
+lại, khác biệt giữa các cơ chế chưng cất cụ thể nhỏ hơn nhiễu do hạt
+giống ngẫu nhiên gây ra, nhỏ hơn cả quy mô hiệu ứng (khoảng 1,4 điểm
+phần trăm) mà một đối chứng dương xác nhận giao thức có thể phát hiện,
+nên chưa đủ dữ liệu để kết luận là hiệu ứng thật hay do hạn chế công
+suất. Hệ quả là xếp hạng phương pháp từ một lần chạy đơn gần như không
+tương quan với xếp hạng trên năm hạt giống (Mục~\ref{sec:chuyensau}).
+Đối chiếu theo tiếp cận điều khiển, mạch lượng tử cụ thể đã khảo sát
+không cho thấy lợi ích đo được và nhất quán về độ chính xác so với hai
+hàm nhân cổ điển, trong khi chi phí huấn luyện cao hơn khoảng 13 lần và
+tăng phi tuyến theo số qubit (Mục~\ref{sec:danhgiadk}). Kết luận này
+giới hạn ở cách hiện thực hóa cụ thể này.
 
-Hiệu ứng của chưng cất tri thức là lớn và ổn định. Student huấn
-luyện độc lập đạt 74,93\% ($\alpha=1{,}0$), trong khi mọi cấu hình có
-chưng cất đạt khoảng 81\%. Mức cải thiện 6,56 điểm phần trăm, với khoảng
-tin cậy 95\% từ 4,08 đến 9,04, tương ứng mức tăng khoảng 1,6 lần về tốc
-độ truyền thông tin của kênh điều khiển. Giá trị $\alpha=1{,}0$ là giá trị
-duy nhất cho cấu hình không chưng cất đủ trọng số của số hạng loss mà nó
-thực sự có, theo cùng nguyên tắc trọng số đầy đủ áp dụng cho mọi cấu hình
-khác trong bài (Mục~\ref{sec:cauhinh}); ở $\alpha=0{,}5$, giá trị chỉ phù
-hợp cho các cấu hình có số hạng chưng cất thứ hai để cân bằng, student
-độc lập chỉ đạt 63,06\%, khiến mức cải thiện quan sát được lên tới 18,43
-điểm (Bảng~\ref{tab:alphasweep}).
+Trong phạm vi bài toán đã khảo sát, các kết quả trên dẫn tới hai hệ quả
+thiết kế. Về thực dụng, lựa chọn cơ chế chưng cất cụ thể tạo khác biệt
+nhỏ về băng thông kênh điều khiển (0,66 bit/phút, phần lớn do riêng
+FeatureKD), không đủ lớn để có ý nghĩa vận hành, nên tiêu chí hợp lý là
+chi phí huấn luyện và độ phức tạp cài đặt. Về nghiên cứu, chênh lệch
+giữa hàm nhân lượng tử và cosine nằm ở ranh giới ý nghĩa thống kê qua
+nhiều phương pháp kiểm định và vượt biên tương đương $\pm 0{,}5$ điểm
+phần trăm đã xác định, nên chưa xác lập được tương đương lẫn khác biệt
+có ý nghĩa, một mốc đối chiếu định lượng cho các cấu hình lượng tử phức
+tạp hơn.
 
-Ngược lại, khác biệt giữa các cơ chế chưng cất nằm dưới ngưỡng phát hiện. Độ
-lệch chuẩn của giá trị trung bình giữa mười hai cơ chế là 0,459 điểm phần
-trăm, trong khi độ lệch chuẩn do thay đổi hạt giống ngẫu nhiên là 0,750
-điểm. Không cơ chế dựa trên quan hệ nào tách khỏi KDBase
-ở mức ý nghĩa thống kê. Cấu hình FeatureKD, kém hơn 1,44 điểm với
-$p = 0{,}016$, cho thấy giao thức phát hiện được hiệu ứng ở quy mô đó trong
-phép so sánh cụ thể này, nhưng một phép so sánh đạt ý nghĩa không tự động
-bảo đảm công suất cho mọi phép so sánh khác. Với độ lệch chuẩn chênh lệch
-ghép cặp quan sát được, hiệu ứng tối thiểu phát hiện được ở công suất 80\%
-dao động khoảng 0,86 đến 1,33 điểm phần trăm tùy cặp so sánh, tức lớn hơn
-phần lớn chênh lệch 0,12-0,51 điểm phần trăm đang được báo cáo là không đạt
-ý nghĩa. Các kết luận "không tách biệt" trong bài do đó nên được đọc là
-chưa đủ dữ liệu để kết luận, không phải bằng chứng cho việc các cơ chế hoàn
-toàn tương đương.
+Nghiên cứu có một số giới hạn cần nêu rõ. So sánh chính chỉ thực hiện
+trên PhysionetMI. Khảo sát trên Cho2017 mang tính khám phá
+(Mục~\ref{sec:hieuqua}), không thay thế được. Hệ số Cohen's kappa không
+cung cấp nhiều thông tin bổ sung so với độ chính xác trong bài toán hai lớp
+cân bằng này, và nghiên cứu chưa đo $F_1$ theo từng đối tượng để định
+lượng khác biệt có thể có giữa hai độ đo. Thành phần lượng tử chỉ được
+hiện thực hóa dưới một dạng mạch cụ thể (bốn qubit, data re-uploading,
+chạy trên bộ mô phỏng), nên kết luận không mở rộng cho học máy lượng tử
+nói chung. Một số giả định thiết kế, gồm việc chia sẻ trọng số mạch
+$\theta$ giữa teacher và student, khởi tạo phép chiếu $W_T$, dùng chung
+hệ số $\beta$ cho ba dạng hàm nhân, và candidate pool khác nhau giữa V5
+với V2--V4, đã được kiểm tra bằng các đối chứng thực nghiệm ở
+Mục~\ref{sec:chuyensau}. Không đối chứng nào loại trừ hoàn toàn rủi ro lý
+thuyết tương ứng, dù đối chứng cố định $W_T$ cho thấy một phần đáng kể
+nhiễu hạt giống của nhánh lượng tử đến từ chính khởi tạo này.
 
-Hai biến thể V1 và V2 chỉ khác nhau ở chỗ có hay không có phép chiếu
-tuyến tính học được, chênh nhau 0,41 điểm phần trăm theo hướng có lợi cho
-V1 (không học), ở ranh giới ý nghĩa thống kê nhưng chưa đạt ngưỡng quy
-ước ($p = 0{,}085$). Khả năng thích nghi của phép giảm chiều không cho
-thấy lợi ích đo được, và số liệu hiện có còn gợi ý chiều ngược lại.
+Các hướng phát triển tiếp theo bao gồm lặp lại so sánh chính, với giao
+thức thống kê và biên tương đương xác định trước khi chạy, trên bộ dữ
+liệu thứ hai thay vì dừng ở khảo sát khám phá; mở rộng sang bài toán
+nhiều lớp nơi dư địa cải thiện tốc độ truyền thông tin lớn hơn; và hoàn
+tất khảo sát độ chính xác cho V5, không chỉ V2, ở số qubit lớn hơn hoặc
+số lớp vướng víu sâu hơn ($n_{\text{qubits}}=16$ chưa khả thi về chi phí
+trên hạ tầng hiện có, Mục~\ref{sec:danhgiadk}). Ở hướng phương pháp
+luận, xây dựng một giao thức xác định số lần lặp ngẫu nhiên tối thiểu,
+dựa trên sàn nhiễu đo được, sẽ giúp các so sánh phương pháp trong lĩnh
+vực này trở nên đáng tin cậy hơn.
 
-Ba dạng hàm nhân không phát hiện được khác biệt có ý nghĩa thống kê dưới
-cùng một chiến lược lựa chọn quan hệ. Nhưng phép so sánh chính giữa hàm
-nhân lượng tử và cosine, đã chốt trước khi xem kết quả, có khoảng tin cậy
-vượt ra ngoài biên tương đương $\pm 0{,}5$ điểm phần trăm đã cam kết. Theo
-đúng kế hoạch phân tích đã chốt, kết luận đúng là chưa đủ dữ liệu để khẳng
-định tương đương lẫn khẳng định khác biệt, chứ không phải một kết quả
-tương đương đã được xác nhận. Trong khi đó, chi phí huấn luyện của nhánh
-lượng tử cao hơn khoảng 13 lần do cấu trúc data re-uploading cần mô phỏng
-mạch nhiều lượt hơn cho từng mẫu.
-
-Kết quả cuối cùng liên quan tới cách đánh giá. Xếp hạng thu được từ một
-lần chạy đơn gần như không tương quan với xếp hạng khi lặp lại thí nghiệm
-nhiều hạt giống. Hệ số tương quan hạng Spearman giữa hai xếp hạng là
-$\rho = 0{,}14$ ($p = 0{,}66$), quá yếu để tin cậy dùng kết quả một lần
-chạy đơn thay cho nhiều hạt giống. Các trường hợp đảo hạng riêng lẻ rất
-kịch tính. Cấu hình đứng áp chót theo lần chạy đơn vươn lên hạng nhất khi
-tính trên năm hạt giống, còn cấu hình đứng thứ hai theo lần chạy đơn tụt
-xuống vị trí áp chót, thứ mười một trên mười hai. Vì các hạt giống là
-những lần rút độc lập, đây là một dự báo yếu và không đáng tin cậy chứ
-không đơn thuần là dao động thống kê.
-
-Trong phạm vi bài toán tưởng tượng vận động hai lớp trên PhysionetMI đã
-khảo sát, các kết quả trên dẫn tới hai hệ quả cho việc thiết kế hệ thống
-điều khiển bằng tín hiệu não. Về mặt thực dụng, chưng cất tri thức mang lại
-lợi ích lớn và đo được về băng thông kênh điều khiển (ITR ngoại tuyến). Lựa
-chọn cơ chế chưng cất cụ thể không tạo khác biệt về băng thông này, nên
-tiêu chí hợp lý là chi phí huấn luyện và độ phức tạp cài đặt.
-
-Về mặt nghiên cứu, khoảng tin cậy quan sát được của phép so sánh chính đã
-chốt trước khi xem kết quả vượt ra ngoài biên tương đương đã cam kết, nên
-không xác lập được tương đương lẫn khác biệt có ý nghĩa. Khoảng này vẫn
-cho biết phạm vi lợi ích tối đa mà biểu diễn lượng tử có thể mang lại
-trong cấu hình được khảo sát (một mạch bốn qubit với trọng số khả huấn
-theo cấu trúc data re-uploading), và là mốc đối chiếu định lượng cho các
-cấu hình phức tạp hơn với số qubit lớn hơn hoặc số lớp vướng víu sâu hơn.
-
-Nghiên cứu có một số giới hạn cần nêu rõ. Phép kiểm định chính, đã tiền
-đăng ký với biên tương đương chốt trước khi xem kết quả, chỉ thực hiện
-trên một bộ dữ liệu và một bài toán hai lớp, PhysionetMI. Mọi phát biểu
-trong bài, kể cả các câu tổng kết ở phần Đóng góp và đầu Mục này, cần được
-đọc trong phạm vi đó. Mục~\ref{sec:cho2017} báo cáo một khảo sát khám phá,
-không tiền đăng ký, trên bộ dữ liệu tưởng tượng vận động thứ hai
-(Cho2017); kết quả không phát hiện điều gì mâu thuẫn với các kết luận
-chính, nhưng đây vẫn là một phép đối chiếu định tính, không phải một phép
-kiểm định xác nhận độc lập thay thế được cho PhysionetMI. Với bài
-toán hai lớp cân bằng và marginal dự
-đoán cân bằng, hệ số Cohen's kappa xấp xỉ một biến đổi tuyến tính của độ
-chính xác ($\kappa \approx 2\,\mathrm{acc}-1$) nên không cung cấp nhiều
-thông tin bổ sung trong thiết lập này. Điều này KHÔNG đúng với điểm $F_1$:
-hai mô hình có cùng accuracy vẫn có thể có $F_1$ khác nhau nếu tỷ lệ lỗi
-dương giả/âm giả (FP/FN) khác nhau, kể cả khi dữ liệu cân bằng, vì $F_1$
-nhạy với cách phân bổ lỗi giữa hai loại chứ không chỉ tổng số lỗi. Nghiên
-cứu chưa lưu lại ma trận nhầm lẫn hoặc $F_1$ theo từng đối tượng để định
-lượng khác biệt này. Đây là một hướng bổ sung cần thiết trong các phiên bản
-sau. Thành phần lượng tử được hiện thực hóa dưới
-dạng một mạch bốn qubit với trọng số khả huấn theo cấu trúc data
-re-uploading, chạy trên bộ mô phỏng. Kết luận chỉ áp dụng cho cách hiện
-thực hóa cụ thể này, không áp dụng cho học máy lượng tử nói chung. Ma trận
-quan hệ cũng được tính trên một mẫu con gồm 16 phần tử thay vì toàn bộ
-mini-batch. Mạch $U(\theta_l)$ dùng chung một bộ trọng số $\theta$ cho cả
-nhánh teacher và nhánh student (Mục~\ref{sec:qrd}), nên mục tiêu quan hệ
-$R_T^{(Q)}$ dùng để giám sát student không hoàn toàn tĩnh trong quá trình
-huấn luyện, khác với các thiết lập chưng cất cổ điển. Một đối chứng thực
-nghiệm huấn luyện lại V2 Dense với $\theta$ dùng chung như hiện tại,
-$\theta$ giữ cố định hoàn toàn, và $\theta_T$ cố định tách riêng khỏi
-$\theta_S$ khả huấn (Mục~\ref{sec:qrd}) không tìm thấy khác biệt có ý
-nghĩa thống kê giữa ba cách xử lý ($n=5$, $df=4$, mọi $p \ge 0{,}14$);
-rủi ro suy biến nêu trên do đó chưa bị loại trừ về mặt lý thuyết nhưng
-không có dấu hiệu ảnh hưởng đo được lên độ chính xác ở quy mô đã khảo
-sát. Tương tự, phép chiếu $W_T$ dùng một khởi tạo ngẫu nhiên duy nhất mỗi
-lần chạy, không qua chuẩn hóa, và nghiên cứu chưa đo mức nhạy của kết quả
-với các lần khởi tạo $W_T$ khác nhau ở tỷ lệ nén $144 \to 4$ chiều. Đây là
-một giới hạn khác cần một đối chứng thực nghiệm riêng. Hệ số $\beta$ trong
-\eqref{eq:total} cũng dùng chung một giá trị cho cả ba dạng hàm nhân được
-so sánh (Mục~\ref{sec:bienthe}), dựa trên lập luận rằng cả ba đều cho giá
-trị bị chặn trong $[0,1]$. Một đo đạc chẩn đoán trực tiếp độ lớn gradient
-và giá trị loss thô của từng hàm nhân (Mục~\ref{sec:qrd}) xác nhận lập
-luận này KHÔNG đủ: ba hàm nhân nhận mức giám sát hiệu lực chênh nhau tới
-hai bậc độ lớn dù cùng $\beta$ danh nghĩa, khoảng 200 lần giữa lượng tử
-và cosine trên số liệu chẩn đoán (1 fold, 5 epoch đầu). Bên cạnh đó, biến
-thể V5 khác các biến thể V2--V4 không chỉ ở tiêu chí chọn quan hệ mà còn
-ở candidate pool dùng để chọn (toàn bộ batch so với một mẫu con cố định
-theo vị trí, Mục~\ref{sec:bienthe}); một đối chứng giữ nguyên candidate
-pool 64 mẫu và chỉ đổi tiêu chí chọn thành ngẫu nhiên
-(\emph{random\_pool64}) cho kết quả nằm giữa V2 và V5, không khác biệt có
-ý nghĩa với bên nào ($n=5$), nên kết quả thấp hơn kỳ vọng của V5 vẫn chưa
-thể quy dứt khoát cho tiêu chí "chọn theo thông tin" hay cho candidate
-pool rộng hơn, đối chứng không đủ phân giải để tách hai ảnh hưởng này.
-Cuối cùng, cấu hình không chưng cất dùng $\alpha=1{,}0$ trên cả
-PhysionetMI và Cho2017 (Mục~\ref{sec:cauhinh},~\ref{sec:cho2017}), theo
-cùng nguyên tắc trọng số đầy đủ áp dụng cho mọi cấu hình khác trong bài;
-Bảng~\ref{tab:alphasweep} đo độ nhạy của baseline này theo $\alpha$ trên
-PhysionetMI nhưng chưa lặp lại phép đo tương tự trên Cho2017.
-
-Các hướng phát triển tiếp theo bao gồm tiền đăng ký và lặp lại phép kiểm
-định chính trên bộ dữ liệu thứ hai, thay vì dừng ở khảo sát khám phá như
-Mục~\ref{sec:cho2017}, mở rộng sang bài toán nhiều lớp
-nơi dư địa cải thiện tốc độ truyền thông tin lớn hơn, và khảo sát các mạch
-lượng tử với số qubit lớn hơn hoặc số lớp vướng víu sâu hơn. Ở hướng phương
-pháp luận, việc xây dựng một giao thức xác định số lần lặp ngẫu nhiên tối
-thiểu, dựa trên sàn nhiễu đo được, sẽ giúp các so sánh phương pháp trong
-lĩnh vực này trở nên đáng tin cậy hơn.
+\textbf{Khả năng tái lập.} Mã nguồn huấn luyện, tiền xử lý và phân tích
+thống kê dùng trong bài sẽ được công khai dưới dạng một repository sau
+khi bài được nhận, nhằm giữ ẩn danh trong quá trình phản biện kín. Danh
+sách gán đối tượng theo fold đầy đủ (515 lượt, Mục~\ref{sec:tienxuly})
+được cung cấp cùng mã nguồn đó khi công khai. Trước thời điểm này, quy
+trình tái lập dựa trên bốn yếu tố đã mô tả chi tiết trong bài: môi
+trường phần mềm cố định phiên bản (PyTorch 2.7.1, PennyLane,
+braindecode), hai bộ dữ liệu công khai PhysionetMI và Cho2017, năm hạt
+giống ngẫu nhiên cố định và liệt kê đầy đủ cho mọi so sánh
+(Mục~\ref{sec:dulieu}), và giao thức phân tích thống kê tiền đăng ký
+không đổi sau khi biết kết quả (Mục~\ref{sec:dulieu}).
 
 % \hypertarget{tuxe0i-liux1ec7u-tham-khux1ea3o}{%

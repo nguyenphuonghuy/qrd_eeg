@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -N probe_hw_env
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=8gb:gpu_slots=1
+#PBS -l walltime=00:10:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/probe_hw_env.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (truy hoi HW/SW cho benchmark T_infer, minor review IJRCS) ====="
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+$PY /gpfs0/users/gv_nphuy/projects/qrd_eeg/scripts/probe_hw_env.py
+echo "rc=$?"
+echo "===== END $(date +%T) ====="

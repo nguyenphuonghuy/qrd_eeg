@@ -1,0 +1,35 @@
+#!/bin/bash
+#PBS -N qubit_v2_nq12_resume
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=10:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/qubit_v2_nq12_resume.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (resume nq12: chi seed 4,5, seed 1-3 da co 309 dong hop le) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/qubit_v2_full_2026_08_05
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="4,5"
+export QRD_N_QUBITS=12
+export QRD_RUNS="v2_dense:qrd_dense"
+export QRD_SEEDS_OUT="qubit_v2_nq12_seed45_resume.csv"
+
+timeout 34200 $PY $PROJ/scripts/run_seeds.py
+echo "rc=$?"
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/qubit_v2_nq12_seed45_resume.csv 2>/dev/null | wc -l) (dich 206 = 2 seed x 103 subject)"
+
+echo "===== END $(date +%T) ====="

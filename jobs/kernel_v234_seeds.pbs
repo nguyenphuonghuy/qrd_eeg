@@ -1,0 +1,59 @@
+#!/bin/bash
+#PBS -N kernel_v234_seeds
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=64gb:gpu_slots=1
+#PBS -l walltime=05:00:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/kernel_v234_seeds.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (cosine/RBF cho V2/V3/V4, kiem tra tinh nhat quan so sanh kernel qua nhieu sel) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+( while true; do
+    MEM=$(ps -u gv_nphuy -o rss= 2>/dev/null | awk '{s+=$1}END{printf "%.1fGB", s/1048576}')
+    echo "[HB $(date +%T)] procmem=$MEM"
+    sleep 300
+  done ) &
+HB=$!
+
+echo "----- BUOC 1: smoke 1 fold x 2 epoch cho ca 6 method moi, bat loi som -----"
+SMOKE_OUT=$PROJ/results/kernel_v234_smoke_2026_08_05
+mkdir -p "$SMOKE_OUT"
+timeout 900 $PY $PROJ/scripts/run_all.py \
+    --methods ck_cosine_dense,ck_rbf_dense,ck_cosine_anchor,ck_rbf_anchor,ck_cosine_global_local,ck_rbf_global_local \
+    --folds 0 --epochs 2 --skip_teacher \
+    --out $SMOKE_OUT/smoke.xlsx
+RC1=$?
+echo "rc buoc 1 (smoke) = $RC1"
+if [ $RC1 -ne 0 ]; then
+  echo "DUNG LAI: smoke buoc 1 that bai, khong chay tiep buoc 2"
+  kill $HB 2>/dev/null
+  exit 3
+fi
+
+echo "----- BUOC 2: chay that 5 seed x 5 fold x 6 method (mac dinh N_FOLDS=5, MAX_EPOCHS=30) -----"
+export QRD_OUT_DIR=$PROJ/results/kernel_v234_seeds_2026_08_05
+mkdir -p "$QRD_OUT_DIR"
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="1,2,3,4,5"
+export QRD_SEEDS_OUT="kernel_v234_per_subject.csv"
+export QRD_RUNS="ck_cosine_dense:ck_cosine_dense,ck_rbf_dense:ck_rbf_dense,ck_cosine_anchor:ck_cosine_anchor,ck_rbf_anchor:ck_rbf_anchor,ck_cosine_global_local:ck_cosine_global_local,ck_rbf_global_local:ck_rbf_global_local"
+
+echo "teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+echo "RUNS=$QRD_RUNS SEEDS=$QRD_SEEDS"
+
+timeout 14400 $PY $PROJ/scripts/run_seeds.py ; echo "rc buoc 2 = $?"
+kill $HB 2>/dev/null
+
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/kernel_v234_per_subject.csv 2>/dev/null | wc -l) (dich 3090 = 6 method x 5 seed x 103 subject)"
+echo "===== END $(date +%T) ====="

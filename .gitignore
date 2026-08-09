@@ -19,3 +19,8 @@ paper/main.docx
 paper/QRD_overleaf.zip
 paper/main.log
 paper/main.blg
+paper/qrd_eeg_latex_source.zip
+paper_backup_*.zip
+
+# Moi truong ao tam cho phan tich thong ke (khong phai source)
+.stats_venv/
