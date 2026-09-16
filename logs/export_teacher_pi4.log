@@ -1,0 +1,8 @@
+===== START 18:23:17 2026-08-15 node=ai01 (xuat TorchScript teacher cho benchmark Pi4) =====
+output keys: ['scores', 'feats'] scores shape: (1, 7, 2)
+Saved: /gpfs0/users/gv_nphuy/projects/qrd_eeg/scripts/../results/pi4_latency/teacher_ensembleeeg_traced.pt size(KB)= 291.744140625
+n_params: 15074
+max abs diff (goc vs traced-reload): 0.0
+OK: traced model khop model goc.
+rc=0
+===== END 18:23:39 =====

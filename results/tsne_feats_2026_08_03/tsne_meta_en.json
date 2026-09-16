@@ -1,0 +1,42 @@
+{
+  "perplexity": 30,
+  "random_state": 42,
+  "panels": {
+    "no_kd": {
+      "fold": 0,
+      "seed": 1,
+      "acc": 71.66666666666667,
+      "silhouette_144d": 0.013347187079489231,
+      "n_test_trials": 900,
+      "n_subjects": 20,
+      "feat_dim": 144
+    },
+    "kd_base": {
+      "fold": 0,
+      "seed": 1,
+      "acc": 82.33333333333334,
+      "silhouette_144d": 0.054666392505168915,
+      "n_test_trials": 900,
+      "n_subjects": 20,
+      "feat_dim": 144
+    },
+    "feature_kd": {
+      "fold": 0,
+      "seed": 1,
+      "acc": 81.77777777777779,
+      "silhouette_144d": 0.0645904541015625,
+      "n_test_trials": 900,
+      "n_subjects": 20,
+      "feat_dim": 144
+    },
+    "qrd_teacher_guided": {
+      "fold": 0,
+      "seed": 1,
+      "acc": 80.77777777777779,
+      "silhouette_144d": 0.0524454228579998,
+      "n_test_trials": 900,
+      "n_subjects": 20,
+      "feat_dim": 144
+    }
+  }
+}

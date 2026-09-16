@@ -21,6 +21,15 @@ paper/main.log
 paper/main.blg
 paper/qrd_eeg_latex_source.zip
 paper_backup_*.zip
+paper/qrd_eeg_latex_20260830.zip
+paper/main_en.pdf
+paper/ijrcs_submission/IJRCS_submission.pdf
+
+# Template chinh thuc tai ve tu IJRCS (tai nguyen ben ngoai, khong phai source)
+paper/IJRCS template.zip
 
 # Moi truong ao tam cho phan tich thong ke (khong phai source)
 .stats_venv/
+
+# Credentials Pi4 (mat khau SSH thuc, khong bao gio commit)
+scripts/.pi4_credentials.local

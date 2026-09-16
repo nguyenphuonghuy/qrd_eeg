@@ -1,0 +1,73 @@
+ssh exit=0
+=== Lan chay 1/5 (teacher_ensembleeeg_traced.pt --dict-input) ===
+/home/khoinguyen/pi4bench/lib/python3.13/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  cpu = _conversion_method_template(device=torch.device("cpu"))
+N_REPS=200 (sau 20 warm-up)
+median = 84.555 ms
+mean   = 84.795 ms
+p25    = 83.996 ms
+p75    = 85.383 ms
+p95    = 87.256 ms
+min/max = 82.522 / 88.552 ms
+rss_after_load = 219.09 MB
+rss_peak       = 251.74 MB
+
+=== Lan chay 2/5 (teacher_ensembleeeg_traced.pt --dict-input) ===
+/home/khoinguyen/pi4bench/lib/python3.13/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  cpu = _conversion_method_template(device=torch.device("cpu"))
+N_REPS=200 (sau 20 warm-up)
+median = 87.623 ms
+mean   = 87.401 ms
+p25    = 86.573 ms
+p75    = 88.077 ms
+p95    = 89.253 ms
+min/max = 84.158 / 91.117 ms
+rss_after_load = 219.14 MB
+rss_peak       = 251.59 MB
+
+=== Lan chay 3/5 (teacher_ensembleeeg_traced.pt --dict-input) ===
+/home/khoinguyen/pi4bench/lib/python3.13/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  cpu = _conversion_method_template(device=torch.device("cpu"))
+N_REPS=200 (sau 20 warm-up)
+median = 84.204 ms
+mean   = 84.284 ms
+p25    = 83.857 ms
+p75    = 84.575 ms
+p95    = 85.803 ms
+min/max = 82.564 / 88.212 ms
+rss_after_load = 219.04 MB
+rss_peak       = 251.48 MB
+
+=== Lan chay 4/5 (teacher_ensembleeeg_traced.pt --dict-input) ===
+/home/khoinguyen/pi4bench/lib/python3.13/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  cpu = _conversion_method_template(device=torch.device("cpu"))
+N_REPS=200 (sau 20 warm-up)
+median = 84.449 ms
+mean   = 84.471 ms
+p25    = 83.910 ms
+p75    = 84.921 ms
+p95    = 85.880 ms
+min/max = 82.697 / 87.607 ms
+rss_after_load = 219.15 MB
+rss_peak       = 251.73 MB
+
+=== Lan chay 5/5 (teacher_ensembleeeg_traced.pt --dict-input) ===
+/home/khoinguyen/pi4bench/lib/python3.13/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  cpu = _conversion_method_template(device=torch.device("cpu"))
+N_REPS=200 (sau 20 warm-up)
+median = 85.681 ms
+mean   = 85.915 ms
+p25    = 85.053 ms
+p75    = 86.760 ms
+p95    = 88.114 ms
+min/max = 83.713 / 90.957 ms
+rss_after_load = 219.15 MB
+rss_peak       = 251.61 MB
+
+=== TONG HOP 5 LAN CHAY DOC LAP ===
+median qua 5 lan: mean=85.302 sd=1.416 ms | gia tri: [84.555, 87.623, 84.204, 84.449, 85.681]
+p95    qua 5 lan: mean=87.261 sd=1.477 ms | gia tri: [87.256, 89.253, 85.803, 85.88, 88.114]
+rss_after_load qua 5 lan: mean=219.11 sd=0.05 MB | gia tri: [219.09, 219.14, 219.04, 219.15, 219.15]
+rss_peak       qua 5 lan: mean=251.63 sd=0.11 MB | gia tri: [251.74, 251.59, 251.48, 251.73, 251.61]
+
+[exited with code 0]

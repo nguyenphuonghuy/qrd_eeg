@@ -1,0 +1,211 @@
+% =====================================================================
+%  IJRCS_submission.tex
+%  English manuscript placed into the official IJRCS LaTeX template
+%  (International Journal of Robotics and Control Systems).
+%  Template front-matter/macros taken from "IJRCS template.zip"
+%  (IJRCS_template.tex); body content is the translated body_en.tex.
+%
+%  ITEMS STILL NEEDING AUTHOR INPUT ARE MARKED "TODO(AUTHOR):" BELOW.
+%  Compile with: cd paper/ijrcs_submission && tectonic -X compile IJRCS_submission.tex
+% =====================================================================
+\documentclass[11pt,a4paper,twoside,asymmetric]{article}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[left=3cm,right=2.5cm,top=3.5cm,bottom=2.5cm,%
+headsep=0.75cm,headheight=2cm,footskip=1cm]{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage[labelsep=period]{caption}
+\usepackage{multirow}
+\usepackage{indentfirst}
+\usepackage{xpatch}
+\usepackage{setspace}
+\usepackage{newtxtext}
+\usepackage[labelfont=bf,font=small]{caption}
+\captionsetup[table]{skip=6pt}
+
+% --- Added for this manuscript's content (not in the blank template) ---
+\usepackage{booktabs}      % \toprule/\midrule/\bottomrule used in Section 4 tables
+\usepackage{braket}        % \ket{}/\bra{}/\braket{} used in Section 3 (quantum states)
+\usepackage{float}         % [H] figure placement used in the method/results figures
+\usepackage[section]{placeins}
+\usepackage{cite}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=RoyalBlue,
+    urlcolor=RoyalBlue,
+    citecolor=RoyalBlue,
+    citebordercolor=0 0 1
+    }
+\urlstyle{same}
+
+\addto\captionsenglish{\renewcommand{\figurename}{\textbf{\small{Fig.}}}}
+\addto\captionsenglish{\renewcommand{\tablename}{\textbf{\small{Table}}}}
+
+\titlespacing{\section}{0pt}{12pt}{4pt}
+\titleformat{\section}[hang]{\large\bfseries}{\thesection. }{0.0em}{}
+
+\titlespacing{\subsection}{0pt}{6pt}{3pt}
+\titleformat{\subsection}[hang]{\bfseries}{\thesubsection. }{0.0em}{}
+
+\renewcommand{\headrulewidth}{1.5pt}
+\xpretocmd\headrule{\color{RoyalBlue}}{}{\PatchFailed}
+
+\renewcommand{\footrulewidth}{1.5pt}
+\renewcommand{\footrule}{\hbox to\headwidth{%
+  \color{RoyalBlue}\leaders\hrule height \headrulewidth\hfill}}
+
+\setlength{\parskip}{0.3em}
+\raggedbottom  % khong ep gian dong de lap day trang khi mot hinh/bang
+               % bi day sang trang sau (tranh khoang trang lon giua trang)
+% Noi long tham so dat bang/hinh mac dinh cua LaTeX (mac dinh qua chat,
+% de khien nhieu bang/hinh bi day don thanh mot cum xa doan van tham
+% chieu, tao khoang trang lon giua chung).
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.7}
+\setcounter{topnumber}{4}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{6}
+
+\fancypagestyle{firstpage}{
+\fancyhf{}
+\lhead{\includegraphics[scale=0.15]{ijrcs}\\}
+\rhead{\includegraphics[scale=0.09]{ascee}\\}
+\chead{International Journal of Robotics and Control Systems\\
+\small{ISSN 2775-2658\\
+\url{http://pubs2.ascee.org/index.php/ijrcs}}}
+\rfoot{\includegraphics[scale=0.3]{email} \small{\href{mailto:ijrcs@ascee.org}{ijrcs@ascee.org}}}
+\lfoot{\includegraphics[scale=1]{doi} \small{\url{http://dx.doi.org/10.31763/ijrcs.v1i1.}}}
+}
+
+\fancypagestyle{followingpage}{
+\fancyhf{}
+\fancyhead[RE,LO]{\small{ISSN 2775-2658\\}}
+\fancyhead[LE,RO]{\small{\textbf{\thepage}\\}}
+\fancyhead[CE,CO]{International Journal of Robotics and Control Systems}
+\cfoot{\color{RoyalBlue}{\footnotesize{Structured Relational Distillation for Motor Imagery Decoding}}}
+}
+\pagestyle{followingpage}
+\AtBeginDocument{\thispagestyle{firstpage}}
+\setcounter{page}{1}
+
+\begin{document}
+\begin{flushleft}
+{\LARGE{
+\begin{spacing}{1}
+Structured Relational Distillation for Motor Imagery Decoding: Assessing
+Relation Strategies and a Quantum Kernel under Real-Time Control
+Constraints
+\end{spacing}
+}}
+\vspace{1em}
+Duong Thi Mai Thuong $^{\text{a},1}$, Nguyen Phuong Huy $^{\text{b},2,\ast}$\\
+\vspace{.5em}
+\footnotesize{$^\text{a}$ Thai Nguyen University of Information and Communication Technology, Thai Nguyen, Vietnam\\
+$^\text{b}$ Thai Nguyen University of Technology, Thai Nguyen, Vietnam\\
+$^\ast$ Corresponding author: \textcolor{RoyalBlue}{nguyenphuonghuy@tnut.edu.vn}\\
+$^1$ORCID: 0009-0005-7862-7473; $^2$ORCID: 0000-0002-5887-5796}
+\end{flushleft}
+{\color{RoyalBlue} \rule{\linewidth}{0.4mm}}
+\vspace{.5em}
+\noindent
+\parbox[t][][s]{0.26\textwidth}{ARTICLE INFO
+\vspace{.5em}
+
+{\color{RoyalBlue}\rule{\linewidth}{0.4mm}}
+
+\vspace{1em}
+\footnotesize{\textbf{Article History}\\
+% TODO(EDITOR): dates are assigned during the review process.
+Received \\
+Revised \\
+Accepted \\
+}
+
+\vspace{1em}
+\small{\footnotesize{\textbf{Keywords}\\
+Brain--computer interface;\\
+Knowledge distillation;\\
+Motor imagery decoding;\\
+Quantum machine learning;\\
+Controlled evaluation}
+}
+\vspace{.5em}
+\vspace{\fill}
+}
+\parbox{0.025\textwidth}{\hspace{0.5em}}
+\parbox[t][][s]{0.70\textwidth}{ABSTRACT
+\vspace{.5em}
+
+{\color{RoyalBlue} \rule{\linewidth}{0.4mm}}
+
+\vspace{.5em}
+\small{Knowledge distillation based on relations among samples is an effective
+approach for motor imagery decoding. However, prior work commonly fixes
+the relation-formation strategy empirically. This study proposes a
+structured relational distillation framework, evaluated under
+closed-loop control constraints. This framework treats the
+relation-formation strategy and the similarity kernel function,
+classical or quantum, as two independent design parameters. Twelve
+configurations were compared on PhysionetMI (103 subjects, five
+independent seeds, $n=5$). Distillation provides a large and stable
+benefit. Accuracy increased from 74.93 to 81.49 percent on PhysionetMI,
+and this result was replicated on a second independent dataset
+(Cho2017, 49 subjects). However, the difference among specific
+mechanisms is smaller than the noise from random seeds (standard
+deviation 0.459 versus 0.750 percentage points), and the ranking from
+a single run is nearly uncorrelated with the ranking over five seeds
+($\rho = 0.14$). The study additionally proposes a control-oriented
+evaluation procedure. This procedure uses information transfer rate
+and the inference-time budget instead of accuracy alone, together
+with a real inference-time measurement on embedded hardware. Under
+this approach, the quantum kernel function yields a difference of
+0.51 percentage points from the two classical kernel functions, close
+to the pre-specified equivalence margin, so there is not yet enough
+data to conclude in either direction. The training cost of the
+quantum branch is about 13 times higher and increases nonlinearly
+with the number of qubits. This makes large-scale training infeasible
+on a shared single-GPU infrastructure. The evaluation framework and
+the resulting quantitative benchmarks provide a reference basis for
+more complex quantum designs tested later.
+}
+\\
+\\
+\rightline{\footnotesize{© 2026 The Authors.}}\\
+\rightline{\footnotesize{Published by Association for Scientific Computing Electrical and Engineering.}}\\
+\rightline{\footnotesize{This is an open access article under the \href{http://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA} license.}}
+\rightline{\includegraphics[scale=1]{cc_by_sa}}}
+{\color{RoyalBlue}\rule{\linewidth}{0.4mm}}
+
+\graphicspath{{figs/}}
+
+\input{body_en}
+
+\noindent \textbf{Author Contribution:} All authors contributed equally
+to the main contribution of this paper. All authors read and approved
+the final paper.
+
+\noindent \textbf{Funding:} This research received no external funding.
+
+\noindent \textbf{Acknowledgment:} The authors would like to thank the
+High-Performance Computing Laboratory, Thai Nguyen University of
+Technology (TNUT), for supporting this research.
+
+\noindent \textbf{Conflicts of Interest:} The authors declare no
+conflict of interest.
+
+\small{
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+}
+
+\end{document}

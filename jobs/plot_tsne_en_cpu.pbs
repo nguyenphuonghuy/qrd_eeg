@@ -1,0 +1,22 @@
+#!/bin/bash
+#PBS -N plot_tsne_en_cpu
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=4:mem=8gb:gpu_slots=0
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/plot_tsne_en_cpu.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (ban tieng Anh Hinh 3, tu tsne_feats_2026_08_03, chi CPU numpy/sklearn/matplotlib) ====="
+export PYTHONUNBUFFERED=1
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+
+timeout 1200 $PY $PROJ/scripts/plot_tsne_en.py ; echo "rc=$?"
+
+echo "----- file ket qua -----"
+ls -la $PROJ/paper/figs/image3_en.png $PROJ/results/tsne_feats_2026_08_03/tsne_meta_en.json
+echo "===== END $(date +%T) ====="

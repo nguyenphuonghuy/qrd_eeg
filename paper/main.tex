@@ -10,6 +10,18 @@
 %  Bien dich bang XeLaTeX (Overleaf: Menu > Settings > Compiler > XeLaTeX)
 % =====================================================================
 \documentclass[11pt,a4paper]{article}
+\raggedbottom  % khong ep gian dong de lap day trang khi mot hinh/bang
+               % bi day sang trang sau (tranh khoang trang lon giua trang)
+% Noi long tham so dat bang/hinh mac dinh cua LaTeX (mac dinh qua chat,
+% de khien nhieu bang/hinh bi day don thanh mot cum xa doan van tham
+% chieu, tao khoang trang lon giua chung).
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.7}
+\setcounter{topnumber}{4}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{6}
 
 % --- Font co dau tieng Viet, dang Times -------------------------------
 \usepackage{fontspec}
@@ -37,13 +49,24 @@
 \usepackage{float}
 \usepackage[section]{placeins}   % float khong vuot qua ranh gioi section
 
+% --- So do TikZ (Hinh 1, ve truc tiep, khong dung anh AI) -----------
+\usepackage[dvipsnames]{xcolor}  % nap truoc tikz de tranh "option clash"
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc,decorations.pathmorphing,backgrounds,fit}
+
 % --- Lien ket, trich dan --------------------------------------------
-\usepackage[hidelinks]{hyperref}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=RoyalBlue,
+    citecolor=RoyalBlue,
+    urlcolor=RoyalBlue,
+    }
 \usepackage{cite}
 
-\title{A Systematic Study of Structured Relational Distillation for Motor
-       Imagery Decoding under Real-Time Control Constraints, with a Quantum
-       Kernel as a Case Study}
+\title{Structured Relational Distillation for Motor Imagery Decoding:
+       Assessing Relation Strategies and a Quantum Kernel under Real-Time
+       Control Constraints}
 \author{}
 \date{}
 
@@ -53,27 +76,31 @@
 \begin{abstract}
 \noindent
 Chưng cất tri thức dựa trên quan hệ giữa các mẫu là một hướng hiệu quả
-cho giải mã tưởng tượng vận động, nhưng các công trình trước thường cố
-định chiến lược hình thành quan hệ theo kinh nghiệm. Nghiên cứu này đề
-xuất một khung chưng cất quan hệ có cấu trúc cho bộ giải mã tưởng tượng
-vận động hai lớp, đánh giá ngoại tuyến theo ràng buộc của vòng điều
-khiển kín, trong đó chiến lược hình thành quan hệ và hàm nhân đo tương
-đồng quan hệ là hai tham số thiết kế độc lập. Mười hai cấu hình (năm
-chiến lược quan hệ, ba dạng hàm nhân) được so sánh trên PhysionetMI
+cho giải mã tưởng tượng vận động. Tuy nhiên, các công trình trước thường
+cố định chiến lược hình thành quan hệ theo kinh nghiệm. Nghiên cứu này
+đề xuất một khung chưng cất quan hệ có cấu trúc, đánh giá theo ràng buộc
+của vòng điều khiển kín. Khung này coi chiến lược hình thành quan hệ và
+hàm nhân đo tương đồng, cổ điển hoặc lượng tử, là hai tham số thiết kế
+độc lập. Mười hai cấu hình được so sánh trên PhysionetMI
 (103 đối tượng, năm hạt giống độc lập, $n=5$). Chưng cất mang lại hiệu
-quả lớn và ổn định, độ chính xác tăng từ 74,93 lên 81,49 phần trăm, tái
-lập trên một bộ dữ liệu độc lập thứ hai (Cho2017, 49 đối tượng). Tuy
+quả lớn và ổn định. Độ chính xác tăng từ 74,93 lên 81,49 phần trăm trên
+PhysionetMI và kết quả này tái lập trên một bộ dữ liệu độc lập thứ hai
+(Cho2017, 49 đối tượng). Tuy
 nhiên, khác biệt giữa các cơ chế cụ thể nhỏ hơn nhiễu do hạt giống ngẫu
-nhiên (độ lệch chuẩn 0,459 so với 0,750 điểm phần trăm), và xếp hạng từ
+nhiên (độ lệch chuẩn 0,459 so với 0,750 điểm phần trăm) và xếp hạng từ
 một lần chạy đơn gần như không tương quan với xếp hạng trên năm hạt
-giống ($\rho = 0{,}14$). Đối chiếu theo tiếp cận điều khiển, hàm nhân
-lượng tử, khảo sát như một trường hợp cụ thể, cho chênh lệch $0{,}51$
-điểm phần trăm so với hai hàm nhân cổ điển, nằm ở ranh giới ý nghĩa
-thống kê qua nhiều phương pháp kiểm định và vượt biên tương đương
-$\pm 0{,}5$ điểm đã xác định, nên chưa đủ dữ liệu để kết luận dứt khoát.
-Chi phí huấn luyện của nhánh lượng tử cao hơn khoảng 13 lần và tăng phi
-tuyến theo số qubit, bất khả thi ở quy mô lớn trên hạ tầng một GPU dùng
-chung.
+giống ($\rho = 0{,}14$). Nghiên cứu đề xuất thêm một quy trình đánh giá
+theo hướng điều khiển. Quy trình này dùng tốc độ truyền thông tin và
+ngân sách thời gian suy luận thay cho độ chính xác đơn thuần, kèm một
+phép đo thời gian suy luận thật trên phần cứng nhúng. Theo tiếp cận
+này, hàm nhân
+lượng tử cho chênh lệch $0{,}51$ điểm phần trăm so với hai hàm nhân cổ
+điển, sát biên tương đương đã xác định trước nên chưa
+đủ dữ liệu để kết luận theo bất kỳ chiều nào. Chi phí huấn luyện của
+nhánh lượng tử cao hơn khoảng 13 lần và tăng phi tuyến theo số qubit.
+Điều này khiến quy mô lớn bất khả thi trên hạ tầng một GPU dùng chung.
+Khung đánh giá và mốc định lượng thu được cung cấp cơ sở đối chiếu cho
+các thiết kế lượng tử phức tạp hơn được thử nghiệm sau này.
 \end{abstract}
 
 \noindent\textbf{Từ khóa:} Giao diện não--máy tính; chưng cất tri thức; giải mã tưởng tượng vận động; học máy lượng tử; đánh giá có kiểm soát.

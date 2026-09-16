@@ -1,0 +1,12 @@
+===== START 18:56:44 2026-08-30 node=ai01 (ban tieng Anh Hinh 3, tu tsne_feats_2026_08_03, chi CPU numpy/sklearn/matplotlib) =====
+no_kd: acc=71.67 silhouette(144d)=0.0133 n=900
+kd_base: acc=82.33 silhouette(144d)=0.0547 n=900
+feature_kd: acc=81.78 silhouette(144d)=0.0646 n=900
+qrd_teacher_guided: acc=80.78 silhouette(144d)=0.0524 n=900
+Da ghi: /gpfs0/users/gv_nphuy/projects/qrd_eeg/paper/figs/image3_en.png
+Metadata: /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/tsne_feats_2026_08_03/tsne_meta_en.json
+rc=0
+----- file ket qua -----
+-rw------- 1 gv_nphuy hpc_lecturers 619162 Aug 30 18:58 /gpfs0/users/gv_nphuy/projects/qrd_eeg/paper/figs/image3_en.png
+-rw------- 1 gv_nphuy hpc_lecturers    914 Aug 30 18:58 /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/tsne_feats_2026_08_03/tsne_meta_en.json
+===== END 18:58:17 =====
