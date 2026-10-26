@@ -19,17 +19,22 @@ OUT = os.path.join(RES, "factorial_2026_10_25", "analysis_factorial.txt")
 SEEDS = [1, 2, 3, 4, 5]
 KERNELS = ["quantum", "cosine", "rbf"]
 STRATS = ["dense", "anchor", "global_local", "teacher_guided"]
+# O cosine: job 17755 bi timeout giua seed 3 (seed 3 chi xong fold 0-2 va fold 3 dense/anchor).
+# Quy tac gop theo (seed, fold), chot 2026-10-26 TRUOC khi xem ket qua: moi (seed, fold) chi lay tu MOT nguon.
+COSINE_PARTS = [
+    ("factorial_2026_10_25/factorial_cosine_per_subject.csv", [1, 2], None),       # job 17755
+    ("factorial_2026_10_25/factorial_cosine_per_subject.csv", [3], [0, 1, 2]),     # job 17755
+    ("factorial_2026_10_25/factorial_cosine_s3f34_per_subject.csv", [3], [3, 4]),  # job 17855
+    ("factorial_2026_10_25/factorial_cosine_s45_per_subject.csv", [4, 5], None),   # job 17774
+]
 CELLS = {  # (kernel, strategy) -> (file, tag)
     ("quantum", "dense"): ("factorial_2026_10_25/factorial_qdense_per_subject.csv", "qrd_dense_b0.02"),
     ("quantum", "anchor"): ("factorial_2026_10_25/factorial_qanchor_per_subject.csv", "qrd_anchor_b0.02"),
     ("quantum", "global_local"): ("factorial_2026_10_25/factorial_qgl_per_subject.csv", "qrd_global_local_b0.02"),
     ("quantum", "teacher_guided"): ("beta_robust_2026_10_24/beta_q002_per_subject.csv", "qrd_tg_b0.02"),
-    ("cosine", "dense"): ([("factorial_2026_10_25/factorial_cosine_per_subject.csv", [1, 2, 3]),
-                             ("factorial_2026_10_25/factorial_cosine_s45_per_subject.csv", [4, 5])], "ck_cosine_dense_b0.02"),
-    ("cosine", "anchor"): ([("factorial_2026_10_25/factorial_cosine_per_subject.csv", [1, 2, 3]),
-                             ("factorial_2026_10_25/factorial_cosine_s45_per_subject.csv", [4, 5])], "ck_cosine_anchor_b0.02"),
-    ("cosine", "global_local"): ([("factorial_2026_10_25/factorial_cosine_per_subject.csv", [1, 2, 3]),
-                             ("factorial_2026_10_25/factorial_cosine_s45_per_subject.csv", [4, 5])], "ck_cosine_global_local_b0.02"),
+    ("cosine", "dense"): (COSINE_PARTS, "ck_cosine_dense_b0.02"),
+    ("cosine", "anchor"): (COSINE_PARTS, "ck_cosine_anchor_b0.02"),
+    ("cosine", "global_local"): (COSINE_PARTS, "ck_cosine_global_local_b0.02"),
     ("cosine", "teacher_guided"): ("beta_robust_2026_10_24/beta_ref_classical_per_subject.csv", "ck_cosine_tg_b0.02"),
     ("rbf", "dense"): ("factorial_2026_10_25/factorial_rbf_per_subject.csv", "ck_rbf_dense_b0.02"),
     ("rbf", "anchor"): ("factorial_2026_10_25/factorial_rbf_per_subject.csv", "ck_rbf_anchor_b0.02"),
@@ -39,10 +44,10 @@ CELLS = {  # (kernel, strategy) -> (file, tag)
 
 
 def per_seed(path, tag):
-    # path: mot file (lay seed 1-5) hoac danh sach (file, [seed]) -- o cosine gop seed 1-3 tu job 17755
-    # (bi timeout) voi seed 4-5 tu job chay bu 17774; dong seed 4 dang do cua 17755 bi bo. Quy tac chot 2026-10-25 truoc khi co ket qua.
-    parts = [(path, SEEDS)] if isinstance(path, str) else path
-    df = pd.concat([pd.read_csv(os.path.join(RES, f)).loc[lambda d: d.seed.isin(sd)] for f, sd in parts])
+    # path: mot file (lay seed 1-5) hoac danh sach (file, [seed], [fold] hoac None) -- xem COSINE_PARTS.
+    parts = [(path, SEEDS, None)] if isinstance(path, str) else path
+    df = pd.concat([pd.read_csv(os.path.join(RES, f)).loc[lambda d: d.seed.isin(sd) & (d.fold.isin(fd) if fd else True)]
+                    for f, sd, fd in parts])
     assert not df.duplicated(["tag", "seed", "fold", "subject"]).any(), (tag, "trung dong")
     df = df[(df.tag == tag) & (df.seed.isin(SEEDS))].assign(w=lambda d: d.acc * d.n)
     g = df.groupby(["seed", "subject"], as_index=False)[["w", "n"]].sum()

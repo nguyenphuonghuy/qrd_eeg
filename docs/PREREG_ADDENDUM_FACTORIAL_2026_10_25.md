@@ -56,3 +56,9 @@ Output: `results/factorial_2026_10_25/`. Phân tích: `scripts/analyze_factorial
 - Quy tắc gộp chốt trước: ô cosine lấy seed 1–3 từ `factorial_cosine_per_subject.csv` (job 17755) và seed 4–5 từ
   `factorial_cosine_s45_per_subject.csv` (job 17774). Mọi dòng seed ≥ 4 của job 17755 bị bỏ. Đã cài trong `scripts/analyze_factorial.py`.
 - Seed, ô thí nghiệm, β, kiểm định chính và quy tắc diễn giải không đổi.
+- 2026-10-26 (TRƯỚC khi xem kết quả; chỉ đếm số dòng theo seed/fold): job 17755 dừng do timeout (rc=124) sau 41/75 lượt,
+  seed 3 chỉ có fold 0–2 đủ 3 chiến lược và fold 3 dense/anchor. Quy tắc gộp ngày 2026-10-25 (seed 1–3 từ 17755) không còn đủ.
+  Chạy bù job 17855 `factorial_cosine_s3f34.pbs` (cosine, seed 3, fold 3–4, cả 3 chiến lược,
+  file `factorial_cosine_s3f34_per_subject.csv`). Quy tắc gộp mới theo (seed, fold), mỗi (seed, fold) chỉ một nguồn:
+  seed 1–2 từ 17755; seed 3 fold 0–2 từ 17755; seed 3 fold 3–4 từ 17855 (bỏ 2 lượt seed 3 fold 3 của 17755);
+  seed 4–5 từ 17774. Cài trong `COSINE_PARTS` của `scripts/analyze_factorial.py`.
