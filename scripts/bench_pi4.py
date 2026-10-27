@@ -71,5 +71,8 @@ print(f"p25    = {p25:.3f} ms")
 print(f"p75    = {p75:.3f} ms")
 print(f"p95    = {p95:.3f} ms")
 print(f"min/max = {lat_ms[0]:.3f} / {lat_ms[-1]:.3f} ms")
-print(f"rss_after_load = {rss_after_load_kb / 1024.0:.2f} MB")
-print(f"rss_peak       = {rss_peak_kb / 1024.0:.2f} MB")
+# ru_maxrss la high-water mark RSS CUA CA TIEN TRINH tu luc khoi dong toi
+# thoi diem goi, khong phai RSS tuc thoi; don vi tren Linux la KiB (sua
+# audit muc 9, nhan dung dinh nghia va don vi MiB thay vi MB).
+print(f"rss_after_load_highwater = {rss_after_load_kb / 1024.0:.2f} MiB")
+print(f"rss_peak_highwater       = {rss_peak_kb / 1024.0:.2f} MiB")

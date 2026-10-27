@@ -28,6 +28,10 @@ OUT_DIR     = os.environ.get("QRD_OUT_DIR",     os.path.join(_SELF, "..", "resul
 N_FOLDS     = int(os.environ.get("QRD_N_FOLDS",   "5"))
 MAX_EPOCHS  = int(os.environ.get("QRD_MAX_EPOCHS","30"))
 SEEDS       = [int(s) for s in os.environ.get("QRD_SEEDS", "1,2,3,4,5").split(",")]
+# QRD_FOLDS="0" -> chi chay cac fold nay nhung VAN chia du lieu theo N_FOLDS
+# (QRD_N_FOLDS=1 lam init_dataset mat split val). Rong -> chay ca N_FOLDS fold.
+_FOLDS_ENV  = os.environ.get("QRD_FOLDS", "").strip()
+FOLDS       = [int(f) for f in _FOLDS_ENV.split(",")] if _FOLDS_ENV else list(range(N_FOLDS))
 
 HP = dict(alpha=float(os.environ.get("QRD_ALPHA", "0.5")), temperature=4.0, beta_qrd=0.02,
           gamma_feat=1.0, gamma_rkd=1.0,
@@ -87,10 +91,10 @@ def main():
     if os.path.exists(subj_csv) and not os.environ.get("QRD_OVERWRITE"):
         sys.exit("ERROR: %s DA TON TAI. Dat QRD_SEEDS_OUT khac, hoac QRD_OVERWRITE=1 neu that su muon de." % subj_csv)
     subject_rows = []
-    print(f"SEEDS={SEEDS} FOLDS={N_FOLDS} EPOCHS={MAX_EPOCHS} RUNS={[r[0] for r in RUNS]}")
+    print(f"SEEDS={SEEDS} FOLDS={FOLDS}/{N_FOLDS} EPOCHS={MAX_EPOCHS} RUNS={[r[0] for r in RUNS]}")
 
     for seed in SEEDS:
-        for fold in range(N_FOLDS):
+        for fold in FOLDS:
             ckpt = teacher_ckpt_path(fold)
             assert os.path.exists(ckpt), f"missing teacher ckpt: {ckpt}"
             for tag, method, beta in RUNS:

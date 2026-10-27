@@ -4,7 +4,7 @@
 # rkd_classical/qrd_*/ck_*) + metric acc/kappa/F1 + fix braindecode _raw.
 # Import tu 'src' cua repo Ensemble-MI (da them vao sys.path boi run_all.py).
 ################################################################
-import os, time, math
+import os, time, math, copy, hashlib, sys, platform
 import numpy as np
 import pandas as pd
 import torch
@@ -185,7 +185,14 @@ class RelationalDistillLoss(nn.Module):
         return 0.5 * (1.0 + x @ x.T)
     def _rbf_kernel(self, feats, which):
         x = self._classical_input(feats, which); d2 = torch.cdist(x, x, p=2) ** 2
-        with torch.no_grad(): med = d2[d2 > 0].median().clamp_min(1e-8)
+        with torch.no_grad():
+            pos = d2[d2 > 0]
+            # Tap khoang cach duong co the rong neu moi feature trong batch
+            # trung nhau tuyet doi; median() cua tensor rong tra NaN va
+            # clamp_min khong sua duoc NaN (sua audit muc 8). Khi do d2 toan
+            # 0 nen exp(-d2/(2*med))=1 voi moi med huu han duong, dung 1.0
+            # lam bandwidth du phong khong anh huong gia tri kernel.
+            med = pos.median().clamp_min(1e-8) if pos.numel() > 0 else pos.new_tensor(1.0)
         return torch.exp(-d2 / (2.0 * med))
     def _kernel(self, feats, which):
         if self.kernel_type == "quantum": return self._quantum_kernel(feats, which)
@@ -260,7 +267,10 @@ def evaluate_full(dataloader, student, criterion, device, return_feats=False):
     student.eval(); tot_loss, tot_n = 0.0, 0; P, Y, S = [], [], []
     Feats = [] if return_feats else None
     for batch in dataloader:
-        if batch["eeg"].shape[0] == 1: continue
+        # Khong bo batch size 1: model dang o eval() (BatchNorm dung running
+        # stats, khong can batch>1 nhu luc train). Bo batch se lam mat mau
+        # (co the mat ca mot subject neu do la mau duy nhat con lai cua ho
+        # trong fold), xem audit muc 5.
         x = batch["eeg"].float().to(device); y = batch["target"].to(device)
         sout = student(x); logits = sout["scores"]
         if return_feats: Feats.append(sout["feats"].detach().cpu())
@@ -285,7 +295,7 @@ def evaluate_full(dataloader, student, criterion, device, return_feats=False):
 def evaluate_teacher(dataloader, teacher, device):
     teacher.eval(); P, Y = [], []
     for batch in dataloader:
-        if batch["eeg"].shape[0] == 1: continue
+        # Khong bo batch size 1 luc eval, cung ly do voi evaluate_full o tren.
         y = batch["target"].to(device)
         logits = compute_weighted_preds(teacher(get_input_dict(batch, device)))
         P.append(logits.argmax(1).cpu()); Y.append(y.cpu())
@@ -364,7 +374,13 @@ def train_method(method, student_args, teacher_args, teacher_ckpt,
                  alpha=0.5, temperature=6.0, beta_qrd=0.02, gamma_feat=0.1, gamma_rkd=1.0,
                  n_qubits=4, n_q_layers=2, qrd_batch_size=16, num_anchors=8, knn_k=4,
                  entropy_weight=0.5, disagreement_weight=0.5, seed=20200220, verbose=True,
-                 save_test_feats=False):
+                 save_test_feats=False, save_best_student_path=None):
+    """save_best_student_path: neu khac None, luu state_dict cua student o
+    epoch co val_acc tot nhat (cung tieu chi chon best_test) cung HP/seed/
+    checksum teacher ra file .pt tai duong dan nay (sua audit muc 10: truoc
+    day khong co cach nao lay lai dung trong so student da dat accuracy bao
+    cao ma khong retrain). Mac dinh None = khong doi hanh vi cac script dang
+    goi ham nay."""
     cfg = METHOD_TABLE[method]
     use_cuda = bool(student_args.cuda) and torch.cuda.is_available()
     device = "cuda" if use_cuda else "cpu"
@@ -410,7 +426,7 @@ def train_method(method, student_args, teacher_args, teacher_ckpt,
         print(f"\n=== method={method} | student_params={np_} | kernel={cfg['kernel']} sel={cfg['sel']} ===")
 
     history, epoch_times = [], []
-    best_val, best_test = -1.0, None
+    best_val, best_test, best_epoch, best_state_dict = -1.0, None, None, None
     grad_diag = bool(os.environ.get("QRD_GRAD_DIAG")) and rel_loss is not None
     for epoch in range(student_args.max_epochs):
         student.train(); t0 = time.time(); _grad_diag_done = False
@@ -467,11 +483,29 @@ def train_method(method, student_args, teacher_args, teacher_ckpt,
             print(f"  ep{epoch+1:03d} val_acc={val['acc']:.2f} test_acc={test['acc']:.2f} "
                   f"kappa={test['kappa']:.3f} f1={test['f1']:.3f} ({epoch_times[-1]:.1f}s)" + _qs)
         if val["acc"] > best_val:
-            best_val = val["acc"]; best_test = test
+            best_val = val["acc"]; best_test = test; best_epoch = epoch + 1
+            if save_best_student_path is not None:
+                best_state_dict = copy.deepcopy(student.state_dict())
     out = dict(method=method, acc=best_test["acc"], kappa=best_test["kappa"], f1=best_test["f1"],
                 per_subject=best_test["per_subject"],
                 mean_epoch_time=float(np.mean(epoch_times)), history=pd.DataFrame(history))
     if save_test_feats:
         out["test_feats"] = best_test["feats"]; out["test_labels"] = best_test["labels"]
         out["test_subjects"] = best_test["subjects"]
+    if save_best_student_path is not None:
+        with open(teacher_ckpt, "rb") as _f:
+            teacher_sha256 = hashlib.sha256(_f.read()).hexdigest()
+        os.makedirs(os.path.dirname(os.path.abspath(save_best_student_path)), exist_ok=True)
+        torch.save(dict(
+            state_dict=best_state_dict, method=method, epoch=best_epoch,
+            val_acc=best_val, test_acc=best_test["acc"], seed=seed,
+            hyperparams=dict(alpha=alpha, temperature=temperature, beta_qrd=beta_qrd,
+                              gamma_feat=gamma_feat, gamma_rkd=gamma_rkd, n_qubits=n_qubits,
+                              n_q_layers=n_q_layers, qrd_batch_size=qrd_batch_size,
+                              num_anchors=num_anchors, knn_k=knn_k,
+                              entropy_weight=entropy_weight, disagreement_weight=disagreement_weight),
+            teacher_ckpt_path=os.path.abspath(teacher_ckpt), teacher_sha256=teacher_sha256,
+            dataset_name=student_args.dataset_name,
+            torch_version=torch.__version__, python_version=sys.version, platform=platform.platform(),
+        ), save_best_student_path)
     return out

@@ -62,3 +62,23 @@ Output: `results/factorial_2026_10_25/`. Phân tích: `scripts/analyze_factorial
   file `factorial_cosine_s3f34_per_subject.csv`). Quy tắc gộp mới theo (seed, fold), mỗi (seed, fold) chỉ một nguồn:
   seed 1–2 từ 17755; seed 3 fold 0–2 từ 17755; seed 3 fold 3–4 từ 17855 (bỏ 2 lượt seed 3 fold 3 của 17755);
   seed 4–5 từ 17774. Cài trong `COSINE_PARTS` của `scripts/analyze_factorial.py`.
+
+## KẾT QUẢ (ghi 2026-10-27, sau khi chạy xong; không đổi gì ở phần kế hoạch phía trên)
+Kiểm tra: mọi job rc=0 (trừ 17755 timeout, đã xử lý theo quy tắc gộp), đủ số dòng, không NaN.
+Chạy `scripts/analyze_factorial.py` → `results/factorial_2026_10_25/analysis_factorial.txt`.
+
+Độ chính xác 12 ô (mean ± sd qua 5 seed):
+
+| | dense | anchor | global_local | teacher_guided |
+|---|---|---|---|---|
+| lượng tử | 81,12 ± 0,82 | 81,39 ± 0,66 | 81,31 ± 0,88 | 81,45 ± 0,56 |
+| cosine | 81,72 ± 0,89 | 81,62 ± 0,36 | 81,59 ± 0,66 | 81,51 ± 0,63 |
+| RBF | 81,67 ± 0,48 | 81,72 ± 0,50 | 81,91 ± 0,57 | 81,53 ± 0,57 |
+
+- KIỂM ĐỊNH CHÍNH: tương tác hàm nhân × chiến lược F(6, 24) = 0,868, p = 0,532.
+  Theo quy tắc chốt trước: **không thấy bằng chứng về tương tác ở mức công suất của thiết kế 5 seed. KHÔNG được diễn giải là hai trục độc lập.**
+- Phụ (mô tả, không hiệu chỉnh): hiệu ứng chính hàm nhân F(2, 8) = 4,12, p = 0,059; hiệu ứng chính chiến lược F(3, 12) = 0,59, p = 0,631.
+  Cả 8 chênh lệch lượng tử − cổ điển theo từng chiến lược đều âm (−0,06 đến −0,60 điểm), không chênh lệch nào có p < 0,05
+  (nhỏ nhất p = 0,065, dense lượng tử − RBF); MDE80 từ 0,61 đến 1,42 điểm.
+- Ghi chú độ lệch chạy lại: ô lượng tử dense (V2) lần này 81,12 so với 81,49 ở bảng chính (−0,37 điểm), anchor +0,14, global_local −0,11.
+  −0,37 lớn hơn độ lệch tối đa 0,33 điểm đang nêu trong bài (Bảng tái lập) — phải cập nhật câu đó và câu lý giải biên ±0,5.

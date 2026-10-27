@@ -1,0 +1,508 @@
+===== START 15:54:25 2026-10-26 node=ai01 (Giai thua: luong tu x global_local, xem docs/PREREG_ADDENDUM_FACTORIAL_2026_10_25.md) =====
+[HB 15:54:25] procmem=0.0GB
+[compat] Patched EEGWindowsDataset.raw for legacy pickles.
+SEEDS=[1, 2, 3, 4, 5] FOLDS=[0, 1, 2, 3, 4]/5 EPOCHS=30 RUNS=['qrd_global_local_b0.02']
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Val   subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Test  subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 27.00 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2696, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2696 | Val: 945 | Test: 900
+[HB 16:04:25] procmem=6.0GB
+[16:05:51][seed 1][fold 0] qrd_global_local_b0.02: acc=80.11 dt=533.4s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=063) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Val   subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Test  subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.16 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 63, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2736, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2736 | Val: 900 | Test: 900
+[HB 16:14:25] procmem=6.5GB
+[16:14:32][seed 1][fold 1] qrd_global_local_b0.02: acc=78.11 dt=520.9s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Val   subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Test  subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.92 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2700, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2700 | Val: 900 | Test: 945
+[16:24:02][seed 1][fold 2] qrd_global_local_b0.02: acc=87.83 dt=569.3s
+Training on PhysionetMI dataset
+[HB 16:24:25] procmem=5.5GB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Val   subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Test  subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 27.57 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[16:32:51][seed 1][fold 3] qrd_global_local_b0.02: acc=79.37 dt=529.1s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Val   subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Test  subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.97 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[HB 16:34:25] procmem=6.6GB
+[16:41:24][seed 1][fold 4] qrd_global_local_b0.02: acc=84.23 dt=513.2s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Val   subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Test  subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.77 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2696, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2696 | Val: 945 | Test: 900
+[HB 16:44:25] procmem=6.6GB
+[16:49:59][seed 2][fold 0] qrd_global_local_b0.02: acc=78.11 dt=515.2s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=063) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Val   subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Test  subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.70 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 63, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2736, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2736 | Val: 900 | Test: 900
+[HB 16:54:25] procmem=6.6GB
+[16:59:02][seed 2][fold 1] qrd_global_local_b0.02: acc=76.44 dt=543.0s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Val   subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Test  subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 25.34 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2700, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2700 | Val: 900 | Test: 945
+[HB 17:04:25] procmem=6.6GB
+[17:07:38][seed 2][fold 2] qrd_global_local_b0.02: acc=82.22 dt=516.0s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Val   subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Test  subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 27.50 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[HB 17:14:25] procmem=6.6GB
+[17:18:25][seed 2][fold 3] qrd_global_local_b0.02: acc=79.15 dt=646.4s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Val   subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Test  subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.02 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[HB 17:24:25] procmem=6.6GB
+[17:27:47][seed 2][fold 4] qrd_global_local_b0.02: acc=83.07 dt=562.7s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Val   subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Test  subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 27.14 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2696, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2696 | Val: 945 | Test: 900
+[HB 17:34:25] procmem=6.6GB
+[17:36:20][seed 3][fold 0] qrd_global_local_b0.02: acc=78.33 dt=512.3s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=063) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Val   subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Test  subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.62 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 63, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2736, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2736 | Val: 900 | Test: 900
+[HB 17:44:25] procmem=6.6GB
+[17:47:48][seed 3][fold 1] qrd_global_local_b0.02: acc=78.00 dt=688.8s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Val   subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Test  subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.17 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2700, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2700 | Val: 900 | Test: 945
+[HB 17:54:25] procmem=6.6GB
+[17:57:18][seed 3][fold 2] qrd_global_local_b0.02: acc=86.67 dt=569.9s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Val   subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Test  subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.78 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[HB 18:04:25] procmem=6.6GB
+[18:06:11][seed 3][fold 3] qrd_global_local_b0.02: acc=80.95 dt=532.6s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Val   subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Test  subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 27.16 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[HB 18:14:25] procmem=6.6GB
+[18:16:06][seed 3][fold 4] qrd_global_local_b0.02: acc=84.23 dt=594.9s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Val   subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Test  subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.80 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2696, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2696 | Val: 945 | Test: 900
+[HB 18:24:25] procmem=6.6GB
+[18:25:38][seed 4][fold 0] qrd_global_local_b0.02: acc=79.78 dt=571.8s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=063) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Val   subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Test  subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.79 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 63, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2736, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2736 | Val: 900 | Test: 900
+[HB 18:34:25] procmem=6.6GB
+[18:35:25][seed 4][fold 1] qrd_global_local_b0.02: acc=78.22 dt=587.1s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Val   subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Test  subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.61 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2700, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2700 | Val: 900 | Test: 945
+[HB 18:44:25] procmem=6.6GB
+[18:45:18][seed 4][fold 2] qrd_global_local_b0.02: acc=86.35 dt=591.4s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Val   subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Test  subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.97 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[HB 18:54:25] procmem=6.6GB
+[18:54:55][seed 4][fold 3] qrd_global_local_b0.02: acc=79.47 dt=575.3s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Val   subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Test  subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 27.07 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[HB 19:04:25] procmem=6.6GB
+[19:04:53][seed 4][fold 4] qrd_global_local_b0.02: acc=85.29 dt=595.9s
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Val   subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Test  subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.35 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2696, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2696 | Val: 945 | Test: 900
+[19:14:01][seed 5][fold 0] qrd_global_local_b0.02: acc=78.78 dt=545.9s
+Training on PhysionetMI dataset
+[HB 19:14:25] procmem=5.5GB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=063) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Val   subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Test  subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.34 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 63, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2736, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2736 | Val: 900 | Test: 900
+[19:23:49][seed 5][fold 1] qrd_global_local_b0.02: acc=80.56 dt=587.6s
+Training on PhysionetMI dataset
+[HB 19:24:25] procmem=5.5GB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21), np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Val   subjects (N=020) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Test  subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.90 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2700, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2700 | Val: 900 | Test: 945
+[19:34:03][seed 5][fold 2] qrd_global_local_b0.02: acc=85.19 dt=614.6s
+Training on PhysionetMI dataset
+[HB 19:34:26] procmem=6.3GB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109), np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Val   subjects (N=021) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63)]
+Test  subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.66 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[19:43:45][seed 5][fold 3] qrd_global_local_b0.02: acc=78.94 dt=581.1s
+Training on PhysionetMI dataset
+[HB 19:44:26] procmem=5.5GB
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=061) : [np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83), np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+Val   subjects (N=021) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42)]
+Test  subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 26.59 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 61, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2660, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2660 | Val: 945 | Test: 945
+[19:52:41][seed 5][fold 4] qrd_global_local_b0.02: acc=82.12 dt=536.7s
+
+Saved: /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/factorial_2026_10_25/factorial_qgl_per_subject.csv  (5 method-seed combos)
+qrd_global_local_b0.02 sigma_sub=11.54+/-0.51 | min_sub=49.78+/-4.04
+rc=0
+rows: 515 (dich 515 = 1 run x 5 seed x 103 subject)
+===== END 19:52:48 =====

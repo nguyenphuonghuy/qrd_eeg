@@ -1,0 +1,25 @@
+#!/bin/bash
+#PBS -N export_student_pi4_fix
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=4:mem=8gb:gpu_slots=0
+#PBS -l walltime=00:15:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/export_student_pi4_fix.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (xuat lai TorchScript student DUNG kien truc EEGNetv4_class, sua audit muc 2) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+$PY $PROJ/scripts/export_student_pi4.py
+echo "rc=$?"
+
+echo "===== END $(date +%T) ====="

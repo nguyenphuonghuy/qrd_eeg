@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -N beta_smoke
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=16gb:gpu_slots=1
+#PBS -l walltime=00:40:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/beta_robust_smoke.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (Smoke phu luc beta, xem docs/PREREG_ADDENDUM_BETA_2026_10_24.md) ====="
+echo "seed 1, fold 0, 30 epoch. Tieu chi: rc=0, khong NaN; quantum b0.02 = 81.11 va cosine b0.02 = 82.67 (sai <= 0.01) de dung lai so lieu tham chieu."
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+export OMP_NUM_THREADS=${NCPUS:-8}
+export MKL_NUM_THREADS=${NCPUS:-8}
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/beta_robust_smoke_2026_10_24
+mkdir -p "$QRD_OUT_DIR"
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+export QRD_DATASET=PhysionetMI
+export QRD_SEEDS="1"
+export QRD_FOLDS=0   # giu 5 fold khi chia du lieu, chi chay fold 0
+export QRD_MAX_EPOCHS=30
+export QRD_RUNS="ck_cosine_tg:ck_cosine_tg:0.02,ck_cosine_tg_b4.0:ck_cosine_tg:4.0,ck_rbf_tg_b0.2:ck_rbf_tg:0.2,qrd_teacher_guided:qrd_teacher_guided:0.02"
+export QRD_SEEDS_OUT="beta_smoke_per_subject.csv"
+
+$PY $PROJ/scripts/run_seeds.py
+echo "rc=$?"
+echo "rows: $(tail -n +2 $QRD_OUT_DIR/beta_smoke_per_subject.csv 2>/dev/null | wc -l) (dich 80-84 = 4 run x 20-21 subject cua fold 0)"
+
+echo "===== END $(date +%T) ====="

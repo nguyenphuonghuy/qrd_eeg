@@ -1,0 +1,60 @@
+===== START 16:51:48 2026-10-03 node=ai01 (sua audit muc 3: tai tao rieng panel No KD Hinh 3 voi alpha=1.0) =====
+teacher ckpt: 5
+[compat] Patched EEGWindowsDataset.raw for legacy pickles.
+FOLD=0 SEED=1 EPOCHS=30 METHODS=['no_kd']
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Train subjects (N=062) : [np.int64(22), np.int64(23), np.int64(24), np.int64(25), np.int64(26), np.int64(27), np.int64(28), np.int64(29), np.int64(30), np.int64(31), np.int64(32), np.int64(33), np.int64(34), np.int64(35), np.int64(36), np.int64(37), np.int64(38), np.int64(39), np.int64(40), np.int64(41), np.int64(42), np.int64(43), np.int64(44), np.int64(45), np.int64(46), np.int64(47), np.int64(48), np.int64(49), np.int64(50), np.int64(51), np.int64(52), np.int64(53), np.int64(54), np.int64(55), np.int64(56), np.int64(57), np.int64(58), np.int64(59), np.int64(60), np.int64(61), np.int64(62), np.int64(63), np.int64(64), np.int64(65), np.int64(66), np.int64(67), np.int64(68), np.int64(69), np.int64(70), np.int64(71), np.int64(72), np.int64(73), np.int64(74), np.int64(75), np.int64(76), np.int64(77), np.int64(78), np.int64(79), np.int64(80), np.int64(81), np.int64(82), np.int64(83)]
+Val   subjects (N=021) : [np.int64(1), np.int64(2), np.int64(3), np.int64(4), np.int64(5), np.int64(6), np.int64(7), np.int64(8), np.int64(9), np.int64(10), np.int64(11), np.int64(12), np.int64(13), np.int64(14), np.int64(15), np.int64(16), np.int64(17), np.int64(18), np.int64(19), np.int64(20), np.int64(21)]
+Test  subjects (N=020) : [np.int64(84), np.int64(85), np.int64(86), np.int64(87), np.int64(89), np.int64(91), np.int64(93), np.int64(94), np.int64(95), np.int64(96), np.int64(97), np.int64(98), np.int64(99), np.int64(101), np.int64(102), np.int64(103), np.int64(105), np.int64(107), np.int64(108), np.int64(109)]
+
+Creating custom dataset
+Randomly assigning subjects to subsets
+Time elapsed: 27.71 seconds
+
+PhysionetMI dataset | Dataset info:
+{'N_datasets': 62, 'N_electrodes': 64, 'N_classes': 2, 'N_trials': 2696, 'window_size': 300, 'N_subsets': 7}
+Samples | Train: 2696 | Val: 945 | Test: 900
+
+=== method=no_kd | student_params=2402 | kernel=None sel=None ===
+  ep001 val_acc=50.26 test_acc=50.00 kappa=-0.005 f1=0.410 (15.3s)
+  ep002 val_acc=51.11 test_acc=49.22 kappa=-0.018 f1=0.470 (2.2s)
+  ep003 val_acc=51.53 test_acc=49.89 kappa=0.001 f1=0.472 (2.1s)
+  ep004 val_acc=50.90 test_acc=50.78 kappa=0.010 f1=0.383 (2.2s)
+  ep005 val_acc=52.91 test_acc=50.00 kappa=0.003 f1=0.481 (2.2s)
+  ep006 val_acc=56.08 test_acc=51.56 kappa=0.031 f1=0.516 (2.2s)
+  ep007 val_acc=51.85 test_acc=51.00 kappa=0.014 f1=0.364 (2.2s)
+  ep008 val_acc=54.07 test_acc=52.00 kappa=0.044 f1=0.481 (2.1s)
+  ep009 val_acc=56.61 test_acc=55.78 kappa=0.113 f1=0.529 (2.2s)
+  ep010 val_acc=55.87 test_acc=53.00 kappa=0.064 f1=0.485 (2.2s)
+  ep011 val_acc=59.68 test_acc=57.11 kappa=0.140 f1=0.556 (2.2s)
+  ep012 val_acc=60.74 test_acc=59.22 kappa=0.185 f1=0.592 (2.2s)
+  ep013 val_acc=59.89 test_acc=57.11 kappa=0.145 f1=0.534 (2.1s)
+  ep014 val_acc=63.60 test_acc=60.78 kappa=0.216 f1=0.607 (2.2s)
+  ep015 val_acc=65.61 test_acc=62.00 kappa=0.241 f1=0.618 (2.2s)
+  ep016 val_acc=64.66 test_acc=62.44 kappa=0.251 f1=0.611 (2.1s)
+  ep017 val_acc=67.83 test_acc=66.89 kappa=0.337 f1=0.668 (2.2s)
+  ep018 val_acc=67.72 test_acc=65.89 kappa=0.320 f1=0.646 (2.2s)
+  ep019 val_acc=71.64 test_acc=68.89 kappa=0.378 f1=0.689 (2.2s)
+  ep020 val_acc=73.44 test_acc=70.89 kappa=0.418 f1=0.707 (2.2s)
+  ep021 val_acc=70.90 test_acc=70.44 kappa=0.410 f1=0.696 (2.1s)
+  ep022 val_acc=74.29 test_acc=73.78 kappa=0.476 f1=0.738 (2.2s)
+  ep023 val_acc=75.56 test_acc=75.00 kappa=0.500 f1=0.749 (2.2s)
+  ep024 val_acc=75.56 test_acc=75.44 kappa=0.509 f1=0.754 (2.1s)
+  ep025 val_acc=76.61 test_acc=75.44 kappa=0.510 f1=0.752 (2.2s)
+  ep026 val_acc=78.52 test_acc=76.89 kappa=0.538 f1=0.768 (2.1s)
+  ep027 val_acc=78.20 test_acc=76.89 kappa=0.538 f1=0.769 (2.2s)
+  ep028 val_acc=79.58 test_acc=78.56 kappa=0.571 f1=0.786 (2.2s)
+  ep029 val_acc=79.89 test_acc=77.44 kappa=0.549 f1=0.774 (2.1s)
+  ep030 val_acc=81.16 test_acc=79.00 kappa=0.580 f1=0.790 (2.2s)
+[no_kd] acc=79.00 n_test=900 feat_dim=144 -> /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/tsne_feats_2026_08_03/tsne_feats_no_kd.npz
+rc=0
+----- file ket qua -----
+-rw------- 1 gv_nphuy hpc_lecturers 534812 Oct  3 16:58 /gpfs0/users/gv_nphuy/projects/qrd_eeg/results/tsne_feats_2026_08_03/tsne_feats_no_kd.npz
+acc= 79.0 alpha= 1.0
+===== END 16:59:21 =====

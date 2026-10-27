@@ -1,0 +1,110 @@
+diff --git a/models/eegnet.py b/models/eegnet.py
+index 2fb874a..0cbedce 100644
+--- a/models/eegnet.py
++++ b/models/eegnet.py
+@@ -137,7 +137,7 @@ class EEGNetv4_class(nn.Sequential):
+         self.pool_2 = pool_class(kernel_size=(1, 8), stride=(1, 8))
+ 
+         n_out_virtual_chans = 1
+-        n_out_time = 12 # TODO: set this automatically, instead of hard-coded
++        n_out_time = 9 # TODO: set this automatically, instead of hard-coded
+ 
+         if self.final_conv_length == "auto":
+             self.final_conv_length = n_out_time
+diff --git a/models/ensemble.py b/models/ensemble.py
+index e80718b..7fabf0e 100644
+--- a/models/ensemble.py
++++ b/models/ensemble.py
+@@ -79,7 +79,7 @@ class Backbone_EEGNetv4(nn.Sequential):
+         self.dropout_1_prob = dropout_1_prob
+         self.backbone_indices = backbone_indices
+ 
+-        n_out_time = 12 # TODO: set this automatically, instead of hard-coded
++        n_out_time = 9 # TODO: set this automatically, instead of hard-coded
+         self.final_conv_length = n_out_time
+         self._num_features = self.F2 * self.final_conv_length
+         ##############################################################################
+diff --git a/preprocess_dataset.py b/preprocess_dataset.py
+index e7d5b76..9866b56 100644
+--- a/preprocess_dataset.py
++++ b/preprocess_dataset.py
+@@ -21,14 +21,14 @@ exp_name = now.strftime("%Y_%m_%d-%H%M%S")
+ 
+ exp_args_dict = {
+     'exp_group': exp_name,
+-    'dataset_name': 'PhysionetMI',
++    'dataset_name': __import__('os').environ.get('QRD_DATASET', 'PhysionetMI'),
+     # Dataset preprocessing
+     'fmin': 4., # bandpass filter fmin (in Hz)
+     'fmax': 38., # bandpass filter fmax (in Hz)
+     'sfreq': 100., # resampling frequency (in Hz)
+     't_start_offset': 0.0, # trial start offset (in seconds)
+     't_end_offset': 0.0, # trial end offset (in seconds)
+-    't_dur': 4.0, # trial duration (in seconds)
++    't_dur': 3.0, # trial duration (in seconds)
+     'use_car': True, # apply Common Average Reference (CAR) on EEG signals
+ }
+ 
+@@ -64,6 +64,10 @@ def preprocess_dataset(args):
+ 
+     ############################
+ 
++    _only = __import__('os').environ.get('QRD_ONLY_SUBJ', '').strip()
++    if _only:
++        subject_range = [int(x) for x in _only.split(',')]
++        print('QRD_ONLY_SUBJ -> chi xu ly:', subject_range)
+     for subj in subject_range:
+         # Get single-subject dataset
+         dataset = MOABBDataset(dataset_name=dataset_name, subject_ids=[subj, ])
+diff --git a/run_experiment.py b/run_experiment.py
+index 296db9c..4d8a7e2 100644
+--- a/run_experiment.py
++++ b/run_experiment.py
+@@ -33,7 +33,7 @@ exp_args_dict = {
+     'feats_aggr': 'mean',
+ 
+     'pre_align': True,
+-    'dataset_name': 'PhysionetMI',
++    'dataset_name': os.environ.get('QRD_DATASET', 'PhysionetMI'),
+     'batch_size': 64,
+     'batch_size_val': 64,
+ 
+@@ -57,7 +57,7 @@ exp_args_dict = {
+     'exp_group': exp_name,
+     ############################
+     # Training hyperparams
+-    'max_epochs': 120,
++    'max_epochs': int(os.environ.get('QRD_TEACHER_EPOCHS', '120')),
+     'warmup_epochs': 0,
+     'optim': 'sgd',
+     'lr': 0.01,
+diff --git a/src/train.py b/src/train.py
+index dff0629..fd86146 100644
+--- a/src/train.py
++++ b/src/train.py
+@@ -215,7 +215,7 @@ def train(args):
+ 	df = pd.DataFrame(results_list, columns=column_names)
+ 
+ 	if existing:
+-		df = df_previous.append(df, ignore_index=True)
++		df = pd.concat([df_previous, df], ignore_index=True)
+ 
+ 	df.to_excel(results_xls_filename)
+ 	############################
+diff --git a/src/utils.py b/src/utils.py
+index 74d9abe..3e18b59 100644
+--- a/src/utils.py
++++ b/src/utils.py
+@@ -158,7 +158,11 @@ def compute_weighted_preds(out_dict_mean):
+ def get_input_dict(batch, device):
+ 
+ 	inputs = batch['eeg'].float().to(device)
+-	subset = batch['subset']
++	# 'subset' chi ton tai trong batch khi phase=='train' (xem
++	# custom_dataset.py CustomDataset.__getitem__); batch val/test khong co
++	# khoa nay. Backbone_Shared/Backbone_Multi.forward chi doc x_dict['x'],
++	# khong doc 'subset', nen None la an toan luc eval (sua audit muc 4).
++	subset = batch.get('subset')
+ 	dataset_idx = batch['dataset_idx'].to(device)
+ 	input_dict = {'x': inputs,
+ 				'subset': subset,

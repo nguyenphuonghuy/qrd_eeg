@@ -1,0 +1,48 @@
+PHAN TICH THI NGHIEM BETA (PREREG ADDENDUM 2026-10-24)
+Don vi: subject; gia tri moi seed = mean qua 103 subject; paired t-test tren seed 1-5.
+
+== Do chinh xac moi cau hinh (mean +/- sd qua 5 seed) ==
+  ck_cosine_tg_b0.02     cosine   beta=0.02  81.51 +/- 0.63   seeds=81.90 80.58 81.70 82.18 81.19
+  ck_cosine_tg_b0.1      cosine   beta=0.1   81.51 +/- 0.69   seeds=82.16 80.50 81.62 82.09 81.17
+  ck_cosine_tg_b0.5      cosine   beta=0.5   81.33 +/- 0.32   seeds=81.40 80.84 81.51 81.68 81.23
+  ck_cosine_tg_b4.0      cosine   beta=4.0   81.61 +/- 0.63   seeds=82.50 80.76 81.75 81.45 81.62
+  kd_base_ref            kdbase   beta=None  81.71 +/- 0.30   seeds=82.09 81.27 81.79 81.62 81.79
+  qrd_tg_b0.02           quantum  beta=0.02  81.45 +/- 0.56   seeds=82.22 80.78 81.17 81.34 81.77
+  qrd_tg_b0.1            quantum  beta=0.1   81.32 +/- 0.72   seeds=81.81 80.37 80.78 82.07 81.60
+  qrd_tg_b0.5            quantum  beta=0.5   81.42 +/- 0.72   seeds=82.29 80.39 81.51 81.12 81.81
+  ck_rbf_tg_b0.02        rbf      beta=0.02  81.53 +/- 0.57   seeds=82.24 80.76 81.53 81.88 81.23
+  ck_rbf_tg_b0.1         rbf      beta=0.1   81.86 +/- 0.41   seeds=82.16 81.51 82.35 81.86 81.40
+  ck_rbf_tg_b0.2         rbf      beta=0.2   81.32 +/- 0.66   seeds=81.83 80.22 81.47 81.79 81.29
+  ck_rbf_tg_b0.5         rbf      beta=0.5   81.87 +/- 0.33   seeds=82.22 81.40 81.75 82.14 81.86
+
+== SO SANH CHINH (chot truoc): luong tu beta=0.02 VS cosine beta=4.0 ==
+  quantum(0.02) - cosine(4.0)                  diff=-0.160 pp  CI95=[-0.514, +0.195]  t=-1.252  p=0.2789  d_z=-0.560  (n=5)
+  KET LUAN THEO QUY TAC: KHONG DU DU LIEU (p > 0.05, CI vuot bien +/-0.5 pp)
+
+== So sanh phu (mo ta, khong hieu chinh da so sanh) ==
+  quantum(0.02) - rbf(0.2)                     diff=+0.134 pp  CI95=[-0.454, +0.722]  t=+0.631  p=0.5621  d_z=+0.282  (n=5)  -> KHONG DU DU LIEU (p > 0.05, CI vuot bien +/-0.5 pp)
+  qrd_tg_b0.02 - ck_cosine_tg_b0.02 (cung beta danh nghia, dot moi) diff=-0.056 pp  CI95=[-0.808, +0.695]  t=-0.207  p=0.8459  d_z=-0.093  (n=5)
+  qrd_tg_b0.02 - ck_rbf_tg_b0.02 (cung beta danh nghia, dot moi) diff=-0.073 pp  CI95=[-0.589, +0.442]  t=-0.395  p=0.7131  d_z=-0.177  (n=5)
+  -- Moi cau hinh moi va tham chieu so voi KDBase (kd_base_ref, dot moi) --
+  ck_cosine_tg_b4.0 - KDBase                   diff=-0.099 pp  CI95=[-0.515, +0.316]  t=-0.663  p=0.5437  d_z=-0.296  (n=5)
+  ck_rbf_tg_b0.2 - KDBase                      diff=-0.393 pp  CI95=[-0.946, +0.161]  t=-1.970  p=0.1202  d_z=-0.881  (n=5)
+  ck_cosine_tg_b0.1 - KDBase                   diff=-0.207 pp  CI95=[-0.840, +0.426]  t=-0.908  p=0.4150  d_z=-0.406  (n=5)
+  ck_cosine_tg_b0.5 - KDBase                   diff=-0.380 pp  CI95=[-0.741, -0.018]  t=-2.915  p=0.0435  d_z=-1.304  (n=5)
+  ck_rbf_tg_b0.1 - KDBase                      diff=+0.142 pp  CI95=[-0.288, +0.573]  t=+0.918  p=0.4104  d_z=+0.411  (n=5)
+  ck_rbf_tg_b0.5 - KDBase                      diff=+0.160 pp  CI95=[-0.104, +0.423]  t=+1.682  p=0.1679  d_z=+0.752  (n=5)
+  qrd_tg_b0.1 - KDBase                         diff=-0.388 pp  CI95=[-1.127, +0.351]  t=-1.459  p=0.2183  d_z=-0.652  (n=5)
+  qrd_tg_b0.5 - KDBase                         diff=-0.289 pp  CI95=[-0.819, +0.240]  t=-1.516  p=0.2042  d_z=-0.678  (n=5)
+  qrd_tg_b0.02 - KDBase                        diff=-0.259 pp  CI95=[-0.651, +0.133]  t=-1.834  p=0.1405  d_z=-0.820  (n=5)
+  ck_cosine_tg_b0.02 - KDBase                  diff=-0.203 pp  CI95=[-0.822, +0.417]  t=-0.909  p=0.4148  d_z=-0.406  (n=5)
+  ck_rbf_tg_b0.02 - KDBase                     diff=-0.186 pp  CI95=[-0.653, +0.282]  t=-1.101  p=0.3325  d_z=-0.493  (n=5)
+
+== Bang lieu-dap ung theo beta (dot moi) ==
+  quantum  b=0.02: 81.45  b=0.1: 81.32  b=0.5: 81.42
+  cosine   b=0.02: 81.51  b=0.1: 81.51  b=0.5: 81.33  b=4.0: 81.61
+  rbf      b=0.02: 81.53  b=0.1: 81.86  b=0.2: 81.32  b=0.5: 81.87
+
+== Doi chieu voi so lieu cu dung trong ban thao (KHONG dung trong phan tich tren) ==
+  qrd_teacher_guided   cu 81.12 +/- 0.71 | moi 81.45 +/- 0.56 | moi-cu +0.33 pp
+  ck_cosine_tg         cu 81.63 +/- 0.63 | moi 81.51 +/- 0.63 | moi-cu -0.12 pp
+  ck_rbf_tg            cu 81.61 +/- 0.58 | moi 81.53 +/- 0.57 | moi-cu -0.09 pp
+  kd_base              cu 81.49 +/- 0.59 | moi 81.71 +/- 0.30 | moi-cu +0.22 pp

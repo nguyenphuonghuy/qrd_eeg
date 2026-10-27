@@ -64,9 +64,7 @@
     }
 \usepackage{cite}
 
-\title{Structured Relational Distillation for Motor Imagery Decoding:
-       Assessing Relation Strategies and a Quantum Kernel under Real-Time
-       Control Constraints}
+\title{Đánh giá có kiểm soát trên nhiều hạt giống ngẫu nhiên cho chưng cất tri thức quan hệ trong giải mã tưởng tượng vận động với hàm nhân cổ điển và lượng tử}
 \author{}
 \date{}
 
@@ -75,35 +73,34 @@
 
 \begin{abstract}
 \noindent
-Chưng cất tri thức dựa trên quan hệ giữa các mẫu là một hướng hiệu quả
-cho giải mã tưởng tượng vận động. Tuy nhiên, các công trình trước thường
-cố định chiến lược hình thành quan hệ theo kinh nghiệm. Nghiên cứu này
-đề xuất một khung chưng cất quan hệ có cấu trúc, đánh giá theo ràng buộc
-của vòng điều khiển kín. Khung này coi chiến lược hình thành quan hệ và
-hàm nhân đo tương đồng, cổ điển hoặc lượng tử, là hai tham số thiết kế
-độc lập. Mười hai cấu hình được so sánh trên PhysionetMI
-(103 đối tượng, năm hạt giống độc lập, $n=5$). Chưng cất mang lại hiệu
-quả lớn và ổn định. Độ chính xác tăng từ 74,93 lên 81,49 phần trăm trên
-PhysionetMI và kết quả này tái lập trên một bộ dữ liệu độc lập thứ hai
-(Cho2017, 49 đối tượng). Tuy
-nhiên, khác biệt giữa các cơ chế cụ thể nhỏ hơn nhiễu do hạt giống ngẫu
-nhiên (độ lệch chuẩn 0,459 so với 0,750 điểm phần trăm) và xếp hạng từ
-một lần chạy đơn gần như không tương quan với xếp hạng trên năm hạt
-giống ($\rho = 0{,}14$). Nghiên cứu đề xuất thêm một quy trình đánh giá
-theo hướng điều khiển. Quy trình này dùng tốc độ truyền thông tin và
-ngân sách thời gian suy luận thay cho độ chính xác đơn thuần, kèm một
-phép đo thời gian suy luận thật trên phần cứng nhúng. Theo tiếp cận
-này, hàm nhân
-lượng tử cho chênh lệch $0{,}51$ điểm phần trăm so với hai hàm nhân cổ
-điển, sát biên tương đương đã xác định trước nên chưa
-đủ dữ liệu để kết luận theo bất kỳ chiều nào. Chi phí huấn luyện của
-nhánh lượng tử cao hơn khoảng 13 lần và tăng phi tuyến theo số qubit.
-Điều này khiến quy mô lớn bất khả thi trên hạ tầng một GPU dùng chung.
-Khung đánh giá và mốc định lượng thu được cung cấp cơ sở đối chiếu cho
-các thiết kế lượng tử phức tạp hơn được thử nghiệm sau này.
+Chưng cất tri thức có thể chuyển độ chính xác của các bộ giải mã tưởng
+tượng vận động cỡ lớn sang mạng gọn nhẹ cho giao diện não--máy tính nhúng.
+Tuy nhiên, các cơ chế chưng cất thường được so sánh từ một lần huấn luyện
+duy nhất nên xếp hạng của chúng có thể chỉ phản ánh nhiễu huấn luyện. Đóng
+góp của nghiên cứu là một giao thức đánh giá có kiểm soát trên nhiều hạt
+giống ngẫu nhiên cho các cơ chế này, cùng bằng chứng định lượng rằng nhiễu
+hạt giống vượt khác biệt giữa các cơ chế. Một khung chưng cất quan hệ có
+cấu trúc thay đổi chiến lược hình thành quan hệ và hàm nhân đo tương đồng,
+cổ điển hoặc lượng tử, trong khi giữ cố định mọi thành phần khác. Mười hai
+cơ chế được đánh giá trên PhysionetMI (103 đối tượng) với kiểm định chéo
+theo đối tượng, năm hạt giống cố định và kế hoạch thống kê chốt trước khi
+chạy. Trong phân tích xác nhận này, chưng cất với ngân sách 30 epoch nâng
+độ chính xác từ 74,93\% lên 81,49\% và phép tái lập khám phá trên Cho2017
+(49 đối tượng) cho kết quả cùng chiều. Ngoài mức tăng này, không chiến lược
+quan hệ hay hàm nhân nào tách khỏi chưng cất mức logits ở mức ý nghĩa thống
+kê. Độ phân tán giữa các cơ chế (0,46 điểm phần trăm) nhỏ hơn nhiễu hạt
+giống (0,75 điểm) và xếp hạng từ một lần chạy gần như không tương quan với
+xếp hạng trên năm hạt giống (hệ số Spearman $\rho = 0{,}14$). Hàm nhân lượng
+tử không khác biệt có ý nghĩa so với hàm nhân cosine hay RBF kể cả khi cân
+bằng độ lớn gradient nhưng dữ liệu chưa đủ để khẳng định tương đương.
+Một thí nghiệm giai thừa giữa hai trục thiết kế không phát hiện tương tác
+giữa chúng. Nhánh lượng tử chỉ có khi huấn luyện nên student triển khai chạy
+nguyên vẹn trên Raspberry Pi 4, đổi lại chi phí huấn luyện cao gấp khoảng 13
+lần. Do đó, các khẳng định ở mức cơ chế trong chưng cất cho điện não đồ cần
+dựa trên so sánh nhiều hạt giống kèm khoảng tin cậy.
 \end{abstract}
 
-\noindent\textbf{Từ khóa:} Giao diện não--máy tính; chưng cất tri thức; giải mã tưởng tượng vận động; học máy lượng tử; đánh giá có kiểm soát.
+\noindent\textbf{Từ khóa:} Giao diện não--máy tính; chưng cất tri thức; giải mã tưởng tượng vận động; hàm nhân lượng tử; khả năng tái lập.
 
 \input{body}
 

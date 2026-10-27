@@ -1,0 +1,86 @@
+% Hinh quy trinh nghien cuu (flowchart, dap Reviewer D). Ban tieng Viet.
+% Bien dich: tectonic fig0_flow.tex  ->  fig0_flow.pdf
+\documentclass[border=2pt]{standalone}
+\usepackage{fontspec}
+\setmainfont{TeX Gyre Termes}
+\usepackage{polyglossia}
+\setmainlanguage{vietnamese}
+\usepackage{amsmath}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\newcommand{\Lbl}[1]{\textbf{#1}}
+\begin{document}
+\hyphenpenalty=10000 \exhyphenpenalty=10000
+\begin{tikzpicture}[
+  font=\small,
+  node distance=4.2mm,
+  box/.style={draw=#1!75!black, fill=#1!8, rounded corners=2pt, line width=0.6pt,
+              text width=8.6cm, align=left, inner sep=4pt},
+  side/.style={draw=#1!75!black, fill=#1!8, rounded corners=2pt, line width=0.6pt,
+               text width=5.0cm, align=left, inner sep=4pt},
+  arr/.style={-{Stealth[length=2.4mm]}, line width=0.7pt, draw=black!70},
+  darr/.style={-{Stealth[length=2.2mm]}, line width=0.6pt, draw=black!60, dashed},
+]
+% ---------------- cot chinh ----------------
+\node[box=gray] (data) {\Lbl{1. Dữ liệu.} PhysionetMI, 103 đối tượng, 64 kênh, tưởng tượng
+  vận động hai lớp (tay trái và tay phải).};
+\node[box=gray, below=of data] (prep) {\Lbl{2. Tiền xử lý.} Lọc thông dải 4--38 Hz, tham chiếu
+  trung bình chung, lấy mẫu lại 100 Hz, cửa sổ 3 s tính từ thời điểm sự kiện.};
+\node[box=Cerulean, below=of prep] (split) {\Lbl{3. Chia 5 fold theo đối tượng}
+  (tất định, không phụ thuộc hạt giống), 3 khối để huấn luyện, 1 khối để kiểm
+  định, 1 khối để kiểm tra. Sau đó căn chỉnh Riemann theo từng đối tượng trong
+  từng phần dữ liệu.};
+\node[box=Cerulean, below=of split] (teacher) {\Lbl{4. Teacher.} Ensemble-MI huấn luyện
+  một lần cho mỗi fold (120 epoch), giữ checkpoint tốt nhất trên tập kiểm định rồi cố định.};
+% vong lap
+\node[text width=8.6cm, align=left, font=\small\bfseries, text=ForestGreen!60!black,
+      below=8mm of teacher, inner sep=1pt] (looptitle) {5. Lặp cho mỗi hạt giống
+      $s\in\{1,\dots,5\}$ $\times$ fold $k\in\{1,\dots,5\}$ $\times$ cấu hình $c$};
+\node[box=ForestGreen, below=2.5mm of looptitle] (bal) {\Lbl{5a.} Cân bằng lớp các trial huấn
+  luyện của từng đối tượng (lấy mẫu giảm theo hạt giống $s$).};
+\node[box=ForestGreen, below=of bal] (train) {\Lbl{5b.} Huấn luyện student EEGNet
+  30 epoch với hàm mất mát của cấu hình $c$ (teacher cố định).};
+\node[box=ForestGreen, below=of train] (select) {\Lbl{5c.} Giữ epoch có độ chính xác
+  kiểm định cao nhất, ghi độ chính xác kiểm tra của từng đối tượng.};
+\begin{scope}[on background layer]
+  \node[draw=ForestGreen!70!black, dashed, line width=0.7pt, rounded corners=3pt,
+        inner sep=5pt, fit=(looptitle)(bal)(train)(select)] (loop) {};
+\end{scope}
+\node[box=Orange, below=7mm of select] (agg) {\Lbl{6. Gộp kết quả.} Lấy trung bình
+  qua 103 đối tượng cho mỗi hạt giống, được $n=5$ giá trị độc lập cho mỗi cấu hình
+  (hạt giống là đơn vị suy luận).};
+\node[box=Orange, below=of agg] (stats) {\Lbl{7. Phân tích thống kê.} Kiểm định
+  $t$ ghép cặp chốt trước ($df=4$), CI 95\%, $d_z$ của Cohen, biên tương đương
+  $\pm 0{,}5$ điểm phần trăm. Hiệu ứng tối thiểu phát hiện được (hậu nghiệm) và độ
+  ổn định xếp hạng qua các hạt giống.};
+
+\draw[arr] (data) -- (prep);
+\draw[arr] (prep) -- (split);
+\draw[arr] (split) -- (teacher);
+\draw[arr] (teacher) -- (loop.north -| teacher.south);
+\draw[arr] (bal) -- (train);
+\draw[arr] (train) -- (select);
+\draw[arr] (loop.south -| select.south) -- (agg);
+\draw[arr] (agg) -- (stats);
+
+% ---------------- cot phu ----------------
+\node[side=Plum, right=7mm of looptitle.north east, anchor=north west] (cfg)
+  {\Lbl{Cấu hình $c$.} Không chưng cất, KDBase, FeatureKD,
+  RelationalKD, năm biến thể QRD V1--V5 (hàm nhân lượng tử), chiến lược V5 với
+  hàm nhân cosine hoặc RBF.};
+\node[side=Plum, below=of cfg] (qrd) {\Lbl{Nhánh QRD (chỉ khi huấn luyện).}
+  Đặc trưng student/teacher $\rightarrow$ mã hóa góc $\rightarrow$ mạch
+  re-uploading $\rightarrow$ ma trận quan hệ hàm nhân lượng tử $R_T, R_S$
+  $\rightarrow$ $\mathcal{L}_{\mathrm{QRD}}$. Bị loại bỏ khi triển khai.};
+\node[side=gray, right=7mm of stats.north east, anchor=north west] (cho)
+  {\Lbl{Tái lập khám phá.} Cùng quy trình trên Cho2017 (49 đối tượng).};
+\node[side=gray, below=of cho] (pi) {\Lbl{Kiểm tra triển khai.} Student đã chưng
+  cất được xuất sang Raspberry Pi 4 để đo thời gian suy luận và tốc độ truyền thông tin.};
+
+\draw[darr] (cfg.west) -- (cfg.west -| loop.east);
+\draw[darr] (qrd.west) -- ++(-3.5mm,0) |- (train.east);
+\draw[arr] (stats.east) -- (cho.west |- stats.east);
+\draw[arr] ($(stats.east)+(3.5mm,0)$) |- (pi.west);
+\end{tikzpicture}
+\end{document}

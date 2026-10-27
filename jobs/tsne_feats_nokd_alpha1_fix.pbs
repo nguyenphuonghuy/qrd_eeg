@@ -1,0 +1,41 @@
+#!/bin/bash
+#PBS -N tsne_feats_nokd_alpha1_fix
+#PBS -q sharedgpu
+#PBS -l select=1:ncpus=8:mem=32gb:gpu_slots=1
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+LOG=/gpfs0/users/gv_nphuy/projects/qrd_eeg/logs/tsne_feats_nokd_alpha1_fix.log
+mkdir -p "$(dirname "$LOG")"
+exec > "$LOG" 2>&1
+
+echo "===== START $(date +%T) $(date +%F) node=$(hostname) (sua audit muc 3: tai tao rieng panel No KD Hinh 3 voi alpha=1.0) ====="
+export PYTHONUNBUFFERED=1
+export CUDA_MPS_PIPE_DIRECTORY=/dev/null
+
+PROJ=/gpfs0/users/gv_nphuy/projects/qrd_eeg
+export ENSEMBLE_MI_DIR=$PROJ/external/Ensemble-MI
+export QRD_TEACHER_DIR=$PROJ/checkpoints
+export QRD_OUT_DIR=$PROJ/results/tsne_feats_2026_08_03
+mkdir -p "$QRD_OUT_DIR"
+
+export QRD_DATASET=PhysionetMI
+export QRD_TSNE_FOLD=0
+export QRD_TSNE_SEED=1
+export QRD_TSNE_ONLY=no_kd
+
+PY=/gpfs0/users/gv_nphuy/envs/qrd_env/bin/python
+cd "$ENSEMBLE_MI_DIR" || { echo "LOI cd repo"; exit 2; }
+
+echo "teacher ckpt: $(ls $QRD_TEACHER_DIR/teacher_fold0*.pth 2>/dev/null | wc -l)"
+
+timeout 1200 $PY $PROJ/scripts/extract_tsne_feats.py ; echo "rc=$?"
+
+echo "----- file ket qua -----"
+ls -la $QRD_OUT_DIR/tsne_feats_no_kd.npz
+$PY -c "
+import numpy as np
+d = np.load('$QRD_OUT_DIR/tsne_feats_no_kd.npz', allow_pickle=True)
+print('acc=', float(d['acc']), 'alpha=', float(d['alpha']) if 'alpha' in d else 'KHONG CO')
+"
+echo "===== END $(date +%T) ====="

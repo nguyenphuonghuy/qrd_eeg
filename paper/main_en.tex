@@ -61,13 +61,11 @@
     }
 \usepackage{cite}
 
-\title{Structured Relational Distillation for Motor Imagery Decoding:
-       Assessing Relation Strategies and a Quantum Kernel under Real-Time
-       Control Constraints}
+\title{A Controlled Multi-Seed Evaluation of Relational Knowledge Distillation for Motor Imagery Decoding with Classical and Quantum Kernels}
 \author{%
 Duong Thi Mai Thuong$^{1}$, Nguyen Phuong Huy$^{2,\ast}$\\[4pt]
-\small $^{1}$Thai Nguyen University of Information and Communication Technology, Thai Nguyen, Vietnam\\
-\small $^{2}$Thai Nguyen University of Technology, Thai Nguyen, Vietnam\\
+\small $^{1}$Department of Computer Science, Faculty of Information Technology, Thai Nguyen University of Information and Communication Technology, Thai Nguyen, Vietnam\\
+\small $^{2}$Department of Electronics Engineering, Faculty of Electronics Engineering, Thai Nguyen University of Technology, Thai Nguyen, Vietnam\\
 \small $^{\ast}$Corresponding author: \href{mailto:nguyenphuonghuy@tnut.edu.vn}{nguyenphuonghuy@tnut.edu.vn}\\
 \small $^{1}$ORCID: \href{https://orcid.org/0009-0005-7862-7473}{0009-0005-7862-7473};
 $^{2}$ORCID: \href{https://orcid.org/0000-0002-5887-5796}{0000-0002-5887-5796}
@@ -79,37 +77,34 @@ $^{2}$ORCID: \href{https://orcid.org/0000-0002-5887-5796}{0000-0002-5887-5796}
 
 \begin{abstract}
 \noindent
-Knowledge distillation based on relations among samples is an effective
-approach for motor imagery decoding. However, prior work commonly fixes
-the relation-formation strategy empirically. This study proposes a
-structured relational distillation framework, evaluated under
-closed-loop control constraints. This framework treats the
-relation-formation strategy and the similarity kernel function,
-classical or quantum, as two independent design parameters. Twelve
-configurations were compared on PhysionetMI (103 subjects, five
-independent seeds, $n=5$). Distillation provides a large and stable
-benefit. Accuracy increased from 74.93 to 81.49 percent on PhysionetMI,
-and this result was replicated on a second independent dataset
-(Cho2017, 49 subjects). However, the difference among specific
-mechanisms is smaller than the noise from random seeds (standard
-deviation 0.459 versus 0.750 percentage points), and the ranking from
-a single run is nearly uncorrelated with the ranking over five seeds
-($\rho = 0.14$). The study additionally proposes a control-oriented
-evaluation procedure. This procedure uses information transfer rate
-and the inference-time budget instead of accuracy alone, together
-with a real inference-time measurement on embedded hardware. Under
-this approach, the quantum kernel function yields a difference of
-0.51 percentage points from the two classical kernel functions, close
-to the pre-specified equivalence margin, so there is not yet enough
-data to conclude in either direction. The training cost of the
-quantum branch is about 13 times higher and increases nonlinearly
-with the number of qubits. This makes large-scale training infeasible
-on a shared single-GPU infrastructure. The evaluation framework and
-the resulting quantitative benchmarks provide a reference basis for
-more complex quantum designs tested later.
+Knowledge distillation can transfer the accuracy of large motor imagery
+decoders to compact networks for embedded brain--computer interfaces.
+However, distillation mechanisms are usually compared from a single
+training run, so their rankings may reflect training noise. The research contribution is
+a controlled multi-seed evaluation protocol for these mechanisms, together
+with quantitative evidence that seed noise exceeds the differences among
+them. A structured relational distillation framework varies the
+relation-formation strategy and the similarity kernel, classical or
+quantum, with all other components fixed. Twelve mechanisms were evaluated
+on PhysionetMI (103 subjects) with subject-wise cross-validation, five fixed
+seeds, and a statistical plan fixed before running. In this confirmatory
+analysis, distillation with a 30-epoch budget raised accuracy from 74.93\%
+to 81.49\%, and an exploratory replication on Cho2017 (49 subjects) agreed
+in direction. Beyond this gain, no relation strategy or kernel separated
+significantly from logit-level distillation. The spread among mechanisms
+(0.46 percentage points) was smaller than seed noise (0.75 points), and
+single-run rankings were almost uncorrelated with five-seed rankings
+(Spearman $\rho = 0.14$). The quantum kernel did not differ significantly
+from cosine or RBF kernels, even with gradient-matched weighting, but these
+data cannot establish equivalence. A factorial experiment crossing the two
+design axes detected no interaction between them. The quantum branch exists
+only during training, so the deployed student runs unchanged on a Raspberry
+Pi 4, at about 13 times the training cost. Mechanism-level claims in
+electroencephalography distillation should therefore rest on multi-seed
+comparisons with confidence intervals.
 \end{abstract}
 
-\noindent\textbf{Keywords:} Brain--computer interface; knowledge distillation; motor imagery decoding; quantum machine learning; controlled evaluation.
+\noindent\textbf{Keywords:} Brain--computer interface; knowledge distillation; motor imagery decoding; quantum kernel; reproducibility.
 
 \input{body_en}
 

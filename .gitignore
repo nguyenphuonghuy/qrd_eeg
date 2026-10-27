@@ -33,3 +33,17 @@ paper/IJRCS template.zip
 
 # Credentials Pi4 (mat khau SSH thuc, khong bao gio commit)
 scripts/.pi4_credentials.local
+
+# Tai lieu binh duyet / ban quyen ben thu ba / ghi chu noi bo: KHONG cong khai
+docs/3379-11308-1-RV.pdf
+docs/TMLR.pdf
+docs/RESTRUCTURE_PLAN_*.md
+docs/AGENTS_HPC_EEG_*.md
+docs/ACCURACY_GAP_REVIEW_*.md
+docs/AUDIT_PAPER_CODE_*.md
+# File sinh ra khi bien dich LaTeX
+paper/*.log
+paper/*.blg
+paper/ijrcs_submission/*.log
+paper/ijrcs_submission/*.blg
+paper/ijrcs_submission/*.bbl

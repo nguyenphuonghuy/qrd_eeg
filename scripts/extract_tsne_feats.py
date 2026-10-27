@@ -30,6 +30,9 @@ MAX_EPOCHS  = int(os.environ.get("QRD_MAX_EPOCHS", "30"))
 
 METHODS = [("no_kd", "no_kd"), ("kd_base", "kd_base"),
            ("feature_kd", "feature_kd"), ("qrd_teacher_guided", "qrd_teacher_guided")]
+_only = os.environ.get("QRD_TSNE_ONLY")
+if _only:
+    METHODS = [m for m in METHODS if m[0] in _only.split(",")]
 
 HP = dict(alpha=0.5, temperature=4.0, beta_qrd=0.02, gamma_feat=1.0, gamma_rkd=1.0,
           n_qubits=4, n_q_layers=2, qrd_batch_size=16, num_anchors=8, knn_k=4,
@@ -65,12 +68,19 @@ def main():
     for tag, method in METHODS:
         t_args = create_exp_args(exp_args_dict=teacher_dict, fold_idx=FOLD)
         s_args = create_exp_args(exp_args_dict=student_dict, fold_idx=FOLD)
+        # No KD khong co so hang distillation de can bang nen phai dung
+        # alpha=1.0 (full cross-entropy), giong moi noi khac trong bai
+        # (xem body_en.tex Muc 4.1); HP['alpha']=0.5 chi dung cho cac
+        # method CO distillation. Sua audit docs/AUDIT_PAPER_CODE_2026_10_03.md
+        # muc 3 (truoc day dung chung 0.5 cho ca 4 panel).
+        hp_tag = dict(HP, alpha=1.0) if tag == "no_kd" else HP
         res = train_method(method, s_args, t_args, ckpt, seed=SEED, verbose=True,
-                            save_test_feats=True, **HP)
+                            save_test_feats=True, **hp_tag)
         out_path = os.path.join(OUT_DIR, f"tsne_feats_{tag}.npz")
         np.savez(out_path,
                  feats=res["test_feats"], labels=res["test_labels"],
                  subjects=res["test_subjects"], acc=res["acc"],
+                 alpha=hp_tag["alpha"],
                  method=method, fold=FOLD, seed=SEED)
         print(f"[{tag}] acc={res['acc']:.2f} n_test={res['test_feats'].shape[0]} "
               f"feat_dim={res['test_feats'].shape[1]} -> {out_path}")

@@ -1,0 +1,12 @@
+===== START 11:18:03 2026-10-03 node=ai01 (xuat lai TorchScript student DUNG kien truc EEGNetv4_class, sua audit muc 2) =====
+output shape: (1, 2)
+/gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/models/eegnet.py:18: TracerWarning: Converting a tensor to a Python boolean might cause the trace to be incorrect. We can't record the data flow of Python values, so this value will be treated as a constant in the future. This means that the trace might not generalize to other inputs!
+  assert x.size()[3] == 1
+/gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/models/eegnet.py:20: TracerWarning: Converting a tensor to a Python boolean might cause the trace to be incorrect. We can't record the data flow of Python values, so this value will be treated as a constant in the future. This means that the trace might not generalize to other inputs!
+  if x.size()[2] == 1:
+Saved: /gpfs0/users/gv_nphuy/projects/qrd_eeg/scripts/../results/pi4_latency/student_eegnetv4_traced.pt size(KB)= 39.8291015625
+max abs diff (goc vs traced-reload): 0.0
+OK: traced model khop model goc.
+So tham so (phai khop 2402 trong bai): 2402
+rc=0
+===== END 11:19:33 =====

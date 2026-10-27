@@ -1,0 +1,27 @@
+===== START 02:54:09 2026-10-24 node=ai01 (Smoke phu luc beta, xem docs/PREREG_ADDENDUM_BETA_2026_10_24.md) =====
+seed 1, fold 0, 30 epoch. Tieu chi: rc=0, khong NaN; quantum b0.02 = 81.11 va cosine b0.02 = 82.67 (sai <= 0.01) de dung lai so lieu tham chieu.
+[compat] Patched EEGWindowsDataset.raw for legacy pickles.
+SEEDS=[1] FOLDS=1 EPOCHS=30 RUNS=['ck_cosine_tg', 'ck_cosine_tg_b4.0', 'ck_rbf_tg_b0.2', 'qrd_teacher_guided']
+Training on PhysionetMI dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:77: UserWarning: apply_on_array can only be True if fn is a callable function. Automatically correcting to apply_on_array=False.
+  warn(
+
+Preprocessing pre-loaded dataset
+/gpfs0/users/gv_nphuy/envs/qrd_env/lib/python3.11/site-packages/braindecode/preprocessing/preprocess.py:371: UserWarning: Applying preprocessors [Preprocessor(fn='pick_channels', apply_on_array=False, kwargs={'ch_names': ['FC5', 'FC3', 'FC1', 'FCz', 'FC2', 'FC4', 'FC6', 'C5', 'C3', 'C1', 'Cz', 'C2', 'C4', 'C6', 'CP5', 'CP3', 'CP1', 'CPz', 'CP2', 'CP4', 'CP6', 'Fp1', 'Fpz', 'Fp2', 'AF7', 'AF3', 'AFz', 'AF4', 'AF8', 'F7', 'F5', 'F3', 'F1', 'Fz', 'F2', 'F4', 'F6', 'F8', 'FT7', 'FT8', 'T7', 'T8', 'T9', 'T10', 'TP7', 'TP8', 'P7', 'P5', 'P3', 'P1', 'Pz', 'P2', 'P4', 'P6', 'P8', 'PO7', 'PO3', 'POz', 'PO4', 'PO8', 'O1', 'Oz', 'O2', 'Iz'], 'ordered': True})] to the mne.io.Raw of an EEGWindowsDataset.
+  warn(
+Traceback (most recent call last):
+  File "/gpfs0/users/gv_nphuy/projects/qrd_eeg/scripts/run_seeds.py", line 123, in <module>
+    main()
+  File "/gpfs0/users/gv_nphuy/projects/qrd_eeg/scripts/run_seeds.py", line 102, in main
+    res = train_method(method, s_args, t_args, ckpt, seed=seed, verbose=False, **hp)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs0/users/gv_nphuy/projects/qrd_eeg/scripts/train_all.py", line 396, in train_method
+    dl_train, dl_val, dl_test, dinfo = init_dataset(args=teacher_args)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs0/users/gv_nphuy/projects/qrd_eeg/external/Ensemble-MI/src/initializers.py", line 108, in init_dataset
+    split_val = splits[1]
+                ~~~~~~^^^
+IndexError: deque index out of range
+rc=1
+rows: 0 (dich 80-84 = 4 run x 20-21 subject cua fold 0)
+===== END 02:58:55 =====
