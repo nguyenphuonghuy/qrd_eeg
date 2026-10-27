@@ -47,3 +47,8 @@ paper/*.blg
 paper/ijrcs_submission/*.log
 paper/ijrcs_submission/*.blg
 paper/ijrcs_submission/*.bbl
+# Ghi chu lam viec noi bo va thong tin ha tang (giu tren may, khong cong khai)
+CLAUDE.md
+AI_CONTEXT.md
+docs/PI4_SSH_GUIDE.md
+scripts/pi4_connect.sh
